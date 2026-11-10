@@ -1,7 +1,7 @@
 import { PickerPanel } from '../../components/PickerPanel';
 import styles from '../../components/ui.module.css';
 import { getPlayer } from '../../engine/game';
-import { DRINK_COUNT, cardPlayerId } from '../../engine/turn';
+import { cardPlayerId, drinkCountOf } from '../../engine/turn';
 import type { Game } from '../../engine/types';
 import { fr } from '../../i18n/fr';
 import { useGameStore } from '../../store/game';
@@ -20,6 +20,7 @@ export function DrinkScreen({ game }: { game: Game }) {
   const shown = p.revealed && target !== null;
   const drink = target !== null ? drinks.find((d) => d.number === target) : undefined;
   const t = fr.play.drink;
+  const count = drinkCountOf(game);
 
   return (
     <main className={styles.screen}>
@@ -32,11 +33,11 @@ export function DrinkScreen({ game }: { game: Game }) {
         </p>
       </section>
 
-      <section className={styles.section} aria-label={t.pick}>
-        <h2>{t.pick}</h2>
+      <section className={styles.section} aria-label={t.pick(count)}>
+        <h2>{t.pick(count)}</h2>
         <PickerPanel
           game={game}
-          max={DRINK_COUNT}
+          max={count}
           excluded={[]}
           target={target}
           onTrigger={() => void spinDrink()}

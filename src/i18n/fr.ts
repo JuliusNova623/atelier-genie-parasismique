@@ -176,7 +176,7 @@ export const fr = {
   },
   drinks: {
     title: 'Boissons',
-    hint: 'Le numéro tiré à l’étape boisson désigne la boisson correspondante. Le nom est facultatif (« Boisson n°X » sinon). Marquez celles qui sont sans alcool.',
+    hint: 'Le numéro tiré à l’étape boisson désigne la boisson correspondante (de 1 au nombre choisi). Le nom est facultatif (« Boisson n°X » sinon). Marquez celles qui sont sans alcool.',
     counts: (alc: number, soft: number) =>
       `${alc} alcoolisée${alc > 1 ? 's' : ''} · ${soft} sans alcool`,
     alcoholic: 'Alcoolisée',
@@ -186,7 +186,13 @@ export const fr = {
     nameLabel: (n: number) => `Nom de la boisson ${n}`,
     typeLabel: (n: number) => `Boisson ${n} sans alcool`,
     placeholder: (n: number) => `Boisson n°${n}`,
-    summary: 'Boissons (noms, alcoolisées ou non)',
+    summary: (n: number) => `Boissons : ${n} (noms, alcoolisées ou non)`,
+    countLabel: 'Nombre de boissons',
+    countValue: (n: number) => `${n} boisson${n > 1 ? 's' : ''}`,
+    less: 'Une boisson de moins',
+    more: 'Une boisson de plus',
+    countHint:
+      'Le nombre choisi est figé au lancement de la partie. Les boissons au-delà restent mémorisées si vous en remettez plus tard.',
     open: 'Modifier les 20 boissons',
   },
   about: {
@@ -264,7 +270,7 @@ export const fr = {
     },
     drink: {
       title: 'Étape boisson',
-      pick: 'Tire ta boisson (1 à 20)',
+      pick: (n: number) => `Tire ta boisson (1 à ${n})`,
       refusedCard: (n: number) => `Carte n°${n} refusée`,
       drinkIs: (n: number, name: string) => `Boisson n°${n} : ${name}`,
       noAlcoholVersion: 'Version sans alcool : un verre d’eau ou un soft',

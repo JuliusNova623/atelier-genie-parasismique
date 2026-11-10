@@ -25,6 +25,7 @@ export function NewGame() {
   const navigate = useNavigate();
   const setGame = useGameStore((s) => s.setGame);
   const defaultRules = useSettings((s) => s.defaultRules);
+  const drinkCount = useSettings((s) => s.drinkCount);
   const t = fr.newGame;
 
   const [players, setPlayers] = useState<Player[]>([]);
@@ -95,6 +96,7 @@ export function NewGame() {
       teams: mode === 'teams' ? teams : [],
       rules: {
         ...rules,
+        drinkCount: useSettings.getState().drinkCount,
         teamRules:
           mode === 'teams'
             ? rules.teamRules
@@ -336,7 +338,7 @@ export function NewGame() {
         <summary
           style={{ cursor: 'pointer', minHeight: 48, display: 'flex', alignItems: 'center' }}
         >
-          🍺 {fr.drinks.summary}
+          🍺 {fr.drinks.summary(drinkCount)}
         </summary>
         <DrinksEditor />
       </details>

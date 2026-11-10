@@ -221,7 +221,7 @@ Le contenu tient dans **un seul fichier** : [`src/content/content.json`](src/con
 (la carte correspondante, jamais déjà jouée), puis :
 
 - **« Je le fais / Je réponds »** → **+3** points ;
-- **« Je refuse »** → étape boisson : tirage d'un numéro 1–20 (la boisson correspondante, avec remise),
+- **« Je refuse »** → étape boisson : tirage d'un numéro de 1 à N (la boisson correspondante, avec remise ; N = nombre de boissons de la soirée, de 1 à 20, réglable dans _Accueil → Boissons_),
   puis **« J'ai bu »** (**+1**) ou **« Je ne bois pas »** (**−2**).
 
 Dans tous les cas la carte est consommée. Le barème, les jokers et les conditions de fin se règlent
@@ -229,6 +229,8 @@ Dans tous les cas la carte est consommée. Le barème, les jokers et les conditi
 
 **Jokers** (1 de chaque par défaut, 0 à 3, désactivables) : **Passe** (saute la carte, sans points ni boisson),
 **Double** (points de carte ×2 si réalisée), **Transfert** (un autre joueur joue la carte et ses conséquences).
+
+**Boissons** : _Accueil → Boissons_ (ou le bloc repliable de _Nouvelle partie_) permet de choisir le **nombre de boissons** (1 à 20), de les nommer et de marquer chacune _alcoolisée_ ou _sans alcool_. Le nombre est figé au lancement de la partie ; les boissons au-delà du nombre choisi restent mémorisées.
 
 **Sans alcool** : case par joueur (« Version sans alcool : un verre d'eau ou un soft », mêmes points) et par boisson.
 

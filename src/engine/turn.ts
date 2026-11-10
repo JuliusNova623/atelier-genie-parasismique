@@ -88,7 +88,14 @@ export function playedCards(game: Game, themeId: string): number[] {
 
 // ───────────────────────── Carte, jokers, boisson (étape 6) ─────────────────────────
 
-export const DRINK_COUNT = 20;
+export const MAX_DRINKS = 20;
+export const DRINK_COUNT = MAX_DRINKS;
+
+/** Nombre de boissons de la partie (borné à 1..20 ; 20 si la partie n'en précise pas). */
+export function drinkCountOf(game: Game): number {
+  const n = game.rules.drinkCount ?? MAX_DRINKS;
+  return Math.min(MAX_DRINKS, Math.max(1, Math.trunc(n)));
+}
 
 function requireCard(game: Game) {
   const p = game.pending;
@@ -178,7 +185,7 @@ export function refuseCard(game: Game): Game {
   };
 }
 
-/** Tire la boisson AVANT l'animation : uniforme sur 1..20, AVEC remise. */
+/** Tire la boisson AVANT l'animation : uniforme sur 1..N (N = nombre de boissons), AVEC remise. */
 export function drawDrinkNumber(game: Game, source?: Uint32Source): Game {
   const p = game.pending;
   if (!p || p.stage !== 'drink' || p.drinkNumber !== undefined) {
@@ -186,7 +193,11 @@ export function drawDrinkNumber(game: Game, source?: Uint32Source): Game {
   }
   return {
     ...game,
-    pending: { ...p, drinkNumber: drawWithReplacement(DRINK_COUNT, source), revealed: false },
+    pending: {
+      ...p,
+      drinkNumber: drawWithReplacement(drinkCountOf(game), source),
+      revealed: false,
+    },
   };
 }
 

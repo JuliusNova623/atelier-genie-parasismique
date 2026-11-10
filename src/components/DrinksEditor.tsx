@@ -1,5 +1,5 @@
 import { fr } from '../i18n/fr';
-import { useSettings } from '../store/settings';
+import { clampDrinkCount, useSettings } from '../store/settings';
 import styles from './ui.module.css';
 
 /**
@@ -7,20 +7,52 @@ import styles from './ui.module.css';
  * interrupteur alcoolisée / sans alcool. Les modifications sont enregistrées immédiatement.
  */
 export function DrinksEditor() {
-  const drinks = useSettings((s) => s.drinks);
+  const allDrinks = useSettings((s) => s.drinks);
+  const count = useSettings((s) => s.drinkCount);
+  const update = useSettings((s) => s.update);
   const setDrinks = useSettings((s) => s.setDrinks);
+  // Seules les N premières boissons sont en jeu ; les autres restent mémorisées.
+  const drinks = allDrinks.slice(0, count);
   const t = fr.drinks;
 
   const patch = (number: number, change: { name?: string; noAlcohol?: boolean }) =>
-    void setDrinks(drinks.map((d) => (d.number === number ? { ...d, ...change } : d)));
+    void setDrinks(allDrinks.map((d) => (d.number === number ? { ...d, ...change } : d)));
 
-  const setAll = (noAlcohol: boolean) => void setDrinks(drinks.map((d) => ({ ...d, noAlcohol })));
+  const setAll = (noAlcohol: boolean) =>
+    void setDrinks(allDrinks.map((d) => (d.number <= count ? { ...d, noAlcohol } : d)));
+
+  const setCount = (n: number) => void update({ drinkCount: clampDrinkCount(n) });
 
   const soft = drinks.filter((d) => d.noAlcohol).length;
 
   return (
     <div className={styles.menu}>
       <p className={styles.hint}>{t.hint}</p>
+      <div className={styles.row} role="group" aria-label={t.countLabel}>
+        <strong className={styles.grow}>{t.countLabel}</strong>
+        <button
+          type="button"
+          className={`${styles.btn} ${styles.iconBtn}`}
+          aria-label={t.less}
+          disabled={count <= 1}
+          onClick={() => setCount(count - 1)}
+        >
+          −
+        </button>
+        <span aria-live="polite" style={{ minWidth: 110, textAlign: 'center', fontWeight: 700 }}>
+          {t.countValue(count)}
+        </span>
+        <button
+          type="button"
+          className={`${styles.btn} ${styles.iconBtn}`}
+          aria-label={t.more}
+          disabled={count >= 20}
+          onClick={() => setCount(count + 1)}
+        >
+          +
+        </button>
+      </div>
+      <p className={styles.hint}>{t.countHint}</p>
       <p role="status" style={{ margin: 0, fontWeight: 700 }}>
         {t.counts(drinks.length - soft, soft)}
       </p>

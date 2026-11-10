@@ -45,6 +45,8 @@ export interface Rules {
   /** Joueur désigné au hasard à chaque tour au lieu de la rotation. */
   randomPlayer: boolean;
   teamRules: { opponentDecides: boolean; duel: boolean; sharedJokers: boolean };
+  /** Nombre de boissons (1 à 20), figé au lancement de la partie ; absent = 20 (anciennes parties). */
+  drinkCount?: number;
 }
 
 export interface TurnEvent {

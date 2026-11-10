@@ -12,6 +12,8 @@ export interface Prefs {
   sound: boolean;
   haptics: boolean;
   keepAwake: boolean;
+  /** Nombre de boissons utilisées par les prochaines parties (1 à 20). */
+  drinkCount: number;
   defaultRules: Rules;
 }
 
@@ -20,6 +22,7 @@ export const DEFAULT_PREFS: Prefs = {
   sound: true,
   haptics: true,
   keepAwake: true,
+  drinkCount: 20,
   defaultRules: DEFAULT_RULES,
 };
 
@@ -32,6 +35,7 @@ export function mergePrefs(saved: Partial<Prefs> | undefined): Prefs {
   return {
     ...DEFAULT_PREFS,
     ...saved,
+    drinkCount: clampDrinkCount(saved?.drinkCount),
     defaultRules: {
       ...DEFAULT_RULES,
       ...r,
@@ -41,6 +45,9 @@ export function mergePrefs(saved: Partial<Prefs> | undefined): Prefs {
     },
   };
 }
+
+export const clampDrinkCount = (n: unknown): number =>
+  typeof n === 'number' && Number.isFinite(n) ? Math.min(20, Math.max(1, Math.trunc(n))) : 20;
 
 export function applyVisualTheme(theme: VisualTheme): void {
   if (typeof document !== 'undefined') document.documentElement.dataset.theme = theme;
@@ -62,6 +69,7 @@ const prefsOf = (s: Prefs): Prefs => ({
   sound: s.sound,
   haptics: s.haptics,
   keepAwake: s.keepAwake,
+  drinkCount: s.drinkCount,
   defaultRules: s.defaultRules,
 });
 

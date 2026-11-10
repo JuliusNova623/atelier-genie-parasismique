@@ -11,13 +11,14 @@ import { DrinksEditor } from './DrinksEditor';
 beforeEach(async () => {
   await act(async () => {
     await useSettings.getState().load();
+    await useSettings.getState().update({ drinkCount: 20 });
     await useSettings
       .getState()
       .setDrinks(useSettings.getState().drinks.map((d) => ({ ...d, name: '', noAlcohol: false })));
   });
 });
 
-describe('éditeur des 20 boissons', () => {
+describe('éditeur des boissons', () => {
   it('affiche les 20 boissons, toutes alcoolisées et sans nom au départ', () => {
     render(<DrinksEditor />);
     expect(screen.getAllByRole('listitem')).toHaveLength(20);
@@ -80,6 +81,89 @@ describe('éditeur des 20 boissons', () => {
       'aria-checked',
       'true',
     );
+  });
+});
+
+describe('nombre de boissons', () => {
+  it('propose 20 boissons par défaut et permet d’en retirer ou d’en ajouter', async () => {
+    const user = userEvent.setup();
+    render(<DrinksEditor />);
+    expect(screen.getByText('20 boissons')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Une boisson de plus' })).toBeDisabled();
+
+    for (let i = 0; i < 8; i++) {
+      await user.click(screen.getByRole('button', { name: 'Une boisson de moins' }));
+    }
+    expect(screen.getByText('12 boissons')).toBeInTheDocument();
+    expect(screen.getAllByRole('listitem')).toHaveLength(12);
+    expect(screen.getByRole('status')).toHaveTextContent('12 alcoolisées · 0 sans alcool');
+    expect(screen.queryByLabelText('Nom de la boisson 13')).not.toBeInTheDocument();
+    expect(useSettings.getState().drinkCount).toBe(12);
+    expect(await repo.getSetting<{ drinkCount: number }>('prefs', { drinkCount: 0 })).toMatchObject(
+      {
+        drinkCount: 12,
+      },
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Une boisson de plus' }));
+    expect(screen.getByText('13 boissons')).toBeInTheDocument();
+  });
+
+  it('ne descend pas sous 1 boisson et ne dépasse pas 20', async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      await useSettings.getState().update({ drinkCount: 2 });
+    });
+    render(<DrinksEditor />);
+    await user.click(screen.getByRole('button', { name: 'Une boisson de moins' }));
+    expect(screen.getByText('1 boisson')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Une boisson de moins' })).toBeDisabled();
+    expect(screen.getAllByRole('listitem')).toHaveLength(1);
+  });
+
+  it('conserve les noms des boissons masquées quand on en remet', async () => {
+    const user = userEvent.setup();
+    render(<DrinksEditor />);
+    await user.type(screen.getByLabelText('Nom de la boisson 15'), 'Rhum');
+    for (let i = 0; i < 10; i++) {
+      await user.click(screen.getByRole('button', { name: 'Une boisson de moins' }));
+    }
+    expect(screen.queryByLabelText('Nom de la boisson 15')).not.toBeInTheDocument();
+    for (let i = 0; i < 10; i++) {
+      await user.click(screen.getByRole('button', { name: 'Une boisson de plus' }));
+    }
+    expect(screen.getByLabelText('Nom de la boisson 15')).toHaveValue('Rhum');
+  });
+
+  it('« Toutes sans alcool » ne touche que les boissons en jeu', async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      await useSettings.getState().update({ drinkCount: 3 });
+    });
+    render(<DrinksEditor />);
+    await user.click(screen.getByRole('button', { name: /Toutes sans alcool/ }));
+    expect(screen.getByRole('status')).toHaveTextContent('0 alcoolisée · 3 sans alcool');
+    const all = useSettings.getState().drinks;
+    expect(all.slice(0, 3).every((d) => d.noAlcohol)).toBe(true);
+    expect(all.slice(3).every((d) => !d.noAlcohol)).toBe(true);
+  });
+
+  it('borne un nombre invalide relu depuis les réglages enregistrés', async () => {
+    await repo.setSetting('prefs', { drinkCount: 99 });
+    await act(async () => {
+      await useSettings.getState().load();
+    });
+    expect(useSettings.getState().drinkCount).toBe(20);
+    await repo.setSetting('prefs', { drinkCount: -3 });
+    await act(async () => {
+      await useSettings.getState().load();
+    });
+    expect(useSettings.getState().drinkCount).toBe(1);
+    await repo.setSetting('prefs', { visualTheme: 'neon' });
+    await act(async () => {
+      await useSettings.getState().load();
+    });
+    expect(useSettings.getState().drinkCount).toBe(20);
   });
 });
 

@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { repo } from '../db/repo';
+import { useSettings } from '../store/settings';
 import { NewGame } from './NewGame';
 
 function setup() {
@@ -77,5 +78,22 @@ describe('NewGame', () => {
     const b = values.filter((v) => v === 'team-2').length;
     expect(Math.abs(a - b)).toBeLessThanOrEqual(1);
     expect(screen.getByRole('button', { name: 'Lancer la partie' })).toBeEnabled();
+  });
+
+  it('fige dans la partie le nombre de boissons choisi dans les réglages', async () => {
+    const user = userEvent.setup();
+    await useSettings.getState().update({ drinkCount: 8 });
+    setup();
+    expect(screen.getByText(/Boissons : 8/)).toBeInTheDocument();
+    await addPlayer(user, 'Alice');
+    await addPlayer(user, 'Bob');
+    await user.click(screen.getByRole('button', { name: 'Lancer la partie' }));
+    await screen.findByText('PLAY');
+    expect((await repo.loadCurrentGame())?.rules.drinkCount).toBe(8);
+
+    // Changer le réglage ensuite n'affecte pas la partie déjà lancée.
+    await useSettings.getState().update({ drinkCount: 3 });
+    expect((await repo.loadCurrentGame())?.rules.drinkCount).toBe(8);
+    await useSettings.getState().update({ drinkCount: 20 });
   });
 });

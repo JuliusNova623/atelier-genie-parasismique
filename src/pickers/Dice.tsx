@@ -57,7 +57,7 @@ export function Dice({ max, target, onTrigger, onDone, reduced }: NumberPickerPr
             className={styles.dieEdge}
           />
           <text x="60" y="68" textAnchor="middle" className={styles.dieText}>
-            {shown ?? '20'}
+            {shown ?? max}
           </text>
         </svg>
       </motion.button>

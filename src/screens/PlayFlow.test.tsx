@@ -226,6 +226,18 @@ describe('étape boisson', () => {
     expect(playerScores(g()).a).toBe(1);
   });
 
+  it('adapte le tirage au nombre de boissons de la partie (titre et cartes)', async () => {
+    const game = {
+      ...base({ ...DEFAULT_RULES, drinkCount: 6 }),
+      pending: drink({ drinkNumber: undefined, revealed: false }),
+    };
+    await useSettings.getState().update({ drinkCount: 20 });
+    await show(game);
+    expect(screen.getByRole('heading', { name: 'Tire ta boisson (1 à 6)' })).toBeInTheDocument();
+    await userEvent.setup().click(screen.getByRole('button', { name: /Cartes/ }));
+    expect(screen.getAllByRole('button', { name: /Carte face cachée/ })).toHaveLength(6);
+  });
+
   it('n’affiche pas les boutons avant la fin de l’animation (résultat non révélé)', async () => {
     await show({ ...base(), pending: drink({ revealed: false }) });
     expect(screen.queryByRole('button', { name: /J’ai bu/ })).not.toBeInTheDocument();
