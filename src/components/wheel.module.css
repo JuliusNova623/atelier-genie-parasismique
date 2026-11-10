@@ -1,0 +1,40 @@
+.wrap {
+  position: relative;
+  width: min(86vw, 340px);
+  aspect-ratio: 1;
+  margin: 8px auto;
+}
+
+.rotor {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  cursor: pointer;
+  touch-action: none;
+  filter: drop-shadow(0 0 14px var(--accent));
+}
+
+.rotor:focus-visible {
+  outline: 3px solid var(--accent-2);
+  outline-offset: 6px;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pointer {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 28px solid var(--text);
+  z-index: 2;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6));
+}

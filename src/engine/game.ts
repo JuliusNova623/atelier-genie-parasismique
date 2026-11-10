@@ -36,6 +36,7 @@ export function createGame(input: NewGameInput): Game {
     themeIds: input.themes.map((t) => t.id),
     themeCards: Object.fromEntries(input.themes.map((t) => [t.id, [...t.cardNumbers]])),
     log: [],
+    pending: null,
   };
 }
 
@@ -148,7 +149,7 @@ export function recordTurn(game: Game, input: TurnInput, now: number, source?: U
     nextPlayerId: nextPlayerId(game, owner, source),
     timestamp: now,
   };
-  return { ...game, log: [...game.log, event] };
+  return { ...game, log: [...game.log, event], pending: null };
 }
 
 /** Duel : le vainqueur marque les points de carte, aucune boisson. */
@@ -183,7 +184,7 @@ export function recordDuel(
     nextPlayerId: nextPlayerId(game, owner, source),
     timestamp: now,
   };
-  return { ...game, log: [...game.log, event] };
+  return { ...game, log: [...game.log, event], pending: null };
 }
 
 export function canUndo(game: Game): boolean {
@@ -193,7 +194,7 @@ export function canUndo(game: Game): boolean {
 /** Annule le dernier tour (plusieurs niveaux possibles) : tout se déduit du log. */
 export function undoLast(game: Game): Game {
   if (!canUndo(game)) return game;
-  return { ...game, log: game.log.slice(0, -1) };
+  return { ...game, log: game.log.slice(0, -1), pending: null };
 }
 
 export function playerScores(game: Game): Record<string, number> {

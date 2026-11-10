@@ -1,30 +1,22 @@
-import { Navigate, useNavigate } from 'react-router-dom';
-import styles from '../components/ui.module.css';
-import { currentPlayerId, getPlayer, playerScores } from '../engine/game';
-import { fr } from '../i18n/fr';
+import { Navigate } from 'react-router-dom';
 import { useGameStore } from '../store/game';
+import { CardScreen } from './play/CardScreen';
+import { ThemeScreen } from './play/ThemeScreen';
+import { WheelScreen } from './play/WheelScreen';
 
-/** Écran provisoire : la roulette des thèmes arrive à l'étape 5. */
+/**
+ * L'écran affiché est dérivé de l'état de la partie (source de vérité), pas de l'historique du
+ * navigateur : le bouton retour ne peut pas casser un tour, et la reprise revient à la bonne étape.
+ */
 export function Play() {
-  const navigate = useNavigate();
   const game = useGameStore((s) => s.game);
   if (!game) return <Navigate to="/" replace />;
-  const player = getPlayer(game, currentPlayerId(game));
-  const scores = playerScores(game);
 
-  return (
-    <main className={styles.screen}>
-      <section className={styles.section} aria-live="polite">
-        <p className={styles.hint}>{fr.play.turnOf}</p>
-        <h1 style={{ margin: 0, color: player.color }}>
-          <span aria-hidden="true">{player.avatar}</span> {player.name}
-        </h1>
-        <p className={styles.hint}>Score : {scores[player.id]}</p>
-      </section>
-      <p className={styles.hint}>{fr.play.placeholder}</p>
-      <button type="button" className={styles.btn} onClick={() => navigate('/')}>
-        {fr.play.toHome}
-      </button>
-    </main>
-  );
+  const p = game.pending;
+  const turn = game.log.length;
+  if (!p || (p.stage === 'theme' && !p.revealed)) {
+    return <WheelScreen key={`wheel-${turn}`} game={game} />;
+  }
+  if (p.stage === 'card' && p.revealed) return <CardScreen key={`card-${turn}`} game={game} />;
+  return <ThemeScreen key={`theme-${turn}`} game={game} />;
 }

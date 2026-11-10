@@ -66,6 +66,20 @@ export interface TurnEvent {
   timestamp: number;
 }
 
+export type PickerMode = 'dice' | 'shake' | 'cards' | 'slot';
+
+/**
+ * Tour en cours, persisté avec la partie. Le résultat est fixé AVANT l'animation :
+ * `revealed` passe à true quand l'animation est terminée (si l'app se ferme pendant
+ * l'animation, la reprise rejoue la même issue, sans nouveau tirage).
+ */
+export interface PendingTurn {
+  stage: 'theme' | 'card';
+  themeId: string;
+  cardNumber?: number;
+  revealed: boolean;
+}
+
 export interface Game {
   id: string;
   startedAt: number;
@@ -81,6 +95,9 @@ export interface Game {
   themeCards: Record<string, number[]>;
   themeIds: string[];
   log: TurnEvent[];
+  pending: PendingTurn | null;
+  /** Dernier mode de tirage utilisé par joueur (présélectionné au tour suivant). */
+  pickerModes?: Record<string, PickerMode>;
 }
 
 export const DEFAULT_RULES: Rules = {
