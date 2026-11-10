@@ -1,4 +1,7 @@
+import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
+import { useSettings } from '../store/settings';
+import { setKeepAwake } from '../util/native';
 import { useGameStore } from '../store/game';
 import { CardScreen } from './play/CardScreen';
 import { DrinkScreen } from './play/DrinkScreen';
@@ -11,6 +14,16 @@ import { WheelScreen } from './play/WheelScreen';
  */
 export function Play() {
   const game = useGameStore((s) => s.game);
+  const keepAwake = useSettings((s) => s.keepAwake);
+  const running = !!game;
+
+  // Écran allumé pendant la partie (réglable) ; relâché en quittant l'écran de jeu.
+  useEffect(() => {
+    if (!keepAwake || !running) return;
+    void setKeepAwake(true);
+    return () => void setKeepAwake(false);
+  }, [keepAwake, running]);
+
   if (!game) return <Navigate to="/" replace />;
 
   const p = game.pending;

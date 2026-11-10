@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { playerScores, remainingJokers, teamScores } from '../engine/game';
 import type { Game, JokerType } from '../engine/types';
 import { fr } from '../i18n/fr';
 import { useGameStore } from '../store/game';
+import { pushBackHandler } from '../util/back';
 import styles from './ui.module.css';
 
 const JOKERS: JokerType[] = ['pass', 'double', 'transfer'];
@@ -16,6 +17,16 @@ export function ScoreSheet({ game, onClose }: { game: Game; onClose: () => void 
   const hasTeams = game.mode === 'teams' && game.teams.length > 0;
   const [tab, setTab] = useState<'teams' | 'players'>(hasTeams ? 'teams' : 'players');
   const t = fr.play.scores;
+
+  // Le bouton retour Android ferme d'abord la bottom sheet.
+  useEffect(
+    () =>
+      pushBackHandler(() => {
+        onClose();
+        return true;
+      }),
+    [onClose],
+  );
 
   const scores = playerScores(game);
   const players = [...game.players].sort((a, b) => scores[b.id] - scores[a.id]);

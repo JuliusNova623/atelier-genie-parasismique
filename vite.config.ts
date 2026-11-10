@@ -9,6 +9,7 @@ export default defineConfig({
   base: './',
   build: { target: 'es2020', outDir: 'dist' },
   test: {
+    include: ['src/**/*.test.{ts,tsx}'],
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],

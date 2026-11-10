@@ -1,5 +1,10 @@
 import { create } from 'zustand';
 import { repo } from '../db/repo';
+import { fr } from '../i18n/fr';
+import { announce } from '../util/announce';
+import { playCue, type Cue } from '../util/feedback';
+import { useContent } from './content';
+import { drinkLabel, useSettings } from './settings';
 import { undoLast } from '../engine/game';
 import { endGame, replayGame } from '../engine/results';
 import {
@@ -59,18 +64,45 @@ export const useGameStore = create<GameState>((set, get) => {
   /**
    * Applique une transition du moteur. Les transitions invalides (double tap, état périmé)
    * lèvent une erreur dans le moteur : on les ignore pour qu'un second clic reste sans effet.
+   * Renvoie true si la partie a réellement changé.
    */
-  const apply = async (fn: (g: Game) => Game) => {
+  const apply = async (fn: (g: Game) => Game): Promise<boolean> => {
     const g = get().game;
-    if (!g) return;
+    if (!g) return false;
     let next: Game;
     try {
       next = fn(g);
     } catch (e) {
       console.warn('Action ignorée :', e instanceof Error ? e.message : e);
-      return;
+      return false;
     }
-    if (next !== g) await get().setGame(next);
+    if (next === g) return false;
+    await get().setGame(next);
+    return true;
+  };
+
+  /** Applique la transition puis joue le son/la vibration associés, si elle a eu lieu. */
+  const act = async (fn: (g: Game) => Game, cue?: Cue) => {
+    if ((await apply(fn)) && cue) {
+      const { sound, haptics } = useSettings.getState();
+      playCue(cue, { sound, haptics });
+    }
+  };
+
+  /** Résultat d'un tirage dit à voix haute pour les lecteurs d'écran (l'animation est visuelle). */
+  const announceResult = (g: Game | null) => {
+    const p = g?.pending;
+    if (!p?.revealed) return;
+    if (p.stage === 'theme') {
+      const name = useContent.getState().content.themes.find((t) => t.id === p.themeId)?.name;
+      announce(fr.a11y.themeDrawn(name ?? p.themeId));
+    } else if (p.stage === 'card' && p.cardNumber !== undefined) {
+      announce(fr.a11y.cardDrawn(p.cardNumber));
+    } else if (p.stage === 'drink' && p.drinkNumber !== undefined) {
+      announce(
+        fr.a11y.drinkDrawn(p.drinkNumber, drinkLabel(useSettings.getState().drinks, p.drinkNumber)),
+      );
+    }
   };
 
   return {
@@ -91,38 +123,47 @@ export const useGameStore = create<GameState>((set, get) => {
       set({ game: null });
       await repo.clearCurrentGame();
     },
-    spinTheme: () => apply((g) => (g.pending ? g : drawTheme(g))),
+    spinTheme: () => act((g) => (g.pending ? g : drawTheme(g)), 'spin'),
     spinCard: () =>
-      apply((g) => (g.pending?.stage === 'theme' && g.pending.revealed ? drawCardNumber(g) : g)),
-    spinDrink: () => apply((g) => drawDrinkNumber(g)),
-    reveal: () => apply(revealPending),
+      act(
+        (g) => (g.pending?.stage === 'theme' && g.pending.revealed ? drawCardNumber(g) : g),
+        'spin',
+      ),
+    spinDrink: () => act((g) => drawDrinkNumber(g), 'spin'),
+    async reveal() {
+      await act(revealPending, 'reveal');
+      announceResult(get().game);
+    },
     selectPickerMode: (mode) =>
-      apply((g) => {
+      act((g) => {
         const p = g.pending;
         const busy =
           p && (p.stage === 'card' || (p.stage === 'drink' && p.drinkNumber !== undefined));
         return busy ? g : rememberPickerMode(g, mode);
       }),
-    completeCard: () => apply((g) => completeCard(g, Date.now())),
-    refuseCard: () => apply((g) => refuseCard(g)),
-    playPass: () => apply((g) => playPass(g, Date.now())),
-    armJoker: (joker, transferTo) => apply((g) => armJoker(g, joker, transferTo)),
-    disarmJoker: () => apply((g) => disarmJoker(g)),
-    resolveDrink: (drank) => apply((g) => resolveDrink(g, drank, Date.now())),
-    startDuel: (a, b) => apply((g) => startDuel(g, a, b)),
-    cancelDuel: () => apply((g) => cancelDuel(g)),
-    finishDuel: (winnerId) => apply((g) => finishDuel(g, winnerId, Date.now())),
-    undo: () => apply((g) => undoLast(g)),
+    completeCard: () => act((g) => completeCard(g, Date.now()), 'success'),
+    refuseCard: () => act((g) => refuseCard(g), 'refuse'),
+    playPass: () => act((g) => playPass(g, Date.now()), 'pass'),
+    armJoker: (joker, transferTo) => act((g) => armJoker(g, joker, transferTo), 'pass'),
+    disarmJoker: () => act((g) => disarmJoker(g)),
+    resolveDrink: (drank) =>
+      act((g) => resolveDrink(g, drank, Date.now()), drank ? 'drink' : 'refuse'),
+    startDuel: (a, b) => act((g) => startDuel(g, a, b), 'duel'),
+    cancelDuel: () => act((g) => cancelDuel(g)),
+    finishDuel: (winnerId) => act((g) => finishDuel(g, winnerId, Date.now()), 'success'),
+    undo: () => act((g) => undoLast(g), 'undo'),
     async finishGame() {
       const g = get().game;
       if (!g) return null;
       const now = Date.now();
       await repo.archiveGame(endGame(g, now), now);
       set({ game: null });
+      const { sound, haptics } = useSettings.getState();
+      playCue('fanfare', { sound, haptics });
       return g.id;
     },
     dismissEnd: (reasons) =>
-      apply((g) => ({ ...g, endDismissed: [...new Set([...(g.endDismissed ?? []), ...reasons])] })),
+      act((g) => ({ ...g, endDismissed: [...new Set([...(g.endDismissed ?? []), ...reasons])] })),
     async replay(finished) {
       await get().setGame(replayGame(finished, Date.now()));
     },

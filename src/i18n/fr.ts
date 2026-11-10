@@ -182,6 +182,14 @@ export const fr = {
     responsible:
       'L’alcool est dangereux pour la santé, à consommer avec modération. Ne prenez jamais le volant après avoir bu.',
   },
+  a11y: {
+    themeDrawn: (name: string) => `Thème tiré : ${name}`,
+    cardDrawn: (n: number) => `Carte numéro ${n} tirée`,
+    drinkDrawn: (n: number, name: string) => `Boisson numéro ${n} : ${name}`,
+  },
+  back: {
+    pauseQuit: 'Mettre la partie en pause et quitter ?',
+  },
   play: {
     turnOf: 'Au tour de',
     score: (n: number) => `Score : ${n}`,

@@ -1,5 +1,5 @@
 import 'fake-indexeddb/auto';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
@@ -171,7 +171,7 @@ describe('sauvegarde des données', () => {
     const user = userEvent.setup();
     render(<BackupSection />);
     await user.click(screen.getByRole('button', { name: 'Exporter mes données' }));
-    expect(saveTextFile).toHaveBeenCalled();
+    await waitFor(() => expect(saveTextFile).toHaveBeenCalled());
     const [name, text] = vi.mocked(saveTextFile).mock.calls.at(-1)!;
     expect(name).toMatch(/^sauvegarde-/);
     expect(JSON.parse(text)).toMatchObject({ app: 'roulette-soiree', version: 1 });

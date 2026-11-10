@@ -1,5 +1,8 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { Announcer } from './components/Announcer';
+import { BackButtonHandler } from './components/BackButtonHandler';
+import { hideSplash } from './util/native';
 import { AboutScreen } from './screens/AboutScreen';
 import { EndScreen } from './screens/EndScreen';
 import { HistoryScreen } from './screens/HistoryScreen';
@@ -25,19 +28,28 @@ export function App() {
     void navigator.storage?.persist?.();
   }, []);
 
-  if (!settingsLoaded || !gameLoaded || !contentLoaded) return null;
+  const ready = settingsLoaded && gameLoaded && contentLoaded;
+  useEffect(() => {
+    if (ready) void hideSplash();
+  }, [ready]);
+
+  if (!ready) return null;
 
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/new" element={<NewGame />} />
-      <Route path="/play" element={<Play />} />
-      <Route path="/settings" element={<Settings />} />
-      <Route path="/end/:id" element={<EndScreen />} />
-      <Route path="/history" element={<HistoryScreen />} />
-      <Route path="/import" element={<ImportScreen />} />
-      <Route path="/about" element={<AboutScreen />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <Announcer />
+      <BackButtonHandler />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/new" element={<NewGame />} />
+        <Route path="/play" element={<Play />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/end/:id" element={<EndScreen />} />
+        <Route path="/history" element={<HistoryScreen />} />
+        <Route path="/import" element={<ImportScreen />} />
+        <Route path="/about" element={<AboutScreen />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 }

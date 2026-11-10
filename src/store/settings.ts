@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { repo } from '../db/repo';
 import type { DrinkRow } from '../db/db';
 import { DEFAULT_RULES, type Rules } from '../engine/types';
+import { applyStatusBar } from '../util/native';
 
 export type VisualTheme = 'neon' | 'arcade' | 'sober' | 'pastel';
 export const VISUAL_THEMES: VisualTheme[] = ['neon', 'arcade', 'sober', 'pastel'];
@@ -43,6 +44,7 @@ export function mergePrefs(saved: Partial<Prefs> | undefined): Prefs {
 
 export function applyVisualTheme(theme: VisualTheme): void {
   if (typeof document !== 'undefined') document.documentElement.dataset.theme = theme;
+  void applyStatusBar(theme);
 }
 
 const PREFS_KEY = 'prefs';
