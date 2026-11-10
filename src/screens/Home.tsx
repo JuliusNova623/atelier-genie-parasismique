@@ -41,6 +41,9 @@ export function Home() {
         <button type="button" className={styles.btn} onClick={() => navigate('/settings')}>
           {t.settings}
         </button>
+        <button type="button" className={styles.btn} onClick={() => navigate('/drinks')}>
+          🍺 {t.drinks}
+        </button>
         <button type="button" className={styles.btn} onClick={() => navigate('/history')}>
           {t.history}
         </button>

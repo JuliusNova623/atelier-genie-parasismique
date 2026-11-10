@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { repo } from '../db/repo';
 import styles from '../components/ui.module.css';
+import { DrinksEditor } from '../components/DrinksEditor';
 import { RulesEditor } from '../components/RulesEditor';
 import { createGame } from '../engine/game';
 import { validateRules } from '../engine/scoring';
@@ -330,6 +331,15 @@ export function NewGame() {
           </button>
         </div>
       </section>
+
+      <details className={styles.section}>
+        <summary
+          style={{ cursor: 'pointer', minHeight: 48, display: 'flex', alignItems: 'center' }}
+        >
+          🍺 {fr.drinks.summary}
+        </summary>
+        <DrinksEditor />
+      </details>
 
       <h2 style={{ margin: 0 }}>{t.rules}</h2>
       <p className={styles.hint}>{t.rulesHint}</p>

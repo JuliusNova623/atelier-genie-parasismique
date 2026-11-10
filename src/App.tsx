@@ -4,6 +4,7 @@ import { Announcer } from './components/Announcer';
 import { BackButtonHandler } from './components/BackButtonHandler';
 import { hideSplash } from './util/native';
 import { AboutScreen } from './screens/AboutScreen';
+import { DrinksScreen } from './screens/DrinksScreen';
 import { EndScreen } from './screens/EndScreen';
 import { HistoryScreen } from './screens/HistoryScreen';
 import { Home } from './screens/Home';
@@ -45,6 +46,7 @@ export function App() {
         <Route path="/play" element={<Play />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/end/:id" element={<EndScreen />} />
+        <Route path="/drinks" element={<DrinksScreen />} />
         <Route path="/history" element={<HistoryScreen />} />
         <Route path="/import" element={<ImportScreen />} />
         <Route path="/about" element={<AboutScreen />} />

@@ -20,6 +20,7 @@ export const fr = {
     import: 'Importer des cartes',
     about: 'À propos',
     soon: 'Bientôt disponible',
+    drinks: 'Boissons',
     newGameWarning: 'Une partie est en cours. En lancer une nouvelle la remplacera.',
   },
   settings: {
@@ -172,6 +173,21 @@ export const fr = {
     importDone: 'Données restaurées.',
     exportDone: 'Sauvegarde prête.',
     hint: 'La sauvegarde contient vos réglages, boissons, cartes importées, partie en cours et historique.',
+  },
+  drinks: {
+    title: 'Boissons',
+    hint: 'Le numéro tiré à l’étape boisson désigne la boisson correspondante. Le nom est facultatif (« Boisson n°X » sinon). Marquez celles qui sont sans alcool.',
+    counts: (alc: number, soft: number) =>
+      `${alc} alcoolisée${alc > 1 ? 's' : ''} · ${soft} sans alcool`,
+    alcoholic: 'Alcoolisée',
+    soft: 'Sans alcool',
+    allAlcoholic: 'Toutes alcoolisées',
+    allSoft: 'Toutes sans alcool',
+    nameLabel: (n: number) => `Nom de la boisson ${n}`,
+    typeLabel: (n: number) => `Boisson ${n} sans alcool`,
+    placeholder: (n: number) => `Boisson n°${n}`,
+    summary: 'Boissons (noms, alcoolisées ou non)',
+    open: 'Modifier les 20 boissons',
   },
   about: {
     title: 'À propos',

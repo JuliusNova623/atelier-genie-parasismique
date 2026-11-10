@@ -11,9 +11,6 @@ export function Settings() {
   const s = useSettings();
   const t = fr.settings;
 
-  const setDrink = (number: number, patch: { name?: string; noAlcohol?: boolean }) =>
-    s.setDrinks(s.drinks.map((d) => (d.number === number ? { ...d, ...patch } : d)));
-
   const toggles = [
     ['sound', t.sound],
     ['haptics', t.haptics],
@@ -73,33 +70,11 @@ export function Settings() {
         showTeamRules
       />
 
-      <section className={styles.section} aria-label={t.drinks}>
-        <h2>{t.drinks}</h2>
-        <p className={styles.hint}>{t.drinksHint}</p>
-        {s.drinks.map((d) => (
-          <div key={d.number} className={styles.row}>
-            <span aria-hidden="true" style={{ width: 28, textAlign: 'right' }}>
-              {d.number}
-            </span>
-            <input
-              className={`${styles.input} ${styles.grow}`}
-              aria-label={`Nom de la boisson ${d.number}`}
-              placeholder={t.drinkPlaceholder(d.number)}
-              value={d.name}
-              maxLength={40}
-              onChange={(e) => setDrink(d.number, { name: e.target.value })}
-            />
-            <label className={styles.check}>
-              <input
-                type="checkbox"
-                aria-label={`${t.drinkNoAlcohol} : boisson ${d.number}`}
-                checked={d.noAlcohol}
-                onChange={(e) => setDrink(d.number, { noAlcohol: e.target.checked })}
-              />
-              <small>{t.drinkNoAlcohol}</small>
-            </label>
-          </div>
-        ))}
+      <section className={styles.section} aria-label={fr.drinks.title}>
+        <h2>{fr.drinks.title}</h2>
+        <button type="button" className={styles.btn} onClick={() => navigate('/drinks')}>
+          🍺 {fr.drinks.open}
+        </button>
       </section>
 
       <section className={styles.section} aria-label={t.data}>
