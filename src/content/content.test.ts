@@ -4,7 +4,7 @@ import { validateContent } from './validate';
 
 const clone = () => structuredClone(raw) as typeof raw;
 
-describe('content.json provisoire', () => {
+describe('content.json (200 cartes de la soirée)', () => {
   it('est valide : 10 thèmes × 20 cartes, sans avertissement', () => {
     const r = validateContent(raw);
     expect(r.errors).toEqual([]);
@@ -16,11 +16,26 @@ describe('content.json provisoire', () => {
     }
   });
 
-  it('alterne questions et actions avec un texte provisoire', () => {
-    const c = builtInContent.themes[2].cards[6];
-    expect(c.type).toBe('question');
-    expect(c.text).toBe('[Thème 3 – Carte 7] Question provisoire');
-    expect(builtInContent.themes[2].cards[7].type).toBe('action');
+  it('contient 200 textes non vides, sans reste du format source (« V| » / « A| »)', () => {
+    const cards = builtInContent.themes.flatMap((t) => t.cards);
+    expect(cards).toHaveLength(200);
+    for (const c of cards) {
+      expect(c.text.trim().length).toBeGreaterThan(5);
+      expect(c.text).not.toMatch(/^[VA]\|/);
+      expect(['question', 'action']).toContain(c.type);
+    }
+    expect(cards.some((c) => c.type === 'question')).toBe(true);
+    expect(cards.some((c) => c.type === 'action')).toBe(true);
+  });
+
+  it('les chronomètres sont des durées plausibles, réservées aux actions', () => {
+    const timed = builtInContent.themes.flatMap((t) => t.cards).filter((c) => c.timer);
+    expect(timed.length).toBeGreaterThan(10);
+    for (const c of timed) {
+      expect(c.type).toBe('action');
+      expect(c.timer).toBeGreaterThanOrEqual(10);
+      expect(c.timer).toBeLessThanOrEqual(120);
+    }
   });
 
   it('a des noms, emojis et couleurs distincts', () => {

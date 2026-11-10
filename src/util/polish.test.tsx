@@ -11,6 +11,7 @@ import { drawCardNumber, drawDrinkNumber, drawTheme, refuseCard } from '../engin
 import { DEFAULT_RULES, type Game, type Player } from '../engine/types';
 import { useGameStore } from '../store/game';
 import { useSettings } from '../store/settings';
+import { themeName } from '../test/cards';
 import { announce } from './announce';
 import { pushBackHandler, resolveBack, runBackHandlers } from './back';
 import { CUES, playCue, type Cue } from './feedback';
@@ -197,7 +198,7 @@ describe('le store annonce les tirages et joue les sons', () => {
       await useGameStore.getState().reveal();
       vi.advanceTimersByTime(80);
     });
-    expect(region).toHaveTextContent('Thème tiré : Thème 4');
+    expect(region).toHaveTextContent(`Thème tiré : ${themeName('theme-4')}`);
 
     g = drawCardNumber(useGameStore.getState().game!);
     g = { ...g, pending: { ...g.pending!, cardNumber: 12 } };

@@ -3,1340 +3,1331 @@
   "themes": [
     {
       "id": "theme-1",
-      "name": "Thème 1",
-      "emoji": "🍻",
-      "color": "#ff2fb3",
-      "description": "Description provisoire",
+      "name": "Vérités Brûlantes",
+      "emoji": "🔥",
+      "color": "#ff3b30",
       "cards": [
         {
           "number": 1,
           "type": "question",
-          "text": "[Thème 1 – Carte 1] Question provisoire",
+          "text": "Quelle est la chose la plus embarrassante que tu aies faite en soirée ?",
           "points": null,
           "timer": null
         },
         {
           "number": 2,
-          "type": "action",
-          "text": "[Thème 1 – Carte 2] Action provisoire",
+          "type": "question",
+          "text": "Quel est le plus gros mensonge que tu aies raconté à tes parents ?",
           "points": null,
           "timer": null
         },
         {
           "number": 3,
           "type": "question",
-          "text": "[Thème 1 – Carte 3] Question provisoire",
+          "text": "Combien de fois as-tu stalké quelqu'un sur les réseaux cette semaine ? Sois honnête.",
           "points": null,
           "timer": null
         },
         {
           "number": 4,
-          "type": "action",
-          "text": "[Thème 1 – Carte 4] Action provisoire",
+          "type": "question",
+          "text": "Quelle est la chose la plus chère que tu aies cassée sans jamais l'avouer ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 5,
           "type": "question",
-          "text": "[Thème 1 – Carte 5] Question provisoire",
+          "text": "Raconte la fois où tu as eu le plus honte en public.",
           "points": null,
           "timer": null
         },
         {
           "number": 6,
-          "type": "action",
-          "text": "[Thème 1 – Carte 6] Action provisoire",
+          "type": "question",
+          "text": "Y a-t-il quelqu'un dans cette pièce que tu as déjà trouvé attirant(e) ? Pas besoin de dire qui.",
           "points": null,
           "timer": null
         },
         {
           "number": 7,
-          "type": "question",
-          "text": "[Thème 1 – Carte 7] Question provisoire",
+          "type": "action",
+          "text": "Révèle la dernière chose que tu as recherchée sur Google.",
           "points": null,
           "timer": null
         },
         {
           "number": 8,
-          "type": "action",
-          "text": "[Thème 1 – Carte 8] Action provisoire",
+          "type": "question",
+          "text": "Quel est ton pire souvenir de rendez-vous amoureux ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 9,
           "type": "question",
-          "text": "[Thème 1 – Carte 9] Question provisoire",
+          "text": "As-tu déjà fait semblant d'être malade pour éviter quelque chose ? Raconte.",
           "points": null,
           "timer": null
         },
         {
           "number": 10,
-          "type": "action",
-          "text": "[Thème 1 – Carte 10] Action provisoire",
+          "type": "question",
+          "text": "Quelle est la rumeur la plus folle qui a circulé sur toi ?",
           "points": null,
           "timer": null
         },
         {
           "number": 11,
           "type": "question",
-          "text": "[Thème 1 – Carte 11] Question provisoire",
+          "text": "Quel est le secret le plus lourd que tu gardes pour quelqu'un d'autre ? Sans donner de nom.",
           "points": null,
           "timer": null
         },
         {
           "number": 12,
           "type": "action",
-          "text": "[Thème 1 – Carte 12] Action provisoire",
+          "text": "Note cette soirée sur 10 et justifie ta note devant tout le monde.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 13,
           "type": "question",
-          "text": "[Thème 1 – Carte 13] Question provisoire",
+          "text": "Quelle est la chose la plus interdite — mais pas grave — que tu aies faite ?",
           "points": null,
           "timer": null
         },
         {
           "number": 14,
-          "type": "action",
-          "text": "[Thème 1 – Carte 14] Action provisoire",
+          "type": "question",
+          "text": "Qu'est-ce que tu n'avoueras jamais à ta famille ?",
           "points": null,
           "timer": null
         },
         {
           "number": 15,
           "type": "question",
-          "text": "[Thème 1 – Carte 15] Question provisoire",
+          "text": "Quel est le truc le plus futile dont tu es secrètement très fier(e) ?",
           "points": null,
           "timer": null
         },
         {
           "number": 16,
-          "type": "action",
-          "text": "[Thème 1 – Carte 16] Action provisoire",
+          "type": "question",
+          "text": "As-tu déjà menti à quelqu'un dans cette pièce ? À propos de quoi ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 17,
           "type": "question",
-          "text": "[Thème 1 – Carte 17] Question provisoire",
+          "text": "Quelle est la chose la plus bizarre que tu fais quand tu es seul(e) chez toi ?",
           "points": null,
           "timer": null
         },
         {
           "number": 18,
-          "type": "action",
-          "text": "[Thème 1 – Carte 18] Action provisoire",
+          "type": "question",
+          "text": "Quel est le pire cadeau que tu aies offert, en sachant très bien qu'il était nul ?",
           "points": null,
           "timer": null
         },
         {
           "number": 19,
           "type": "question",
-          "text": "[Thème 1 – Carte 19] Question provisoire",
+          "text": "Raconte la fois où tu t'es le plus fait griller.",
           "points": null,
           "timer": null
         },
         {
           "number": 20,
-          "type": "action",
-          "text": "[Thème 1 – Carte 20] Action provisoire",
+          "type": "question",
+          "text": "Quel est le compliment que tu as reçu et auquel tu repenses encore ?",
           "points": null,
-          "timer": 30
+          "timer": null
         }
       ]
     },
     {
       "id": "theme-2",
-      "name": "Thème 2",
-      "emoji": "🎤",
-      "color": "#20e3ff",
-      "description": "Description provisoire",
+      "name": "Mission Impossible",
+      "emoji": "💀",
+      "color": "#8b5cf6",
       "cards": [
         {
           "number": 1,
-          "type": "question",
-          "text": "[Thème 2 – Carte 1] Question provisoire",
+          "type": "action",
+          "text": "Fais 20 pompes. Si tu échoues, boisson double.",
           "points": null,
           "timer": null
         },
         {
           "number": 2,
           "type": "action",
-          "text": "[Thème 2 – Carte 2] Action provisoire",
+          "text": "Tiens la chaise contre un mur, genoux à 90°, pendant 60 secondes.",
           "points": null,
-          "timer": null
+          "timer": 60
         },
         {
           "number": 3,
-          "type": "question",
-          "text": "[Thème 2 – Carte 3] Question provisoire",
+          "type": "action",
+          "text": "Descends le plus bas possible en grand écart. Photo obligatoire.",
           "points": null,
           "timer": null
         },
         {
           "number": 4,
           "type": "action",
-          "text": "[Thème 2 – Carte 4] Action provisoire",
+          "text": "Reste en équilibre sur un pied, yeux fermés, 45 secondes.",
           "points": null,
-          "timer": 30
+          "timer": 45
         },
         {
           "number": 5,
-          "type": "question",
-          "text": "[Thème 2 – Carte 5] Question provisoire",
+          "type": "action",
+          "text": "Tiens la planche 1 minute en répondant aux questions du groupe.",
           "points": null,
           "timer": null
         },
         {
           "number": 6,
           "type": "action",
-          "text": "[Thème 2 – Carte 6] Action provisoire",
+          "text": "Porte la personne à ta droite sur ton dos et fais un tour complet de la pièce.",
           "points": null,
           "timer": null
         },
         {
           "number": 7,
-          "type": "question",
-          "text": "[Thème 2 – Carte 7] Question provisoire",
+          "type": "action",
+          "text": "Fais 10 burpees en criant un compliment différent à chaque répétition.",
           "points": null,
           "timer": null
         },
         {
           "number": 8,
           "type": "action",
-          "text": "[Thème 2 – Carte 8] Action provisoire",
+          "text": "Touche ton nez avec ta langue. Échec = tu bois.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 9,
-          "type": "question",
-          "text": "[Thème 2 – Carte 9] Question provisoire",
+          "type": "action",
+          "text": "Reste immobile et muet(te) 2 minutes. Le groupe peut te déconcentrer, sans te toucher.",
           "points": null,
           "timer": null
         },
         {
           "number": 10,
           "type": "action",
-          "text": "[Thème 2 – Carte 10] Action provisoire",
+          "text": "Fais une roulade avant sans rien casser.",
           "points": null,
           "timer": null
         },
         {
           "number": 11,
-          "type": "question",
-          "text": "[Thème 2 – Carte 11] Question provisoire",
+          "type": "action",
+          "text": "Marche avec un verre plein en équilibre sur la tête pendant 1 minute.",
           "points": null,
           "timer": null
         },
         {
           "number": 12,
           "type": "action",
-          "text": "[Thème 2 – Carte 12] Action provisoire",
+          "text": "Récite l'alphabet à l'envers en moins de 30 secondes.",
           "points": null,
           "timer": 30
         },
         {
           "number": 13,
-          "type": "question",
-          "text": "[Thème 2 – Carte 13] Question provisoire",
+          "type": "action",
+          "text": "Fais 15 squats sautés sans t'arrêter.",
           "points": null,
           "timer": null
         },
         {
           "number": 14,
           "type": "action",
-          "text": "[Thème 2 – Carte 14] Action provisoire",
+          "text": "Reste en talon-fesses pendant toute la prochaine manche.",
           "points": null,
           "timer": null
         },
         {
           "number": 15,
-          "type": "question",
-          "text": "[Thème 2 – Carte 15] Question provisoire",
-          "points": null,
-          "timer": null
-        },
-        {
-          "number": 16,
           "type": "action",
-          "text": "[Thème 2 – Carte 16] Action provisoire",
+          "text": "Sprint sur place 30 secondes à fond, puis parle normalement pendant 20 secondes.",
           "points": null,
           "timer": 30
         },
         {
-          "number": 17,
-          "type": "question",
-          "text": "[Thème 2 – Carte 17] Question provisoire",
+          "number": 16,
+          "type": "action",
+          "text": "Empile 5 objets de la pièce en une tour qui tient 10 secondes.",
           "points": null,
-          "timer": null
+          "timer": 10
+        },
+        {
+          "number": 17,
+          "type": "action",
+          "text": "Fais le poirier contre un mur et tiens 15 secondes.",
+          "points": null,
+          "timer": 15
         },
         {
           "number": 18,
           "type": "action",
-          "text": "[Thème 2 – Carte 18] Action provisoire",
+          "text": "Compte de 100 à 0 de 7 en 7 à voix haute, sans erreur.",
           "points": null,
           "timer": null
         },
         {
           "number": 19,
-          "type": "question",
-          "text": "[Thème 2 – Carte 19] Question provisoire",
+          "type": "action",
+          "text": "Garde une gorgée d'eau en bouche pendant que le groupe essaie de te faire rire.",
           "points": null,
           "timer": null
         },
         {
           "number": 20,
           "type": "action",
-          "text": "[Thème 2 – Carte 20] Action provisoire",
+          "text": "Mime un exercice de sport jusqu'à ce qu'on devine lequel, sans jamais t'arrêter.",
           "points": null,
-          "timer": 30
+          "timer": null
         }
       ]
     },
     {
       "id": "theme-3",
-      "name": "Thème 3",
-      "emoji": "🔥",
-      "color": "#a855f7",
-      "description": "Description provisoire",
+      "name": "Ridicule Assumé",
+      "emoji": "😂",
+      "color": "#ff9f0a",
       "cards": [
         {
           "number": 1,
-          "type": "question",
-          "text": "[Thème 3 – Carte 1] Question provisoire",
+          "type": "action",
+          "text": "Parle avec un accent choisi par le groupe jusqu'à ton prochain tour.",
           "points": null,
           "timer": null
         },
         {
           "number": 2,
           "type": "action",
-          "text": "[Thème 3 – Carte 2] Action provisoire",
+          "text": "Défilé de mode dans le salon avec un vêtement choisi par ton voisin.",
           "points": null,
           "timer": null
         },
         {
           "number": 3,
-          "type": "question",
-          "text": "[Thème 3 – Carte 3] Question provisoire",
+          "type": "action",
+          "text": "Chante debout le refrain de ta chanson la plus honteuse.",
           "points": null,
           "timer": null
         },
         {
           "number": 4,
           "type": "action",
-          "text": "[Thème 3 – Carte 4] Action provisoire",
+          "text": "Discours de 60 secondes pour remercier l'Académie d'un prix imaginaire.",
           "points": null,
-          "timer": 30
+          "timer": 60
         },
         {
           "number": 5,
-          "type": "question",
-          "text": "[Thème 3 – Carte 5] Question provisoire",
+          "type": "action",
+          "text": "Imite la personne à ta gauche jusqu'à ce qu'on devine qui c'est.",
           "points": null,
           "timer": null
         },
         {
           "number": 6,
           "type": "action",
-          "text": "[Thème 3 – Carte 6] Action provisoire",
+          "text": "Parle uniquement en chuchotant pendant 10 minutes.",
           "points": null,
           "timer": null
         },
         {
           "number": 7,
-          "type": "question",
-          "text": "[Thème 3 – Carte 7] Question provisoire",
+          "type": "action",
+          "text": "Selfie avec la pire grimace possible, montré à tout le monde.",
           "points": null,
           "timer": null
         },
         {
           "number": 8,
           "type": "action",
-          "text": "[Thème 3 – Carte 8] Action provisoire",
+          "text": "Appelle un(e) ami(e) et chante-lui joyeux anniversaire. Ce n'est pas son anniversaire.",
+          "points": null,
+          "timer": null
+        },
+        {
+          "number": 9,
+          "type": "action",
+          "text": "Invente une pub de 30 secondes pour un objet de la pièce.",
           "points": null,
           "timer": 30
         },
         {
-          "number": 9,
-          "type": "question",
-          "text": "[Thème 3 – Carte 9] Question provisoire",
-          "points": null,
-          "timer": null
-        },
-        {
           "number": 10,
           "type": "action",
-          "text": "[Thème 3 – Carte 10] Action provisoire",
+          "text": "Danse 30 secondes sans musique, comme si tu étais en boîte.",
           "points": null,
-          "timer": null
+          "timer": 30
         },
         {
           "number": 11,
-          "type": "question",
-          "text": "[Thème 3 – Carte 11] Question provisoire",
+          "type": "action",
+          "text": "Chaussettes sur les mains jusqu'à ton prochain tour.",
           "points": null,
           "timer": null
         },
         {
           "number": 12,
           "type": "action",
-          "text": "[Thème 3 – Carte 12] Action provisoire",
+          "text": "Raconte ta journée comme un commentateur sportif en direct.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 13,
-          "type": "question",
-          "text": "[Thème 3 – Carte 13] Question provisoire",
+          "type": "action",
+          "text": "Fais le bruit d'un animal choisi par le groupe chaque fois qu'on dit ton prénom, pendant 3 tours.",
           "points": null,
           "timer": null
         },
         {
           "number": 14,
           "type": "action",
-          "text": "[Thème 3 – Carte 14] Action provisoire",
+          "text": "Prends la pose la plus dramatique possible et reste figé(e) 30 secondes.",
           "points": null,
-          "timer": null
+          "timer": 30
         },
         {
           "number": 15,
-          "type": "question",
-          "text": "[Thème 3 – Carte 15] Question provisoire",
+          "type": "action",
+          "text": "Rap improvisé de 4 lignes sur la personne en face de toi.",
           "points": null,
           "timer": null
         },
         {
           "number": 16,
           "type": "action",
-          "text": "[Thème 3 – Carte 16] Action provisoire",
+          "text": "Marche comme un mannequin jusqu'à la cuisine et reviens avec un verre.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 17,
-          "type": "question",
-          "text": "[Thème 3 – Carte 17] Question provisoire",
+          "type": "action",
+          "text": "Ton voisin te coiffe comme il veut. Ça reste jusqu'à la fin de la manche.",
           "points": null,
           "timer": null
         },
         {
           "number": 18,
           "type": "action",
-          "text": "[Thème 3 – Carte 18] Action provisoire",
+          "text": "Parle de toi à la troisième personne jusqu'à ton prochain tour.",
           "points": null,
           "timer": null
         },
         {
           "number": 19,
-          "type": "question",
-          "text": "[Thème 3 – Carte 19] Question provisoire",
+          "type": "action",
+          "text": "Déclaration d'amour enflammée à un objet de la pièce.",
           "points": null,
           "timer": null
         },
         {
           "number": 20,
           "type": "action",
-          "text": "[Thème 3 – Carte 20] Action provisoire",
+          "text": "Imite la démarche d'une célébrité jusqu'à ce qu'on devine.",
           "points": null,
-          "timer": 30
+          "timer": null
         }
       ]
     },
     {
       "id": "theme-4",
-      "name": "Thème 4",
-      "emoji": "📸",
-      "color": "#ffb020",
-      "description": "Description provisoire",
+      "name": "Ex & Cœurs Brisés",
+      "emoji": "💔",
+      "color": "#ff2e88",
       "cards": [
         {
           "number": 1,
           "type": "question",
-          "text": "[Thème 4 – Carte 1] Question provisoire",
+          "text": "Pourquoi ta dernière histoire s'est-elle terminée ? Version honnête.",
           "points": null,
           "timer": null
         },
         {
           "number": 2,
-          "type": "action",
-          "text": "[Thème 4 – Carte 2] Action provisoire",
+          "type": "question",
+          "text": "As-tu regardé le profil d'un(e) ex cette semaine ?",
           "points": null,
           "timer": null
         },
         {
           "number": 3,
           "type": "question",
-          "text": "[Thème 4 – Carte 3] Question provisoire",
+          "text": "Quel est le pire message que tu aies envoyé à quelqu'un qui te plaisait ?",
           "points": null,
           "timer": null
         },
         {
           "number": 4,
-          "type": "action",
-          "text": "[Thème 4 – Carte 4] Action provisoire",
+          "type": "question",
+          "text": "As-tu déjà été ghosté(e) ? Et toi, as-tu déjà ghosté ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 5,
           "type": "question",
-          "text": "[Thème 4 – Carte 5] Question provisoire",
+          "text": "Quelle est la chose la plus bête que tu aies faite par amour ?",
           "points": null,
           "timer": null
         },
         {
           "number": 6,
-          "type": "action",
-          "text": "[Thème 4 – Carte 6] Action provisoire",
+          "type": "question",
+          "text": "Combien de personnes te plaisent en ce moment ? Juste le chiffre.",
           "points": null,
           "timer": null
         },
         {
           "number": 7,
           "type": "question",
-          "text": "[Thème 4 – Carte 7] Question provisoire",
+          "text": "Quel red flag as-tu ignoré beaucoup trop longtemps ?",
           "points": null,
           "timer": null
         },
         {
           "number": 8,
-          "type": "action",
-          "text": "[Thème 4 – Carte 8] Action provisoire",
+          "type": "question",
+          "text": "Raconte ton pire date, du début à la fin.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 9,
           "type": "question",
-          "text": "[Thème 4 – Carte 9] Question provisoire",
+          "text": "As-tu déjà dit « je t'aime » sans vraiment le penser ?",
           "points": null,
           "timer": null
         },
         {
           "number": 10,
-          "type": "action",
-          "text": "[Thème 4 – Carte 10] Action provisoire",
+          "type": "question",
+          "text": "Quelle est la différence entre le type de personne qui te plaît et celle avec qui tu finis ?",
           "points": null,
           "timer": null
         },
         {
           "number": 11,
-          "type": "question",
-          "text": "[Thème 4 – Carte 11] Question provisoire",
+          "type": "action",
+          "text": "Montre ta dernière conversation sur une appli de rencontre, ou explique pourquoi tu n'en as pas.",
           "points": null,
           "timer": null
         },
         {
           "number": 12,
-          "type": "action",
-          "text": "[Thème 4 – Carte 12] Action provisoire",
+          "type": "question",
+          "text": "As-tu déjà recontacté quelqu'un juste par ennui ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 13,
           "type": "question",
-          "text": "[Thème 4 – Carte 13] Question provisoire",
+          "text": "Quel est ton propre red flag, honnêtement ?",
           "points": null,
           "timer": null
         },
         {
           "number": 14,
-          "type": "action",
-          "text": "[Thème 4 – Carte 14] Action provisoire",
+          "type": "question",
+          "text": "Qui a fait le premier pas dans ta dernière histoire, et comment ?",
           "points": null,
           "timer": null
         },
         {
           "number": 15,
           "type": "question",
-          "text": "[Thème 4 – Carte 15] Question provisoire",
+          "text": "As-tu déjà eu un crush sur l'ami(e) d'un(e) ami(e) ?",
           "points": null,
           "timer": null
         },
         {
           "number": 16,
-          "type": "action",
-          "text": "[Thème 4 – Carte 16] Action provisoire",
+          "type": "question",
+          "text": "Quelle est la plus longue période où tu as été célibataire, et comment tu l'as vécue ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 17,
           "type": "question",
-          "text": "[Thème 4 – Carte 17] Question provisoire",
+          "text": "Si un(e) ex t'écrivait maintenant, qu'est-ce que tu répondrais ?",
           "points": null,
           "timer": null
         },
         {
           "number": 18,
-          "type": "action",
-          "text": "[Thème 4 – Carte 18] Action provisoire",
+          "type": "question",
+          "text": "Quelle est la chose la plus cringe que tu aies faite pour impressionner quelqu'un ?",
           "points": null,
           "timer": null
         },
         {
           "number": 19,
           "type": "question",
-          "text": "[Thème 4 – Carte 19] Question provisoire",
+          "text": "Quel compliment te fait le plus d'effet ?",
           "points": null,
           "timer": null
         },
         {
           "number": 20,
-          "type": "action",
-          "text": "[Thème 4 – Carte 20] Action provisoire",
+          "type": "question",
+          "text": "As-tu déjà fait semblant d'aimer un hobby pour quelqu'un ?",
           "points": null,
-          "timer": 30
+          "timer": null
         }
       ]
     },
     {
       "id": "theme-5",
-      "name": "Thème 5",
-      "emoji": "🧠",
-      "color": "#22d36b",
-      "description": "Description provisoire",
+      "name": "Téléphone Ouvert",
+      "emoji": "📱",
+      "color": "#19e3ff",
       "cards": [
         {
           "number": 1,
-          "type": "question",
-          "text": "[Thème 5 – Carte 1] Question provisoire",
+          "type": "action",
+          "text": "Montre la photo la plus récente de ta galerie.",
           "points": null,
           "timer": null
         },
         {
           "number": 2,
           "type": "action",
-          "text": "[Thème 5 – Carte 2] Action provisoire",
+          "text": "Lis à voix haute le dernier message que tu as envoyé.",
           "points": null,
           "timer": null
         },
         {
           "number": 3,
-          "type": "question",
-          "text": "[Thème 5 – Carte 3] Question provisoire",
+          "type": "action",
+          "text": "Montre tes 3 contacts les plus appelés.",
           "points": null,
           "timer": null
         },
         {
           "number": 4,
           "type": "action",
-          "text": "[Thème 5 – Carte 4] Action provisoire",
+          "text": "Donne ton téléphone à ton voisin : il poste une story de son choix. Rien de méchant.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 5,
-          "type": "question",
-          "text": "[Thème 5 – Carte 5] Question provisoire",
+          "type": "action",
+          "text": "Lis ton historique de recherche des 24 dernières heures.",
           "points": null,
           "timer": null
         },
         {
           "number": 6,
           "type": "action",
-          "text": "[Thème 5 – Carte 6] Action provisoire",
+          "text": "Montre tes 5 derniers morceaux écoutés, sans aucune explication.",
           "points": null,
           "timer": null
         },
         {
           "number": 7,
-          "type": "question",
-          "text": "[Thème 5 – Carte 7] Question provisoire",
+          "type": "action",
+          "text": "Montre la 4e photo de ta galerie.",
           "points": null,
           "timer": null
         },
         {
           "number": 8,
           "type": "action",
-          "text": "[Thème 5 – Carte 8] Action provisoire",
+          "text": "Le groupe choisit un emoji : il devient ta seule réponse possible pendant 10 minutes.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 9,
-          "type": "question",
-          "text": "[Thème 5 – Carte 9] Question provisoire",
+          "type": "action",
+          "text": "Lis à voix haute le dernier message de ta mère ou de ton père.",
           "points": null,
           "timer": null
         },
         {
           "number": 10,
           "type": "action",
-          "text": "[Thème 5 – Carte 10] Action provisoire",
+          "text": "Montre ton temps d'écran de la semaine.",
           "points": null,
           "timer": null
         },
         {
           "number": 11,
-          "type": "question",
-          "text": "[Thème 5 – Carte 11] Question provisoire",
+          "type": "action",
+          "text": "Envoie « il faut qu'on parle » à la 7e personne de tes contacts — puis explique la blague 2 minutes après.",
           "points": null,
           "timer": null
         },
         {
           "number": 12,
           "type": "action",
-          "text": "[Thème 5 – Carte 12] Action provisoire",
+          "text": "Montre le dernier profil que tu as consulté.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 13,
-          "type": "question",
-          "text": "[Thème 5 – Carte 13] Question provisoire",
+          "type": "action",
+          "text": "Lis tes 3 dernières notifications.",
           "points": null,
           "timer": null
         },
         {
           "number": 14,
           "type": "action",
-          "text": "[Thème 5 – Carte 14] Action provisoire",
+          "text": "Retrouve et montre ta plus vieille photo de profil.",
           "points": null,
           "timer": null
         },
         {
           "number": 15,
-          "type": "question",
-          "text": "[Thème 5 – Carte 15] Question provisoire",
+          "type": "action",
+          "text": "Donne le nom du dernier contact ajouté et explique qui c'est.",
           "points": null,
           "timer": null
         },
         {
           "number": 16,
           "type": "action",
-          "text": "[Thème 5 – Carte 16] Action provisoire",
+          "text": "Montre ton fond d'écran et explique ce choix.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 17,
-          "type": "question",
-          "text": "[Thème 5 – Carte 17] Question provisoire",
+          "type": "action",
+          "text": "Ton voisin écrit un post sur ton compte. Tu peux le supprimer dans 10 minutes.",
           "points": null,
           "timer": null
         },
         {
           "number": 18,
           "type": "action",
-          "text": "[Thème 5 – Carte 18] Action provisoire",
+          "text": "Le groupe choisit un titre dans ton appli Notes, tu lis la note à voix haute.",
           "points": null,
           "timer": null
         },
         {
           "number": 19,
-          "type": "question",
-          "text": "[Thème 5 – Carte 19] Question provisoire",
+          "type": "action",
+          "text": "Fais écouter le dernier vocal que tu as envoyé.",
           "points": null,
           "timer": null
         },
         {
           "number": 20,
           "type": "action",
-          "text": "[Thème 5 – Carte 20] Action provisoire",
+          "text": "Appelle le 3e contact de tes favoris et dis-lui une phrase dictée par le groupe.",
           "points": null,
-          "timer": 30
+          "timer": null
         }
       ]
     },
     {
       "id": "theme-6",
-      "name": "Thème 6",
+      "name": "Scène & Imitation",
       "emoji": "🎭",
-      "color": "#ff5c5c",
-      "description": "Description provisoire",
+      "color": "#fbbf24",
       "cards": [
         {
           "number": 1,
-          "type": "question",
-          "text": "[Thème 6 – Carte 1] Question provisoire",
+          "type": "action",
+          "text": "Chante ta chanson préférée en remplaçant tous les mots par « la ».",
           "points": null,
           "timer": null
         },
         {
           "number": 2,
           "type": "action",
-          "text": "[Thème 6 – Carte 2] Action provisoire",
+          "text": "Imite un prof ou un patron que tout le monde connaît.",
           "points": null,
           "timer": null
         },
         {
           "number": 3,
-          "type": "question",
-          "text": "[Thème 6 – Carte 3] Question provisoire",
+          "type": "action",
+          "text": "Improvise un poème de 4 vers sur la dernière personne qui a parlé.",
           "points": null,
           "timer": null
         },
         {
           "number": 4,
           "type": "action",
-          "text": "[Thème 6 – Carte 4] Action provisoire",
+          "text": "20 secondes de beatbox. Aucune pitié.",
           "points": null,
-          "timer": 30
+          "timer": 20
         },
         {
           "number": 5,
-          "type": "question",
-          "text": "[Thème 6 – Carte 5] Question provisoire",
+          "type": "action",
+          "text": "Rejoue une scène de film, seul(e), en jouant tous les rôles.",
           "points": null,
           "timer": null
         },
         {
           "number": 6,
           "type": "action",
-          "text": "[Thème 6 – Carte 6] Action provisoire",
+          "text": "Imite le rire de la personne à ta droite.",
           "points": null,
           "timer": null
         },
         {
           "number": 7,
-          "type": "question",
-          "text": "[Thème 6 – Carte 7] Question provisoire",
+          "type": "action",
+          "text": "Chante en duo avec quelqu'un, mais chacun dans une langue différente.",
           "points": null,
           "timer": null
         },
         {
           "number": 8,
           "type": "action",
-          "text": "[Thème 6 – Carte 8] Action provisoire",
-          "points": null,
-          "timer": 30
-        },
-        {
-          "number": 9,
-          "type": "question",
-          "text": "[Thème 6 – Carte 9] Question provisoire",
+          "text": "Présente la météo de demain comme un présentateur paniqué.",
           "points": null,
           "timer": null
         },
         {
+          "number": 9,
+          "type": "action",
+          "text": "Stand-up de 45 secondes sur ta semaine.",
+          "points": null,
+          "timer": 45
+        },
+        {
           "number": 10,
           "type": "action",
-          "text": "[Thème 6 – Carte 10] Action provisoire",
+          "text": "Vends un objet de la pièce comme un animateur de télé-achat.",
           "points": null,
           "timer": null
         },
         {
           "number": 11,
-          "type": "question",
-          "text": "[Thème 6 – Carte 11] Question provisoire",
+          "type": "action",
+          "text": "Mime une scène et fais-la deviner en moins de 60 secondes.",
           "points": null,
-          "timer": null
+          "timer": 60
         },
         {
           "number": 12,
           "type": "action",
-          "text": "[Thème 6 – Carte 12] Action provisoire",
+          "text": "Chante une chanson d'amour en regardant ton voisin dans les yeux, sans rire.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 13,
-          "type": "question",
-          "text": "[Thème 6 – Carte 13] Question provisoire",
+          "type": "action",
+          "text": "Doublage improvisé d'une vidéo muette choisie par le groupe.",
           "points": null,
           "timer": null
         },
         {
           "number": 14,
           "type": "action",
-          "text": "[Thème 6 – Carte 14] Action provisoire",
+          "text": "Imite la personne la plus âgée de la soirée.",
           "points": null,
           "timer": null
         },
         {
           "number": 15,
-          "type": "question",
-          "text": "[Thème 6 – Carte 15] Question provisoire",
+          "type": "action",
+          "text": "Raconte une blague. Si personne ne rit, boisson double.",
           "points": null,
           "timer": null
         },
         {
           "number": 16,
           "type": "action",
-          "text": "[Thème 6 – Carte 16] Action provisoire",
+          "text": "Fais la voix off d'un documentaire sur la personne en face de toi.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 17,
-          "type": "question",
-          "text": "[Thème 6 – Carte 17] Question provisoire",
+          "type": "action",
+          "text": "Danse comme ton père ou ta mère en soirée de famille.",
           "points": null,
           "timer": null
         },
         {
           "number": 18,
           "type": "action",
-          "text": "[Thème 6 – Carte 18] Action provisoire",
+          "text": "Chante un hymne national debout, main sur le cœur.",
           "points": null,
           "timer": null
         },
         {
           "number": 19,
-          "type": "question",
-          "text": "[Thème 6 – Carte 19] Question provisoire",
+          "type": "action",
+          "text": "Invente une langue et parle-la 30 secondes de façon convaincante.",
           "points": null,
-          "timer": null
+          "timer": 30
         },
         {
           "number": 20,
           "type": "action",
-          "text": "[Thème 6 – Carte 20] Action provisoire",
+          "text": "Rejoue ta pire dispute en jouant les deux rôles.",
           "points": null,
-          "timer": 30
+          "timer": null
         }
       ]
     },
     {
       "id": "theme-7",
-      "name": "Thème 7",
-      "emoji": "🤫",
-      "color": "#4f8cff",
-      "description": "Description provisoire",
+      "name": "Entre Nous",
+      "emoji": "🤝",
+      "color": "#34d399",
       "cards": [
         {
           "number": 1,
           "type": "question",
-          "text": "[Thème 7 – Carte 1] Question provisoire",
+          "text": "Qui dans cette pièce serait le pire colocataire, et pourquoi ?",
           "points": null,
           "timer": null
         },
         {
           "number": 2,
-          "type": "action",
-          "text": "[Thème 7 – Carte 2] Action provisoire",
+          "type": "question",
+          "text": "Qui ferait le meilleur président de ce groupe ?",
           "points": null,
           "timer": null
         },
         {
           "number": 3,
           "type": "question",
-          "text": "[Thème 7 – Carte 3] Question provisoire",
+          "text": "Qui a le plus changé depuis que tu le/la connais ?",
           "points": null,
           "timer": null
         },
         {
           "number": 4,
-          "type": "action",
-          "text": "[Thème 7 – Carte 4] Action provisoire",
+          "type": "question",
+          "text": "Qui finira riche ? Et qui finira ruiné ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 5,
           "type": "question",
-          "text": "[Thème 7 – Carte 5] Question provisoire",
+          "text": "À qui demanderais-tu de l'aide à 3h du matin ?",
           "points": null,
           "timer": null
         },
         {
           "number": 6,
-          "type": "action",
-          "text": "[Thème 7 – Carte 6] Action provisoire",
+          "type": "question",
+          "text": "Qui raconte les meilleures histoires, et qui les invente ?",
           "points": null,
           "timer": null
         },
         {
           "number": 7,
           "type": "question",
-          "text": "[Thème 7 – Carte 7] Question provisoire",
+          "text": "Classe tout le monde du plus organisé au plus bordélique.",
           "points": null,
           "timer": null
         },
         {
           "number": 8,
-          "type": "action",
-          "text": "[Thème 7 – Carte 8] Action provisoire",
+          "type": "question",
+          "text": "Qui mérite un vrai compliment ce soir ? Fais-le maintenant.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 9,
           "type": "question",
-          "text": "[Thème 7 – Carte 9] Question provisoire",
+          "text": "Avec qui échangerais-tu ta vie pendant une semaine ?",
           "points": null,
           "timer": null
         },
         {
           "number": 10,
-          "type": "action",
-          "text": "[Thème 7 – Carte 10] Action provisoire",
+          "type": "question",
+          "text": "Qui est le plus susceptible de se faire arrêter pour une bêtise ?",
           "points": null,
           "timer": null
         },
         {
           "number": 11,
           "type": "question",
-          "text": "[Thème 7 – Carte 11] Question provisoire",
+          "text": "À qui confierais-tu ton téléphone déverrouillé ? « Personne » est une réponse valable.",
           "points": null,
           "timer": null
         },
         {
           "number": 12,
-          "type": "action",
-          "text": "[Thème 7 – Carte 12] Action provisoire",
+          "type": "question",
+          "text": "Qui est le plus drôle sans le faire exprès ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 13,
           "type": "question",
-          "text": "[Thème 7 – Carte 13] Question provisoire",
+          "text": "Quelle personne ici connais-tu le moins ? Pose-lui une question tout de suite.",
           "points": null,
           "timer": null
         },
         {
           "number": 14,
-          "type": "action",
-          "text": "[Thème 7 – Carte 14] Action provisoire",
+          "type": "question",
+          "text": "Qui te manquerait le plus si tu partais un an à l'étranger ?",
           "points": null,
           "timer": null
         },
         {
           "number": 15,
           "type": "question",
-          "text": "[Thème 7 – Carte 15] Question provisoire",
+          "text": "Qui a le pire goût musical ? Défends ton choix.",
           "points": null,
           "timer": null
         },
         {
           "number": 16,
-          "type": "action",
-          "text": "[Thème 7 – Carte 16] Action provisoire",
+          "type": "question",
+          "text": "Si ce groupe était un film, qui joue quel rôle ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 17,
           "type": "question",
-          "text": "[Thème 7 – Carte 17] Question provisoire",
+          "text": "Qui dit oui à n'importe quel défi ?",
           "points": null,
           "timer": null
         },
         {
           "number": 18,
-          "type": "action",
-          "text": "[Thème 7 – Carte 18] Action provisoire",
+          "type": "question",
+          "text": "Dis une chose que tu admires sincèrement chez la personne à ta gauche.",
           "points": null,
           "timer": null
         },
         {
           "number": 19,
           "type": "question",
-          "text": "[Thème 7 – Carte 19] Question provisoire",
+          "text": "Qui arrive toujours en retard ? Preuves à l'appui.",
           "points": null,
           "timer": null
         },
         {
           "number": 20,
-          "type": "action",
-          "text": "[Thème 7 – Carte 20] Action provisoire",
+          "type": "question",
+          "text": "Qui serait ton binôme pour un braquage, et qui te ferait griller ?",
           "points": null,
-          "timer": 30
+          "timer": null
         }
       ]
     },
     {
       "id": "theme-8",
-      "name": "Thème 8",
-      "emoji": "⚔️",
-      "color": "#f472b6",
-      "description": "Description provisoire",
+      "name": "Pire Scénario",
+      "emoji": "🧠",
+      "color": "#60a5fa",
       "cards": [
         {
           "number": 1,
           "type": "question",
-          "text": "[Thème 8 – Carte 1] Question provisoire",
+          "text": "Perdre tous tes souvenirs, ou ne plus pouvoir en créer de nouveaux ?",
           "points": null,
           "timer": null
         },
         {
           "number": 2,
-          "type": "action",
-          "text": "[Thème 8 – Carte 2] Action provisoire",
+          "type": "question",
+          "text": "Lire les pensées des autres, ou qu'ils lisent les tiennes ?",
           "points": null,
           "timer": null
         },
         {
           "number": 3,
           "type": "question",
-          "text": "[Thème 8 – Carte 3] Question provisoire",
+          "text": "Plus jamais internet, ou plus jamais de vacances ?",
           "points": null,
           "timer": null
         },
         {
           "number": 4,
-          "type": "action",
-          "text": "[Thème 8 – Carte 4] Action provisoire",
+          "type": "question",
+          "text": "Dire toute la vérité pendant un an, ou mentir obligatoirement pendant un mois ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 5,
           "type": "question",
-          "text": "[Thème 8 – Carte 5] Question provisoire",
+          "text": "Connaître la date de ta mort, ou sa cause ?",
           "points": null,
           "timer": null
         },
         {
           "number": 6,
-          "type": "action",
-          "text": "[Thème 8 – Carte 6] Action provisoire",
+          "type": "question",
+          "text": "Célèbre et détesté, ou inconnu et respecté ?",
           "points": null,
           "timer": null
         },
         {
           "number": 7,
           "type": "question",
-          "text": "[Thème 8 – Carte 7] Question provisoire",
+          "text": "Perdre ton téléphone avec tout dessus, ou toutes tes photos des 5 dernières années ?",
           "points": null,
           "timer": null
         },
         {
           "number": 8,
-          "type": "action",
-          "text": "[Thème 8 – Carte 8] Action provisoire",
+          "type": "question",
+          "text": "1 million d'un coup, ou 5000 € par mois à vie ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 9,
           "type": "question",
-          "text": "[Thème 8 – Carte 9] Question provisoire",
+          "text": "Revivre la même journée 10 fois, ou sauter 10 ans dans le futur ?",
           "points": null,
           "timer": null
         },
         {
           "number": 10,
-          "type": "action",
-          "text": "[Thème 8 – Carte 10] Action provisoire",
+          "type": "question",
+          "text": "Plus jamais de musique, ou plus jamais de films ?",
           "points": null,
           "timer": null
         },
         {
           "number": 11,
           "type": "question",
-          "text": "[Thème 8 – Carte 11] Question provisoire",
+          "text": "Que tout le monde voie ton historique de recherche, ou tes pensées d'une journée ?",
           "points": null,
           "timer": null
         },
         {
           "number": 12,
-          "type": "action",
-          "text": "[Thème 8 – Carte 12] Action provisoire",
+          "type": "question",
+          "text": "Un métier que tu adores très mal payé, ou un métier détesté très bien payé ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 13,
           "type": "question",
-          "text": "[Thème 8 – Carte 13] Question provisoire",
+          "text": "Toujours 20 minutes en retard, ou toujours 2 heures en avance ?",
           "points": null,
           "timer": null
         },
         {
           "number": 14,
-          "type": "action",
-          "text": "[Thème 8 – Carte 14] Action provisoire",
+          "type": "question",
+          "text": "Ne plus jamais mentir, ou ne plus jamais avoir de vie privée ?",
           "points": null,
           "timer": null
         },
         {
           "number": 15,
           "type": "question",
-          "text": "[Thème 8 – Carte 15] Question provisoire",
+          "text": "Vivre sans sucre ou sans sel pour le reste de ta vie ?",
           "points": null,
           "timer": null
         },
         {
           "number": 16,
-          "type": "action",
-          "text": "[Thème 8 – Carte 16] Action provisoire",
+          "type": "question",
+          "text": "Une seconde chance sur un choix du passé, ou connaître l'issue d'un choix futur ?",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 17,
           "type": "question",
-          "text": "[Thème 8 – Carte 17] Question provisoire",
+          "text": "Le plus bête d'un groupe de génies, ou le plus intelligent d'un groupe de nuls ?",
           "points": null,
           "timer": null
         },
         {
           "number": 18,
-          "type": "action",
-          "text": "[Thème 8 – Carte 18] Action provisoire",
+          "type": "question",
+          "text": "Chanter au lieu de parler, ou danser au lieu de marcher ?",
           "points": null,
           "timer": null
         },
         {
           "number": 19,
           "type": "question",
-          "text": "[Thème 8 – Carte 19] Question provisoire",
+          "text": "Ne plus jamais revoir tes amis actuels, ou ne plus jamais rencontrer personne de nouveau ?",
           "points": null,
           "timer": null
         },
         {
           "number": 20,
-          "type": "action",
-          "text": "[Thème 8 – Carte 20] Action provisoire",
+          "type": "question",
+          "text": "Que ta famille lise tes messages, ou que tes amis lisent tes notes ?",
           "points": null,
-          "timer": 30
+          "timer": null
         }
       ]
     },
     {
       "id": "theme-9",
-      "name": "Thème 9",
-      "emoji": "🍀",
-      "color": "#c6f432",
-      "description": "Description provisoire",
+      "name": "Scène de Danse",
+      "emoji": "🕺",
+      "color": "#a78bfa",
       "cards": [
         {
           "number": 1,
-          "type": "question",
-          "text": "[Thème 9 – Carte 1] Question provisoire",
+          "type": "action",
+          "text": "Apprends une choré de 10 secondes au groupe et fais-la exécuter.",
           "points": null,
-          "timer": null
+          "timer": 10
         },
         {
           "number": 2,
           "type": "action",
-          "text": "[Thème 9 – Carte 2] Action provisoire",
+          "text": "Slow avec la personne à ta droite, sur une chanson choisie par le groupe.",
           "points": null,
           "timer": null
         },
         {
           "number": 3,
-          "type": "question",
-          "text": "[Thème 9 – Carte 3] Question provisoire",
-          "points": null,
-          "timer": null
-        },
-        {
-          "number": 4,
           "type": "action",
-          "text": "[Thème 9 – Carte 4] Action provisoire",
+          "text": "Battle de danse de 30 secondes contre le joueur de ton choix. Le groupe vote.",
           "points": null,
           "timer": 30
         },
         {
-          "number": 5,
-          "type": "question",
-          "text": "[Thème 9 – Carte 5] Question provisoire",
+          "number": 4,
+          "type": "action",
+          "text": "Danse uniquement avec le haut du corps pendant un morceau entier.",
           "points": null,
           "timer": null
+        },
+        {
+          "number": 5,
+          "type": "action",
+          "text": "10 secondes de twerk parfaitement assumé.",
+          "points": null,
+          "timer": 10
         },
         {
           "number": 6,
           "type": "action",
-          "text": "[Thème 9 – Carte 6] Action provisoire",
+          "text": "Danse 20 secondes comme si le sol était brûlant.",
           "points": null,
-          "timer": null
+          "timer": 20
         },
         {
           "number": 7,
-          "type": "question",
-          "text": "[Thème 9 – Carte 7] Question provisoire",
+          "type": "action",
+          "text": "Moonwalk sur 3 mètres.",
           "points": null,
           "timer": null
         },
         {
           "number": 8,
           "type": "action",
-          "text": "[Thème 9 – Carte 8] Action provisoire",
+          "text": "Danse les yeux fermés jusqu'à ce que le groupe dise stop.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 9,
-          "type": "question",
-          "text": "[Thème 9 – Carte 9] Question provisoire",
+          "type": "action",
+          "text": "Invente une danse pour cette soirée et donne-lui un nom.",
           "points": null,
           "timer": null
         },
         {
           "number": 10,
           "type": "action",
-          "text": "[Thème 9 – Carte 10] Action provisoire",
+          "text": "Choré en miroir avec ton voisin, parfaitement synchronisée, 20 secondes.",
           "points": null,
-          "timer": null
+          "timer": 20
         },
         {
           "number": 11,
-          "type": "question",
-          "text": "[Thème 9 – Carte 11] Question provisoire",
-          "points": null,
-          "timer": null
-        },
-        {
-          "number": 12,
           "type": "action",
-          "text": "[Thème 9 – Carte 12] Action provisoire",
+          "text": "Danse au ralenti extrême pendant 30 secondes.",
           "points": null,
           "timer": 30
         },
         {
-          "number": 13,
-          "type": "question",
-          "text": "[Thème 9 – Carte 13] Question provisoire",
+          "number": 12,
+          "type": "action",
+          "text": "Refais la danse la plus gênante de ton adolescence.",
           "points": null,
           "timer": null
+        },
+        {
+          "number": 13,
+          "type": "action",
+          "text": "Danse 20 secondes avec un objet de la pièce comme partenaire.",
+          "points": null,
+          "timer": 20
         },
         {
           "number": 14,
           "type": "action",
-          "text": "[Thème 9 – Carte 14] Action provisoire",
+          "text": "Prends une pose de breakdance et tiens-la 10 secondes.",
           "points": null,
-          "timer": null
+          "timer": 10
         },
         {
           "number": 15,
-          "type": "question",
-          "text": "[Thème 9 – Carte 15] Question provisoire",
+          "type": "action",
+          "text": "Danse sur le rythme que le groupe tape avec les mains.",
           "points": null,
           "timer": null
         },
         {
           "number": 16,
           "type": "action",
-          "text": "[Thème 9 – Carte 16] Action provisoire",
+          "text": "Défilé dansé jusqu'à la porte et retour, avec un objet en équilibre sur la tête.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 17,
-          "type": "question",
-          "text": "[Thème 9 – Carte 17] Question provisoire",
+          "type": "action",
+          "text": "Imite la danse d'un clip connu, le groupe doit deviner lequel.",
           "points": null,
           "timer": null
         },
         {
           "number": 18,
           "type": "action",
-          "text": "[Thème 9 – Carte 18] Action provisoire",
+          "text": "Danse en chantant en même temps, sans perdre le rythme, 20 secondes.",
           "points": null,
-          "timer": null
+          "timer": 20
         },
         {
           "number": 19,
-          "type": "question",
-          "text": "[Thème 9 – Carte 19] Question provisoire",
+          "type": "action",
+          "text": "Danse de victoire comme si tu venais de gagner une finale.",
           "points": null,
           "timer": null
         },
         {
           "number": 20,
           "type": "action",
-          "text": "[Thème 9 – Carte 20] Action provisoire",
+          "text": "Danse avec la personne qui a le plus bu ce soir. Vous êtes liés 30 secondes.",
           "points": null,
           "timer": 30
         }
@@ -1344,150 +1335,149 @@
     },
     {
       "id": "theme-10",
-      "name": "Thème 10",
-      "emoji": "🌀",
-      "color": "#ff7a1a",
-      "description": "Description provisoire",
+      "name": "Carte Blanche",
+      "emoji": "🎲",
+      "color": "#f5c84c",
       "cards": [
         {
           "number": 1,
-          "type": "question",
-          "text": "[Thème 10 – Carte 1] Question provisoire",
+          "type": "action",
+          "text": "Le groupe vote : vérité ou action, et choisit la question. Refus impossible.",
           "points": null,
           "timer": null
         },
         {
           "number": 2,
           "type": "action",
-          "text": "[Thème 10 – Carte 2] Action provisoire",
+          "text": "La personne à ta gauche te donne un défi. Elle doit pouvoir le faire aussi.",
           "points": null,
           "timer": null
         },
         {
           "number": 3,
-          "type": "question",
-          "text": "[Thème 10 – Carte 3] Question provisoire",
+          "type": "action",
+          "text": "Choisis un joueur : vous échangez vos places et vos rôles pour 3 tours.",
           "points": null,
           "timer": null
         },
         {
           "number": 4,
           "type": "action",
-          "text": "[Thème 10 – Carte 4] Action provisoire",
+          "text": "Le groupe te donne une règle à respecter jusqu'à la fin de la soirée.",
           "points": null,
-          "timer": 30
+          "timer": null
         },
         {
           "number": 5,
-          "type": "question",
-          "text": "[Thème 10 – Carte 5] Question provisoire",
+          "type": "action",
+          "text": "Désigne quelqu'un pour faire le défi à ta place, mais tu bois avec lui.",
           "points": null,
           "timer": null
         },
         {
           "number": 6,
           "type": "action",
-          "text": "[Thème 10 – Carte 6] Action provisoire",
+          "text": "Pose la question la plus indiscrète que tu veux à la personne de ton choix. Elle doit répondre.",
           "points": null,
           "timer": null
         },
         {
           "number": 7,
-          "type": "question",
-          "text": "[Thème 10 – Carte 7] Question provisoire",
+          "type": "action",
+          "text": "Le groupe choisit un mot interdit pour toi. Chaque fois que tu le dis, tu bois.",
           "points": null,
           "timer": null
         },
         {
           "number": 8,
           "type": "action",
-          "text": "[Thème 10 – Carte 8] Action provisoire",
+          "text": "Choisis : 30 secondes de défi physique maintenant, ou deux boissons.",
           "points": null,
           "timer": 30
         },
         {
           "number": 9,
-          "type": "question",
-          "text": "[Thème 10 – Carte 9] Question provisoire",
+          "type": "action",
+          "text": "Tu deviens maître du jeu pour un tour : tu choisis le thème du joueur suivant.",
           "points": null,
           "timer": null
         },
         {
           "number": 10,
           "type": "action",
-          "text": "[Thème 10 – Carte 10] Action provisoire",
+          "text": "Tout le groupe fait ton défi en même temps. Et c'est toi qui le choisis.",
           "points": null,
           "timer": null
         },
         {
           "number": 11,
-          "type": "question",
-          "text": "[Thème 10 – Carte 11] Question provisoire",
+          "type": "action",
+          "text": "Échange un vêtement avec la personne en face pour la prochaine manche.",
           "points": null,
           "timer": null
         },
         {
           "number": 12,
           "type": "action",
-          "text": "[Thème 10 – Carte 12] Action provisoire",
+          "text": "20 secondes pour convaincre le groupe de t'épargner. Vote à la majorité.",
           "points": null,
-          "timer": 30
+          "timer": 20
         },
         {
           "number": 13,
-          "type": "question",
-          "text": "[Thème 10 – Carte 13] Question provisoire",
+          "type": "action",
+          "text": "Le groupe te pose 3 questions en rafale. Moins de 3 secondes par réponse.",
           "points": null,
           "timer": null
         },
         {
           "number": 14,
           "type": "action",
-          "text": "[Thème 10 – Carte 14] Action provisoire",
+          "text": "Invente une règle pour le jeu. Elle s'applique immédiatement à tous.",
           "points": null,
           "timer": null
         },
         {
           "number": 15,
-          "type": "question",
-          "text": "[Thème 10 – Carte 15] Question provisoire",
-          "points": null,
-          "timer": null
-        },
-        {
-          "number": 16,
           "type": "action",
-          "text": "[Thème 10 – Carte 16] Action provisoire",
+          "text": "Fais rire au moins trois personnes en 30 secondes, par tous les moyens.",
           "points": null,
           "timer": 30
         },
         {
+          "number": 16,
+          "type": "action",
+          "text": "Choisis un joueur : c'est lui qui décide ton numéro de boisson, sans tirage.",
+          "points": null,
+          "timer": null
+        },
+        {
           "number": 17,
-          "type": "question",
-          "text": "[Thème 10 – Carte 17] Question provisoire",
+          "type": "action",
+          "text": "Tu passes ce tour — mais le prochain compte double.",
           "points": null,
           "timer": null
         },
         {
           "number": 18,
           "type": "action",
-          "text": "[Thème 10 – Carte 18] Action provisoire",
+          "text": "Le groupe décide d'un surnom pour toi, valable toute la soirée.",
           "points": null,
           "timer": null
         },
         {
           "number": 19,
-          "type": "question",
-          "text": "[Thème 10 – Carte 19] Question provisoire",
+          "type": "action",
+          "text": "Fais alliance avec un joueur : jusqu'à la fin de la manche, tous les défis se font à deux.",
           "points": null,
           "timer": null
         },
         {
           "number": 20,
           "type": "action",
-          "text": "[Thème 10 – Carte 20] Action provisoire",
+          "text": "Soit tu racontes un secret, soit tu fais le défi choisi par la dernière personne qui a parlé.",
           "points": null,
-          "timer": 30
+          "timer": null
         }
       ]
     }

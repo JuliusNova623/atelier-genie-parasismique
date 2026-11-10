@@ -16,6 +16,7 @@ import {
 } from '../engine/types';
 import { useGameStore } from '../store/game';
 import { useSettings } from '../store/settings';
+import { QUESTION, TIMED_ACTION } from '../test/cards';
 import { Play } from './Play';
 
 const mk = (id: string, name: string, noAlcohol = false): Player => ({
@@ -38,8 +39,8 @@ function base(rules: Rules = DEFAULT_RULES, players = [mk('a', 'Alice'), mk('b',
 
 const card = (over: Partial<PendingTurn> = {}): PendingTurn => ({
   stage: 'card',
-  themeId: 'theme-3',
-  cardNumber: 7, // impair : question
+  themeId: QUESTION.themeId,
+  cardNumber: QUESTION.number, // une question du contenu
   revealed: true,
   ...over,
 });
@@ -79,7 +80,7 @@ describe('page de carte', () => {
   it('« Je réponds » (question) donne les points et passe au joueur suivant', async () => {
     const user = userEvent.setup();
     await show({ ...base(), pending: card() });
-    expect(screen.getByRole('heading', { name: 'Carte n°7' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: `Carte n°${QUESTION.number}` })).toBeInTheDocument();
     expect(screen.getByText('Question')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Je réponds \(\+3\)/ }));
     expect(playerScores(g())).toEqual({ a: 3, b: 0 });
@@ -88,10 +89,13 @@ describe('page de carte', () => {
   });
 
   it('affiche « Je le fais » pour une action, avec son chronomètre', async () => {
-    await show({ ...base(), pending: card({ cardNumber: 8 }) });
+    await show({
+      ...base(),
+      pending: card({ themeId: TIMED_ACTION.themeId, cardNumber: TIMED_ACTION.number }),
+    });
     expect(screen.getByText('Action')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Je le fais/ })).toBeInTheDocument();
-    // La carte 8 est une action avec chronomètre (n multiple de 4) : il est proposé.
+    // Une action avec chronomètre : il est proposé.
     expect(screen.getByRole('group', { name: 'Chronomètre' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Démarrer le chronomètre' })).toBeInTheDocument();
   });
@@ -103,7 +107,7 @@ describe('page de carte', () => {
     expect(g().pending).toMatchObject({ stage: 'drink' });
     expect(g().pending?.drinkNumber).toBeUndefined();
     expect(await screen.findByRole('heading', { name: 'Étape boisson' })).toBeInTheDocument();
-    expect(screen.getByText('Carte n°7 refusée')).toBeInTheDocument();
+    expect(screen.getByText(`Carte n°${QUESTION.number} refusée`)).toBeInTheDocument();
   });
 
   it('Double : s’active, double les points affichés et enregistrés', async () => {

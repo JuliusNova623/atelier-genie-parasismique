@@ -7,6 +7,7 @@ import { createDeck } from '../engine/deck';
 import { createGame, recordTurn } from '../engine/game';
 import { DEFAULT_RULES, type Game, type PendingTurn, type Player } from '../engine/types';
 import { useGameStore } from '../store/game';
+import { escapeRe, themeName } from '../test/cards';
 import { Play } from './Play';
 
 const mk = (id: string): Player => ({
@@ -69,7 +70,9 @@ describe('Play : écran dérivé de l’état de la partie', () => {
   it('affiche la page du thème : nom, cartes restantes, 4 modes', async () => {
     const g = withPending(base(), { stage: 'theme', themeId: 'theme-2', revealed: true });
     await show(g);
-    expect(screen.getByRole('heading', { name: /Thème 2/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: new RegExp(escapeRe(themeName('theme-2'))) }),
+    ).toBeInTheDocument();
     expect(screen.getByText(/20 cartes restantes/)).toBeInTheDocument();
     for (const label of ['Dé', 'Secouer', 'Cartes', 'Machine']) {
       expect(screen.getByRole('button', { name: new RegExp(label) })).toBeInTheDocument();
