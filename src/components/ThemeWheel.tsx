@@ -14,9 +14,9 @@ interface Props {
   reduced: boolean;
 }
 
-const SIZE = 300;
+const SIZE = 400;
 const C = SIZE / 2;
-const R = 142;
+const R = 195;
 
 const point = (angleDeg: number, r: number): [number, number] => {
   const a = (angleDeg * Math.PI) / 180;
@@ -29,6 +29,9 @@ function sectorPath(i: number, n: number): string {
   const [x1, y1] = point((i + 1) * step, R);
   return `M${C} ${C} L${x0} ${y0} A${R} ${R} 0 0 1 ${x1} ${y1} Z`;
 }
+
+/** Libellé court d'un thème sur la roue (champ `short`, sinon le nom en capitales). */
+export const wheelLabel = (t: Theme): string => (t.short ?? t.name).toUpperCase();
 
 /** Rotation finale : le secteur `index` (plus un léger décalage visuel dans le secteur) sous le pointeur. */
 export function finalRotation(
@@ -56,12 +59,12 @@ export function ThemeWheel({ themes, exhausted, targetId, onTrigger, onDone, red
     let cancelled = false;
     const half = 360 / n / 2;
     const jitter = randomInt(Math.floor(half * 1.4)) - Math.floor(half * 0.7);
-    const to = finalRotation(rotation.current, index, n, reduced ? 0 : 5, jitter);
+    const to = finalRotation(rotation.current, index, n, reduced ? 0 : 6, jitter);
     rotation.current = to;
     const controls = animate(
       scope.current,
       { rotate: to },
-      { duration: reduced ? 0.3 : 4.5, ease: [0.12, 0.8, 0.2, 1] },
+      { duration: reduced ? 0.3 : 5.4, ease: [0.1, 0.82, 0.06, 1] },
     );
     controls.then(() => {
       if (!cancelled) setTimeout(() => !cancelled && onDone(), reduced ? 100 : 600);
@@ -80,7 +83,7 @@ export function ThemeWheel({ themes, exhausted, targetId, onTrigger, onDone, red
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.pointer} aria-hidden="true" />
+      <div className={styles.needle} aria-hidden="true" />
       <div
         className={styles.rotor}
         ref={scope}
@@ -115,30 +118,50 @@ export function ThemeWheel({ themes, exhausted, targetId, onTrigger, onDone, red
         <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className={styles.svg} aria-hidden="true">
           {themes.map((t, i) => {
             const off = exhausted.includes(t.id);
-            const [tx, ty] = point(i * (360 / n) + 360 / n / 2, 100);
+            const center = i * (360 / n) + 360 / n / 2;
+            const label = wheelLabel(t);
             return (
               <g key={t.id} opacity={off ? 0.35 : 1}>
                 <path
                   d={sectorPath(i, n)}
                   fill={off ? '#555' : t.color}
-                  stroke="rgba(0,0,0,0.55)"
+                  stroke="rgba(10,6,19,0.75)"
                   strokeWidth="2"
                 />
-                <text
-                  x={tx}
-                  y={ty}
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fontSize="26"
-                  transform={`rotate(${i * (360 / n) + 360 / n / 2} ${tx} ${ty})`}
-                >
-                  {t.emoji}
-                </text>
+                <g transform={`rotate(${center} ${C} ${C})`}>
+                  <text x={C} y={62} textAnchor="middle" fontSize="22">
+                    {t.emoji}
+                  </text>
+                  <text
+                    x={C}
+                    y={92}
+                    textAnchor="middle"
+                    fontSize={label.length > 10 ? 9.5 : 11.5}
+                    fontWeight="900"
+                    letterSpacing=".5"
+                    fill="#140a18"
+                    style={{ fontFamily: 'var(--font)' }}
+                  >
+                    {label}
+                  </text>
+                </g>
               </g>
             );
           })}
-          <circle cx={C} cy={C} r="22" fill="#12001f" stroke="#fff" strokeWidth="3" />
+          <circle
+            cx={C}
+            cy={C}
+            r={R + 1}
+            fill="none"
+            stroke="var(--accent, #f5c84c)"
+            strokeWidth="5"
+          />
         </svg>
+      </div>
+      {/* Moyeu fixe (ne tourne pas) : le clic passe au rotor en dessous. */}
+      <div className={styles.hub} aria-hidden="true">
+        <span>SPIN</span>
+        <span>🎯</span>
       </div>
     </div>
   );

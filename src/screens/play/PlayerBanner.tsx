@@ -28,7 +28,7 @@ export function PlayerBanner({ game }: { game: Game }) {
             {fr.play.turnOf}
             {team ? ` · ${team.name}` : ''}
           </p>
-          <strong style={{ color: player.color, fontSize: '1.3rem', overflowWrap: 'anywhere' }}>
+          <strong className={styles.bannerName} style={{ color: player.color }}>
             {player.name}
           </strong>
           <p className={styles.hint}>{fr.play.score(score)}</p>

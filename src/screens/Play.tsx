@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
+import { useGameStore } from '../store/game';
 import { useSettings } from '../store/settings';
 import { setKeepAwake } from '../util/native';
-import { useGameStore } from '../store/game';
 import { CardScreen } from './play/CardScreen';
 import { DrinkScreen } from './play/DrinkScreen';
+import { PlayShell } from './play/PlayShell';
 import { ThemeScreen } from './play/ThemeScreen';
 import { WheelScreen } from './play/WheelScreen';
+import { screenOf, usePlayHotkeys } from './play/useHotkeys';
 
 /**
  * L'écran affiché est dérivé de l'état de la partie (source de vérité), pas de l'historique du
@@ -24,14 +26,26 @@ export function Play() {
     return () => void setKeepAwake(false);
   }, [keepAwake, running]);
 
+  usePlayHotkeys(game);
+
   if (!game) return <Navigate to="/" replace />;
 
-  const p = game.pending;
+  const screen = screenOf(game);
   const turn = game.log.length;
-  if (!p || (p.stage === 'theme' && !p.revealed)) {
-    return <WheelScreen key={`wheel-${turn}`} game={game} />;
-  }
-  if (p.stage === 'drink') return <DrinkScreen key={`drink-${turn}`} game={game} />;
-  if (p.stage === 'card' && p.revealed) return <CardScreen key={`card-${turn}`} game={game} />;
-  return <ThemeScreen key={`theme-${turn}`} game={game} />;
+  const view =
+    screen === 'wheel' ? (
+      <WheelScreen key={`wheel-${turn}`} game={game} />
+    ) : screen === 'drink' ? (
+      <DrinkScreen key={`drink-${turn}`} game={game} />
+    ) : screen === 'card' ? (
+      <CardScreen key={`card-${turn}`} game={game} />
+    ) : (
+      <ThemeScreen key={`theme-${turn}`} game={game} />
+    );
+
+  return (
+    <PlayShell game={game} screen={screen}>
+      {view}
+    </PlayShell>
+  );
 }

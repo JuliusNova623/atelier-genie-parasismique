@@ -4,7 +4,7 @@ import { BackupSection } from '../components/BackupSection';
 import { RulesEditor } from '../components/RulesEditor';
 import { validateRules } from '../engine/scoring';
 import { fr } from '../i18n/fr';
-import { VISUAL_THEMES, useSettings } from '../store/settings';
+import { DISPLAY_PREFS, VISUAL_THEMES, useSettings } from '../store/settings';
 
 export function Settings() {
   const navigate = useNavigate();
@@ -56,6 +56,24 @@ export function Settings() {
             {label}
           </label>
         ))}
+      </section>
+
+      <section className={styles.section} aria-label={t.display}>
+        <h2>{t.display}</h2>
+        <div className={styles.segment} role="group" aria-label={t.display}>
+          {DISPLAY_PREFS.map((d) => (
+            <button
+              key={d}
+              type="button"
+              className={styles.btn}
+              aria-pressed={s.display === d}
+              onClick={() => s.update({ display: d })}
+            >
+              {t.displays[d]}
+            </button>
+          ))}
+        </div>
+        <p className={styles.hint}>{t.displayHint}</p>
       </section>
 
       <h2 style={{ margin: 0 }}>{t.defaultRules}</h2>

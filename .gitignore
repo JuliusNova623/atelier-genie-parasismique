@@ -8,3 +8,4 @@ android/local.properties
 *.jks
 playwright-report
 test-results
+dist-web

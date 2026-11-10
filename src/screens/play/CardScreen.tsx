@@ -58,15 +58,19 @@ export function CardScreen({ game }: { game: Game }) {
   return (
     <main className={styles.screen}>
       <PlayerBanner game={game} />
-      <section className={styles.section} style={{ borderColor: theme?.color }} aria-live="polite">
-        <p className={styles.hint}>
-          {theme?.emoji} {theme?.name}
+      <div className={styles.cardStage} aria-live="polite">
+        <span className={styles.themeBadge} style={{ background: theme?.color }}>
+          <span aria-hidden="true">{theme?.emoji}</span> {theme?.name}
+        </span>
+        <p className={`${styles.typeTag} ${isAction ? styles.dare : styles.truth}`}>
+          • {isAction ? fr.play.action : fr.play.question} •
         </p>
-        <h1 style={{ margin: 0 }}>{fr.play.cardTitle(p.cardNumber ?? 0)}</h1>
-        <p className={styles.hint}>{isAction ? fr.play.action : fr.play.question}</p>
-        <p style={{ fontSize: '1.25rem', margin: 0, overflowWrap: 'anywhere' }}>{card?.text}</p>
-        {card?.timer ? <CardTimer seconds={card.timer} /> : null}
-      </section>
+        <div className={styles.qcard}>
+          <p style={{ margin: 0 }}>{card?.text}</p>
+          {card?.timer ? <CardTimer seconds={card.timer} /> : null}
+        </div>
+        <h1 className={styles.qmeta}>{fr.play.cardTitle(p.cardNumber ?? 0)}</h1>
+      </div>
 
       {p.transferTo && (
         <p className={styles.notice} role="status">

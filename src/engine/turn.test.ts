@@ -140,10 +140,10 @@ describe('persistance du tour en cours', () => {
 describe('mode de tirage mémorisé', () => {
   it('présélectionne le dernier mode du joueur actif', () => {
     let g = newGame();
-    expect(pickerModeFor(g)).toBe('dice');
+    expect(pickerModeFor(g)).toBe('auto'); // tirage direct par défaut
     g = rememberPickerMode(g, 'slot');
     expect(pickerModeFor(g)).toBe('slot');
-    expect(pickerModeFor(g, 'b')).toBe('dice');
+    expect(pickerModeFor(g, 'b')).toBe('auto');
   });
 });
 

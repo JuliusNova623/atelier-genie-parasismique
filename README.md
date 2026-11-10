@@ -1,12 +1,14 @@
 # Roulette Soirée
 
-Application Android de soirée entre amis, en français : une roulette de **10 thèmes**, **20 cartes** par thème
+Application de soirée entre amis, en français, pour **téléphone Android (APK)** et pour **grand écran dans le navigateur** (TV, projecteur) : une roulette de **10 thèmes**, **20 cartes** par thème
 (questions ou actions), un tirage du numéro ludique (dé, secousse, cartes face cachée, machine à sous),
 un barème de points, des boissons, des jokers, un mode équipes et un podium final.
 
 - **100 % hors-ligne** : aucun serveur, aucun compte, aucune requête réseau. L'APK n'a même pas la permission `INTERNET`.
 - Joueurs, parties et réglages sont stockés **sur le téléphone** (IndexedDB).
-- Application web (Vite + React + TypeScript) empaquetée en APK avec **Capacitor**.
+- Application web (Vite + React + TypeScript) empaquetée en APK avec **Capacitor**, ou en **un seul fichier HTML** pour le navigateur.
+- Design « nuit violette, or, magenta, cyan » : fond animé, verre dépoli, polices embarquées (Bungee, Outfit).
+- Les **200 cartes** (10 thèmes × 20, vérités et actions) sont intégrées.
 
 > État : toute l'application est développée et testée (tests unitaires et e2e). Les parties **natives**
 > (sons, vibrations, écran allumé, bouton retour, partage de fichier) n'ont pas pu être testées sur un
@@ -17,15 +19,16 @@ un barème de points, des boissons, des jokers, un mode équipes et un podium fi
 ## Sommaire
 
 1. [Installer l'APK sur un téléphone](#installer-lapk-sur-un-téléphone)
-2. [Obtenir l'APK (compilation dans le cloud)](#obtenir-lapk-compilation-dans-le-cloud)
-3. [Signer l'application (keystore)](#signer-lapplication-keystore)
-4. [Mettre vos vraies cartes](#mettre-vos-vraies-cartes)
-5. [Règles du jeu](#règles-du-jeu)
-6. [Données et sauvegarde](#données-et-sauvegarde)
-7. [Développer](#développer)
-8. [Parcours de recette manuel](#parcours-de-recette-manuel)
-9. [Choix d'implémentation](#choix-dimplémentation)
-10. [Ce qui reste à vérifier](#ce-qui-reste-à-vérifier)
+2. [Jouer sur grand écran (navigateur, TV, projecteur)](#jouer-sur-grand-écran-navigateur-tv-projecteur)
+3. [Obtenir l'APK (compilation dans le cloud)](#obtenir-lapk-compilation-dans-le-cloud)
+4. [Signer l'application (keystore)](#signer-lapplication-keystore)
+5. [Mettre vos vraies cartes](#mettre-vos-vraies-cartes)
+6. [Règles du jeu](#règles-du-jeu)
+7. [Données et sauvegarde](#données-et-sauvegarde)
+8. [Développer](#développer)
+9. [Parcours de recette manuel](#parcours-de-recette-manuel)
+10. [Choix d'implémentation](#choix-dimplémentation)
+11. [Ce qui reste à vérifier](#ce-qui-reste-à-vérifier)
 
 ---
 
@@ -60,6 +63,48 @@ adb shell am start -n fr.soiree.roulette/.MainActivity
 ```
 
 Pour tester le mode avion : `adb shell cmd connectivity airplane-mode enable` (ou réglage manuel).
+
+---
+
+## Jouer sur grand écran (navigateur, TV, projecteur)
+
+L'application existe aussi en **un seul fichier HTML** qui s'ouvre d'un double-clic dans le navigateur
+d'un ordinateur (Chrome, Edge, Firefox…). Aucun serveur, aucune installation, aucun réseau : tout
+(code, polices, cartes) est dans le fichier, et la partie est enregistrée dans le navigateur.
+
+**Obtenir le fichier**
+
+- _Sur GitHub_ : onglet **Actions** → dernier run → artefact `roulette-soiree-web` (ou joint à la Release d'un tag).
+- _Sur votre machine_ : `npm run build:web` → `dist-web/roulette-soiree.html`.
+
+**Projeter sur la TV**
+
+1. Reliez l'ordinateur à la TV ou au projecteur (câble HDMI, ou « recopie / diffusion d'écran » : Chromecast, AirPlay, Miracast).
+2. Ouvrez `roulette-soiree.html`. Sur un grand écran en paysage, le **mode écran** s'active tout seul
+   (sinon : _Accueil → 📺 Mode écran_, ou _Réglages → Affichage_).
+3. Appuyez sur **F** (ou sur le bouton ⛶) pour passer en plein écran.
+
+**Le principe** : un seul appareil pilote la partie, **tout le monde regarde l'écran** et personne n'a
+besoin de son téléphone. En mode écran :
+
+- la roue, la carte, le numéro de boisson et le joueur actif s'affichent **en très grand** ;
+- les **scores en direct** restent visibles à droite (le joueur dont c'est le tour est mis en évidence) ;
+- le tirage est **« Direct »** : après la roue, la carte (et la boisson) se tirent toutes seules, sans rien toucher ;
+- tout se joue au clavier :
+
+| Touche   | Action                                                                            |
+| -------- | --------------------------------------------------------------------------------- |
+| `Espace` | Action principale : lancer la roue → carte faite → tirer la boisson → « J'ai bu » |
+| `R`      | Refuser la carte (étape boisson)                                                  |
+| `P`      | Joker Passe                                                                       |
+| `N`      | « Je ne bois pas » (étape boisson)                                                |
+| `B`      | « J'ai bu » (étape boisson)                                                       |
+| `F`      | Plein écran                                                                       |
+
+Les raccourcis sont suspendus pendant la saisie de texte et quand un panneau (scores) est ouvert.
+
+> Les parties jouées dans le navigateur sont enregistrées **dans ce navigateur** (sur cet ordinateur) ;
+> elles sont distinctes de celles de l'APK. L'export / import de sauvegarde permet de les déplacer.
 
 ---
 
@@ -170,7 +215,7 @@ elle doit rester **identique** d'une version à l'autre.
 ## Mettre vos vraies cartes
 
 Le contenu tient dans **un seul fichier** : [`src/content/content.json`](src/content/content.json)
-(10 thèmes × 20 cartes, provisoires pour l'instant).
+(10 thèmes × 20 cartes : les 200 cartes de la version de référence).
 
 ```jsonc
 {

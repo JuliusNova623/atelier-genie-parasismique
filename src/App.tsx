@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Announcer } from './components/Announcer';
+import { Backdrop } from './components/Backdrop';
+import { DisplayManager } from './components/DisplayManager';
 import { BackButtonHandler } from './components/BackButtonHandler';
 import { hideSplash } from './util/native';
 import { AboutScreen } from './screens/AboutScreen';
@@ -38,6 +40,8 @@ export function App() {
 
   return (
     <>
+      <DisplayManager />
+      <Backdrop />
       <Announcer />
       <BackButtonHandler />
       <Routes>

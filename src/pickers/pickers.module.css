@@ -39,7 +39,7 @@
 }
 
 .dieShape {
-  fill: var(--surface);
+  fill: var(--surface-solid);
   stroke: var(--accent);
   stroke-width: 3;
 }
@@ -151,14 +151,14 @@
 }
 
 .faceBack {
-  background: var(--accent);
+  background: var(--btn-grad);
   color: var(--on-accent, #12001f);
   border: 2px solid var(--accent-2);
 }
 
 .faceFront {
   transform: rotateY(180deg);
-  background: var(--surface);
+  background: var(--surface-solid);
   color: var(--text);
   border: 2px solid var(--accent-2);
 }
@@ -167,4 +167,24 @@
   opacity: 0.45;
   text-decoration: line-through;
   border-color: var(--border);
+}
+
+/* Mode écran : chiffres géants, visibles de loin. */
+:global([data-display='tv']) .slotWindow {
+  min-width: 18vw;
+  height: auto;
+  padding: 1.5vh 2vw;
+}
+
+:global([data-display='tv']) .slotDigits {
+  font-size: clamp(5rem, 11vw, 13rem);
+}
+
+:global([data-display='tv']) .dieButton {
+  width: min(40vh, 24vw);
+  height: min(40vh, 24vw);
+}
+
+:global([data-display='tv']) .cardGrid {
+  max-width: min(900px, 60vw);
 }

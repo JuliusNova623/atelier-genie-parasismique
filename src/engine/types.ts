@@ -70,7 +70,7 @@ export interface TurnEvent {
   timestamp: number;
 }
 
-export type PickerMode = 'dice' | 'shake' | 'cards' | 'slot';
+export type PickerMode = 'auto' | 'dice' | 'shake' | 'cards' | 'slot';
 
 /**
  * Tour en cours, persisté avec la partie. Le résultat est fixé AVANT l'animation :

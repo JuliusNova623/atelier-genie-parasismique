@@ -1,5 +1,5 @@
 import 'fake-indexeddb/auto';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { builtInContent } from '../content';
@@ -67,17 +67,29 @@ describe('Play : écran dérivé de l’état de la partie', () => {
     expect(useGameStore.getState().game!.pending!.themeId).toBe('theme-4');
   });
 
-  it('affiche la page du thème : nom, cartes restantes, 4 modes', async () => {
-    const g = withPending(base(), { stage: 'theme', themeId: 'theme-2', revealed: true });
+  it('affiche la page du thème : nom, cartes restantes, 5 modes (Direct par défaut)', async () => {
+    const g = withPending(
+      { ...base(), pickerModes: { a: 'dice' } },
+      { stage: 'theme', themeId: 'theme-2', revealed: true },
+    );
     await show(g);
     expect(
       screen.getByRole('heading', { name: new RegExp(escapeRe(themeName('theme-2'))) }),
     ).toBeInTheDocument();
     expect(screen.getByText(/20 cartes restantes/)).toBeInTheDocument();
-    for (const label of ['Dé', 'Secouer', 'Cartes', 'Machine']) {
+    for (const label of ['Direct', 'Dé', 'Secouer', 'Cartes', 'Machine']) {
       expect(screen.getByRole('button', { name: new RegExp(label) })).toBeInTheDocument();
     }
     expect(screen.getByRole('button', { name: /Dé/ })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('en mode Direct (défaut), le numéro de carte est tiré tout seul, sans toucher à rien', async () => {
+    await show(withPending(base(), { stage: 'theme', themeId: 'theme-1', revealed: true }));
+    expect(screen.getByRole('button', { name: /Direct/ })).toHaveAttribute('aria-pressed', 'true');
+    await waitFor(() => expect(useGameStore.getState().game!.pending?.stage).toBe('card'));
+    const p = useGameStore.getState().game!.pending!;
+    expect(p.cardNumber).toBeGreaterThanOrEqual(1);
+    expect(p.cardNumber).toBeLessThanOrEqual(20);
   });
 
   it('signale la dernière carte du thème et grille les numéros joués', async () => {
@@ -85,7 +97,12 @@ describe('Play : écran dérivé de l’état de la partie', () => {
     for (let n = 1; n <= 19; n++) {
       g = recordTurn(g, { themeId: 'theme-1', cardNumber: n, outcome: 'done' }, n);
     }
-    await show(withPending(g, { stage: 'theme', themeId: 'theme-1', revealed: true }));
+    await show(
+      withPending(
+        { ...g, pickerModes: { a: 'dice', b: 'dice' } },
+        { stage: 'theme', themeId: 'theme-1', revealed: true },
+      ),
+    );
     expect(screen.getByText(/Dernière carte de ce thème/)).toBeInTheDocument();
     expect(screen.getByText(/1 carte restante/)).toBeInTheDocument();
     expect(screen.getByText('Numéros déjà joués')).toBeInTheDocument();
@@ -93,7 +110,12 @@ describe('Play : écran dérivé de l’état de la partie', () => {
 
   it('change et mémorise le mode de tirage du joueur', async () => {
     const user = userEvent.setup();
-    await show(withPending(base(), { stage: 'theme', themeId: 'theme-1', revealed: true }));
+    await show(
+      withPending(
+        { ...base(), pickerModes: { a: 'dice' } },
+        { stage: 'theme', themeId: 'theme-1', revealed: true },
+      ),
+    );
     await user.click(screen.getByRole('button', { name: /Machine/ }));
     expect(useGameStore.getState().game!.pickerModes).toEqual({ a: 'slot' });
     expect(screen.getByRole('button', { name: 'Lancer la machine à sous' })).toBeInTheDocument();

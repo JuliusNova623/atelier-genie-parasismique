@@ -6,7 +6,14 @@ import styles from './pickers.module.css';
 import type { NumberPickerProps } from './types';
 
 /** Machine à sous : les chiffres défilent et ralentissent jusqu'au résultat déjà tiré. */
-export function SlotMachine({ max, target, onTrigger, onDone, reduced }: NumberPickerProps) {
+export function SlotMachine({
+  max,
+  target,
+  onTrigger,
+  onDone,
+  reduced,
+  fast = false,
+}: NumberPickerProps & { fast?: boolean }) {
   const [shown, setShown] = useState<number | null>(null);
   const [settled, setSettled] = useState(false);
   const trigger = useOnceTrigger(onTrigger, target);
@@ -23,13 +30,13 @@ export function SlotMachine({ max, target, onTrigger, onDone, reduced }: NumberP
     if (reduced) {
       timer = setTimeout(finish, 150);
     } else {
-      const seq = slotSequence(max, target, 1 + randomInt(max));
+      const seq = slotSequence(max, target, 1 + randomInt(max), fast ? 12 : 24);
       const step = (i: number) => {
         if (cancelled) return;
         setShown(seq[i]);
         if (i === seq.length - 1) {
           setSettled(true);
-          timer = setTimeout(() => onDone(target), 700);
+          timer = setTimeout(() => onDone(target), fast ? 500 : 700);
         } else {
           timer = setTimeout(() => step(i + 1), slotDelay(i, seq.length));
         }
@@ -40,7 +47,7 @@ export function SlotMachine({ max, target, onTrigger, onDone, reduced }: NumberP
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [target, max, reduced, onDone]);
+  }, [target, max, reduced, onDone, fast]);
 
   return (
     <div className={styles.box}>
@@ -66,7 +73,7 @@ export function SlotMachine({ max, target, onTrigger, onDone, reduced }: NumberP
           🎰
         </span>
       </button>
-      <p className={styles.hint}>{target === null ? 'Touche pour lancer' : ' '}</p>
+      <p className={styles.hint}>{target === null && !fast ? 'Touche pour lancer' : ' '}</p>
     </div>
   );
 }

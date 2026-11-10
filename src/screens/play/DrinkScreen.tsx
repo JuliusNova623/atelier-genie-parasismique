@@ -33,22 +33,30 @@ export function DrinkScreen({ game }: { game: Game }) {
         </p>
       </section>
 
-      <section className={styles.section} aria-label={t.pick(count)}>
-        <h2>{t.pick(count)}</h2>
-        <PickerPanel
-          game={game}
-          max={count}
-          excluded={[]}
-          target={target}
-          onTrigger={() => void spinDrink()}
-          stepKey={`drink-${game.log.length}`}
-        />
-      </section>
+      {!shown && (
+        <section className={styles.section} aria-label={t.pick(count)}>
+          <h2>{t.pick(count)}</h2>
+          <PickerPanel
+            game={game}
+            max={count}
+            excluded={[]}
+            target={target}
+            onTrigger={() => void spinDrink()}
+            stepKey={`drink-${game.log.length}`}
+          />
+        </section>
+      )}
 
       {shown && (
         <>
           <section className={styles.section} aria-live="assertive" role="status">
-            <h2 style={{ fontSize: '1.4rem' }}>{t.drinkIs(target, drinkLabel(drinks, target))}</h2>
+            <p className={styles.shotLabel}>{t.yourDrink}</p>
+            <div className={styles.shotNum} aria-hidden="true">
+              {target}
+            </div>
+            <h2 style={{ fontSize: '1.2rem', textAlign: 'center' }}>
+              {t.drinkIs(target, drinkLabel(drinks, target))}
+            </h2>
             {player.noAlcohol && <p style={{ margin: 0, fontWeight: 700 }}>{t.noAlcoholVersion}</p>}
             {drink?.noAlcohol && <p className={styles.hint}>{t.drinkIsNoAlcohol}</p>}
           </section>

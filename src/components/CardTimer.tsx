@@ -35,7 +35,12 @@ export function CardTimer({ seconds }: { seconds: number }) {
   const ss = String(left % 60).padStart(2, '0');
 
   return (
-    <div className={styles.row} role="group" aria-label={fr.play.timer.label}>
+    <div
+      className={styles.row}
+      style={{ justifyContent: 'center' }}
+      role="group"
+      aria-label={fr.play.timer.label}
+    >
       <output
         aria-live="off"
         style={{ fontSize: '2rem', fontVariantNumeric: 'tabular-nums', minWidth: 90 }}

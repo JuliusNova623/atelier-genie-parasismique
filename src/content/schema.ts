@@ -11,6 +11,8 @@ export const cardSchema = z.object({
 export const themeSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
+  /** Libellé court affiché sur la roue (facultatif ; sinon le nom en capitales). */
+  short: z.string().min(1).optional(),
   emoji: z.string().min(1),
   color: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'couleur au format #rrggbb'),
   description: z.string().optional(),

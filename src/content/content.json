@@ -4,6 +4,7 @@
     {
       "id": "theme-1",
       "name": "Vérités Brûlantes",
+      "short": "VÉRITÉS",
       "emoji": "🔥",
       "color": "#ff3b30",
       "cards": [
@@ -152,6 +153,7 @@
     {
       "id": "theme-2",
       "name": "Mission Impossible",
+      "short": "MISSION",
       "emoji": "💀",
       "color": "#8b5cf6",
       "cards": [
@@ -300,6 +302,7 @@
     {
       "id": "theme-3",
       "name": "Ridicule Assumé",
+      "short": "RIDICULE",
       "emoji": "😂",
       "color": "#ff9f0a",
       "cards": [
@@ -448,6 +451,7 @@
     {
       "id": "theme-4",
       "name": "Ex & Cœurs Brisés",
+      "short": "EX & CŒURS",
       "emoji": "💔",
       "color": "#ff2e88",
       "cards": [
@@ -596,6 +600,7 @@
     {
       "id": "theme-5",
       "name": "Téléphone Ouvert",
+      "short": "TÉLÉPHONE",
       "emoji": "📱",
       "color": "#19e3ff",
       "cards": [
@@ -744,6 +749,7 @@
     {
       "id": "theme-6",
       "name": "Scène & Imitation",
+      "short": "SCÈNE",
       "emoji": "🎭",
       "color": "#fbbf24",
       "cards": [
@@ -892,6 +898,7 @@
     {
       "id": "theme-7",
       "name": "Entre Nous",
+      "short": "ENTRE NOUS",
       "emoji": "🤝",
       "color": "#34d399",
       "cards": [
@@ -1040,6 +1047,7 @@
     {
       "id": "theme-8",
       "name": "Pire Scénario",
+      "short": "DILEMMES",
       "emoji": "🧠",
       "color": "#60a5fa",
       "cards": [
@@ -1188,6 +1196,7 @@
     {
       "id": "theme-9",
       "name": "Scène de Danse",
+      "short": "DANSE",
       "emoji": "🕺",
       "color": "#a78bfa",
       "cards": [
@@ -1336,6 +1345,7 @@
     {
       "id": "theme-10",
       "name": "Carte Blanche",
+      "short": "CARTE BLANCHE",
       "emoji": "🎲",
       "color": "#f5c84c",
       "cards": [

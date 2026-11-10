@@ -28,13 +28,15 @@ const mk = (id: string, name: string, noAlcohol = false): Player => ({
 });
 
 function base(rules: Rules = DEFAULT_RULES, players = [mk('a', 'Alice'), mk('b', 'Bob')]): Game {
-  return createGame({
+  const g = createGame({
     now: 0,
     mode: 'solo',
     players,
     rules,
     themes: builtInContent.themes.map((t) => ({ id: t.id, cardNumbers: createDeck(20) })),
   });
+  // Ces tests pilotent le tirage à la main : on évite le mode « Direct » qui se déclenche seul.
+  return { ...g, pickerModes: Object.fromEntries(players.map((p) => [p.id, 'dice' as const])) };
 }
 
 const card = (over: Partial<PendingTurn> = {}): PendingTurn => ({
@@ -81,7 +83,7 @@ describe('page de carte', () => {
     const user = userEvent.setup();
     await show({ ...base(), pending: card() });
     expect(screen.getByRole('heading', { name: `Carte n°${QUESTION.number}` })).toBeInTheDocument();
-    expect(screen.getByText('Question')).toBeInTheDocument();
+    expect(screen.getByText(/• Vérité •/)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Je réponds \(\+3\)/ }));
     expect(playerScores(g())).toEqual({ a: 3, b: 0 });
     expect(await screen.findByRole('button', { name: 'Lancer la roulette' })).toBeInTheDocument();
@@ -93,7 +95,7 @@ describe('page de carte', () => {
       ...base(),
       pending: card({ themeId: TIMED_ACTION.themeId, cardNumber: TIMED_ACTION.number }),
     });
-    expect(screen.getByText('Action')).toBeInTheDocument();
+    expect(screen.getByText(/• Action •/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Je le fais/ })).toBeInTheDocument();
     // Une action avec chronomètre : il est proposé.
     expect(screen.getByRole('group', { name: 'Chronomètre' })).toBeInTheDocument();

@@ -77,7 +77,7 @@ export function rememberPickerMode(game: Game, mode: PickerMode): Game {
 }
 
 export function pickerModeFor(game: Game, playerId = currentPlayerId(game)): PickerMode {
-  return game.pickerModes?.[playerId] ?? 'dice';
+  return game.pickerModes?.[playerId] ?? 'auto';
 }
 
 /** Numéros déjà joués dans un thème (« grillés »). */

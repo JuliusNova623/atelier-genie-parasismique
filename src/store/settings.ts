@@ -7,11 +7,16 @@ import { applyStatusBar } from '../util/native';
 export type VisualTheme = 'neon' | 'arcade' | 'sober' | 'pastel';
 export const VISUAL_THEMES: VisualTheme[] = ['neon', 'arcade', 'sober', 'pastel'];
 
+/** Affichage : « auto » passe en mode écran (TV) sur un grand écran paysage ; sinon forcé. */
+export type DisplayPref = 'auto' | 'tv' | 'phone';
+export const DISPLAY_PREFS: DisplayPref[] = ['auto', 'tv', 'phone'];
+
 export interface Prefs {
   visualTheme: VisualTheme;
   sound: boolean;
   haptics: boolean;
   keepAwake: boolean;
+  display: DisplayPref;
   /** Nombre de boissons utilisées par les prochaines parties (1 à 20). */
   drinkCount: number;
   defaultRules: Rules;
@@ -22,6 +27,7 @@ export const DEFAULT_PREFS: Prefs = {
   sound: true,
   haptics: true,
   keepAwake: true,
+  display: 'auto',
   drinkCount: 20,
   defaultRules: DEFAULT_RULES,
 };
@@ -69,6 +75,7 @@ const prefsOf = (s: Prefs): Prefs => ({
   sound: s.sound,
   haptics: s.haptics,
   keepAwake: s.keepAwake,
+  display: s.display,
   drinkCount: s.drinkCount,
   defaultRules: s.defaultRules,
 });

@@ -14,7 +14,7 @@ async function createGame(page: Page, names: string[]) {
 /** Roue → carte (dé) : s'arrête sur la page de carte. */
 async function drawCard(page: Page) {
   await page.getByRole('button', { name: 'Lancer la roulette', exact: true }).click();
-  await page.getByRole('button', { name: 'Lancer le dé à 20 faces' }).click();
+  // Mode « Direct » (défaut) : le numéro de carte se tire tout seul après la roue.
   await expect(page.getByRole('heading', { name: /^Carte n°\d+$/ })).toBeVisible();
 }
 
@@ -32,7 +32,7 @@ test('parcours complet : créer, jouer un tour, terminer, historique', async ({ 
   await drawCard(page);
   await page.getByRole('button', { name: 'Je refuse' }).click();
   await expect(page.getByRole('heading', { name: 'Étape boisson' })).toBeVisible();
-  await page.getByRole('button', { name: 'Lancer le dé à 20 faces' }).click();
+  // La boisson se tire aussi toute seule ; on valide quand le résultat s'affiche.
   await page.getByRole('button', { name: /J’ai bu/ }).click();
 
   await page.getByRole('button', { name: 'Scores' }).click();

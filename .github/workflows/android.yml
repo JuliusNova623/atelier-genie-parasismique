@@ -45,6 +45,15 @@ jobs:
       - run: npm run build
       - run: npx cap sync android
 
+      # Version navigateur : UN fichier HTML autonome (à ouvrir d'un double-clic, pour la TV).
+      - name: Version navigateur (fichier HTML autonome)
+        run: npm run build:web
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: roulette-soiree-web
+          path: dist-web/roulette-soiree.html
+
       - name: APK debug
         working-directory: android
         run: chmod +x gradlew && ./gradlew assembleDebug
@@ -100,4 +109,4 @@ jobs:
           SIGNED: ${{ steps.release.outputs.signed }}
         run: |
           if [ "$SIGNED" = "true" ]; then FILE="roulette-soiree-${VERSION_NAME}.apk"; else FILE="roulette-soiree-${VERSION_NAME}-debug.apk"; fi
-          gh release create "$GITHUB_REF_NAME" "$FILE" --title "Roulette Soirée $GITHUB_REF_NAME" --generate-notes
+          gh release create "$GITHUB_REF_NAME" "$FILE" dist-web/roulette-soiree.html --title "Roulette Soirée $GITHUB_REF_NAME" --generate-notes
