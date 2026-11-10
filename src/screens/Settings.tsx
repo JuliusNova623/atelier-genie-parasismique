@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styles from '../components/ui.module.css';
+import { BackupSection } from '../components/BackupSection';
 import { RulesEditor } from '../components/RulesEditor';
 import { validateRules } from '../engine/scoring';
 import { fr } from '../i18n/fr';
@@ -104,6 +105,7 @@ export function Settings() {
       <section className={styles.section} aria-label={t.data}>
         <h2>{t.data}</h2>
         <p className={styles.hint}>{t.dataWarning}</p>
+        <BackupSection />
       </section>
     </main>
   );

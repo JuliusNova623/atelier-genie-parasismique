@@ -109,6 +109,8 @@ export interface Game {
   themeIds: string[];
   log: TurnEvent[];
   pending: PendingTurn | null;
+  /** Conditions de fin déjà proposées puis refusées (« Continuer ») : on ne les repropose pas. */
+  endDismissed?: string[];
   /** Dernier mode de tirage utilisé par joueur (présélectionné au tour suivant). */
   pickerModes?: Record<string, PickerMode>;
 }

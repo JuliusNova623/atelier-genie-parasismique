@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { repo } from '../db/repo';
 import { undoLast } from '../engine/game';
+import { endGame, replayGame } from '../engine/results';
 import {
   armJoker,
   cancelDuel,
@@ -46,6 +47,12 @@ interface GameState {
   cancelDuel: () => Promise<void>;
   finishDuel: (winnerId: string) => Promise<void>;
   undo: () => Promise<void>;
+  /** Termine la partie : archivée dans l'historique, plus de partie en cours. Renvoie son id. */
+  finishGame: () => Promise<string | null>;
+  /** « Continuer » malgré une condition de fin atteinte : on ne la reproposera pas. */
+  dismissEnd: (reasons: string[]) => Promise<void>;
+  /** Rejouer avec les mêmes joueurs, équipes et règles. */
+  replay: (finished: Game) => Promise<void>;
 }
 
 export const useGameStore = create<GameState>((set, get) => {
@@ -106,5 +113,18 @@ export const useGameStore = create<GameState>((set, get) => {
     cancelDuel: () => apply((g) => cancelDuel(g)),
     finishDuel: (winnerId) => apply((g) => finishDuel(g, winnerId, Date.now())),
     undo: () => apply((g) => undoLast(g)),
+    async finishGame() {
+      const g = get().game;
+      if (!g) return null;
+      const now = Date.now();
+      await repo.archiveGame(endGame(g, now), now);
+      set({ game: null });
+      return g.id;
+    },
+    dismissEnd: (reasons) =>
+      apply((g) => ({ ...g, endDismissed: [...new Set([...(g.endDismissed ?? []), ...reasons])] })),
+    async replay(finished) {
+      await get().setGame(replayGame(finished, Date.now()));
+    },
   };
 });

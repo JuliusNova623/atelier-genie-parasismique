@@ -1,6 +1,10 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { AboutScreen } from './screens/AboutScreen';
+import { EndScreen } from './screens/EndScreen';
+import { HistoryScreen } from './screens/HistoryScreen';
 import { Home } from './screens/Home';
+import { ImportScreen } from './screens/ImportScreen';
 import { NewGame } from './screens/NewGame';
 import { Play } from './screens/Play';
 import { Settings } from './screens/Settings';
@@ -29,6 +33,10 @@ export function App() {
       <Route path="/new" element={<NewGame />} />
       <Route path="/play" element={<Play />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/end/:id" element={<EndScreen />} />
+      <Route path="/history" element={<HistoryScreen />} />
+      <Route path="/import" element={<ImportScreen />} />
+      <Route path="/about" element={<AboutScreen />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { playerScores, remainingJokers, teamScores } from '../engine/game';
 import type { Game, JokerType } from '../engine/types';
 import { fr } from '../i18n/fr';
@@ -10,6 +11,8 @@ const JOKERS: JokerType[] = ['pass', 'double', 'transfer'];
 /** Tableau des scores en bottom sheet : classement, jokers restants, annulation du dernier tour. */
 export function ScoreSheet({ game, onClose }: { game: Game; onClose: () => void }) {
   const undo = useGameStore((s) => s.undo);
+  const finishGame = useGameStore((s) => s.finishGame);
+  const navigate = useNavigate();
   const hasTeams = game.mode === 'teams' && game.teams.length > 0;
   const [tab, setTab] = useState<'teams' | 'players'>(hasTeams ? 'teams' : 'players');
   const t = fr.play.scores;
@@ -24,6 +27,12 @@ export function ScoreSheet({ game, onClose }: { game: Game; onClose: () => void 
       void undo();
       onClose();
     }
+  };
+
+  const finish = async () => {
+    if (!window.confirm(fr.end.finishConfirm)) return;
+    const id = await finishGame();
+    if (id) navigate(`/end/${id}`, { replace: true });
   };
 
   return (
@@ -125,6 +134,13 @@ export function ScoreSheet({ game, onClose }: { game: Game; onClose: () => void 
           onClick={askUndo}
         >
           {t.undo}
+        </button>
+        <button
+          type="button"
+          className={`${styles.btn} ${styles.btnPrimary}`}
+          onClick={() => void finish()}
+        >
+          {fr.end.finish}
         </button>
       </div>
     </div>

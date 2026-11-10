@@ -41,13 +41,13 @@ export function Home() {
         <button type="button" className={styles.btn} onClick={() => navigate('/settings')}>
           {t.settings}
         </button>
-        <button type="button" className={styles.btn} disabled title={t.soon}>
+        <button type="button" className={styles.btn} onClick={() => navigate('/history')}>
           {t.history}
         </button>
-        <button type="button" className={styles.btn} disabled title={t.soon}>
+        <button type="button" className={styles.btn} onClick={() => navigate('/import')}>
           {t.import}
         </button>
-        <button type="button" className={styles.btn} disabled title={t.soon}>
+        <button type="button" className={styles.btn} onClick={() => navigate('/about')}>
           {t.about}
         </button>
       </nav>

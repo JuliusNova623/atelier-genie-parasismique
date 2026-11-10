@@ -24,6 +24,12 @@ export function createRepo(db: AppDb = defaultDb) {
         await db.currentGame.delete(CURRENT);
       });
     },
+    async getHistoryGame(id: string): Promise<Game | undefined> {
+      return (await db.gameHistory.get(id))?.game;
+    },
+    async deleteHistoryGame(id: string): Promise<void> {
+      await db.gameHistory.delete(id);
+    },
     async history(): Promise<Game[]> {
       return (await db.gameHistory.orderBy('endedAt').reverse().toArray()).map((r) => r.game);
     },
@@ -33,6 +39,9 @@ export function createRepo(db: AppDb = defaultDb) {
     },
     async setContentOverride(content: Content): Promise<void> {
       await db.contentOverride.put({ id: CURRENT, content });
+    },
+    async hasContentOverride(): Promise<boolean> {
+      return !!(await db.contentOverride.get(CURRENT));
     },
     async clearContentOverride(): Promise<void> {
       await db.contentOverride.delete(CURRENT);
