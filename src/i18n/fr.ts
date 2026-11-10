@@ -243,6 +243,7 @@ export const fr = {
     answerIt: 'Je réponds',
     refuse: 'Je refuse',
     points: (n: number) => (n > 0 ? `+${n}` : `${n}`),
+    answer: { show: '👀 Voir la réponse', label: 'Réponse :' },
     timer: {
       start: 'Démarrer le chronomètre',
       pause: 'Pause',

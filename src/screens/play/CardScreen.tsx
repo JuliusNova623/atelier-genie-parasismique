@@ -24,6 +24,7 @@ export function CardScreen({ game }: { game: Game }) {
   const content = useContent((s) => s.content);
   const store = useGameStore.getState();
   const [choosing, setChoosing] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
   const [duelPanel, setDuelPanel] = useState<null | { first: string | null }>(null);
 
   const p = game.pending!;
@@ -67,6 +68,16 @@ export function CardScreen({ game }: { game: Game }) {
         </p>
         <div className={styles.qcard}>
           <p style={{ margin: 0 }}>{card?.text}</p>
+          {card?.answer &&
+            (showAnswer ? (
+              <p className={styles.answer} role="status">
+                💡 {fr.play.answer.label} <strong>{card.answer}</strong>
+              </p>
+            ) : (
+              <button type="button" className={styles.btn} onClick={() => setShowAnswer(true)}>
+                {fr.play.answer.show}
+              </button>
+            ))}
           {card?.timer ? <CardTimer seconds={card.timer} /> : null}
         </div>
         <h1 className={styles.qmeta}>{fr.play.cardTitle(p.cardNumber ?? 0)}</h1>

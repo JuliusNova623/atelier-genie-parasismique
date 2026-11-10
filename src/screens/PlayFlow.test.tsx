@@ -102,6 +102,25 @@ describe('page de carte', () => {
     expect(screen.getByRole('button', { name: 'Démarrer le chronomètre' })).toBeInTheDocument();
   });
 
+  it('énigme : la réponse reste cachée jusqu’à « Voir la réponse »', async () => {
+    const user = userEvent.setup();
+    const riddle = builtInContent.themes[5].cards[0];
+    await show({
+      ...base(),
+      pending: card({ themeId: 'theme-6', cardNumber: riddle.number }),
+    });
+    expect(screen.getByText(riddle.text)).toBeInTheDocument();
+    expect(screen.queryByText(riddle.answer!)).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /Voir la réponse/ }));
+    expect(screen.getByText(riddle.answer!)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Voir la réponse/ })).not.toBeInTheDocument();
+  });
+
+  it('une carte sans énigme n’a pas de bouton de réponse', async () => {
+    await show({ ...base(), pending: card() });
+    expect(screen.queryByRole('button', { name: /Voir la réponse/ })).not.toBeInTheDocument();
+  });
+
   it('« Je refuse » mène à l’étape boisson', async () => {
     const user = userEvent.setup();
     await show({ ...base(), pending: card() });

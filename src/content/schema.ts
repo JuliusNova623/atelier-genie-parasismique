@@ -4,6 +4,8 @@ export const cardSchema = z.object({
   number: z.number().int().min(1),
   type: z.enum(['question', 'action']),
   text: z.string().min(1),
+  /** Réponse cachée (énigmes, casse-têtes) : affichée sur demande avec « Voir la réponse ». */
+  answer: z.string().min(1).optional(),
   points: z.number().nullable().optional(),
   timer: z.number().int().positive().nullable().optional(),
 });

@@ -4,45 +4,115 @@ import { validateContent } from './validate';
 
 const clone = () => structuredClone(raw) as typeof raw;
 
-describe('content.json (200 cartes de la soirée)', () => {
+describe('content.json (200 cartes du PDF « jeux script »)', () => {
+  const themes = builtInContent.themes;
+
   it('est valide : 10 thèmes × 20 cartes, sans avertissement', () => {
     const r = validateContent(raw);
     expect(r.errors).toEqual([]);
     expect(r.warnings).toEqual([]);
     expect(r.ok).toBe(true);
-    expect(builtInContent.themes).toHaveLength(10);
-    for (const t of builtInContent.themes) {
+    expect(themes).toHaveLength(10);
+    for (const t of themes) {
       expect(t.cards.map((c) => c.number)).toEqual(Array.from({ length: 20 }, (_, i) => i + 1));
     }
   });
 
-  it('contient 200 textes non vides, sans reste du format source (« V| » / « A| »)', () => {
-    const cards = builtInContent.themes.flatMap((t) => t.cards);
-    expect(cards).toHaveLength(200);
-    for (const c of cards) {
-      expect(c.text.trim().length).toBeGreaterThan(5);
-      expect(c.text).not.toMatch(/^[VA]\|/);
-      expect(['question', 'action']).toContain(c.type);
+  it('reprend les 10 intitulés du PDF, dans l’ordre', () => {
+    expect(themes.map((t) => t.name)).toEqual([
+      'Secrets & Dossiers',
+      'Défis & Alliances',
+      'Vérités Inavouables',
+      'Dilemmes Hardcore',
+      'Impro & Théâtre',
+      'Réflexion & Casse-tête',
+      'Chance & Chaos',
+      'Le Tribunal du Groupe',
+      "Je n'ai jamais...",
+      'Tyrannie des Règles',
+    ]);
+    for (const t of themes) {
+      expect(t.short).toBeTruthy();
+      expect(t.description).toBeTruthy();
     }
-    expect(cards.some((c) => c.type === 'question')).toBe(true);
-    expect(cards.some((c) => c.type === 'action')).toBe(true);
   });
 
-  it('les chronomètres sont des durées plausibles, réservées aux actions', () => {
-    const timed = builtInContent.themes.flatMap((t) => t.cards).filter((c) => c.timer);
-    expect(timed.length).toBeGreaterThan(10);
+  it('sépare vérités et actions comme le PDF', () => {
+    const kinds = (i: number) => themes[i].cards.map((c) => c.type);
+    // Thème 1 : 10 vérités puis 10 actions.
+    expect(kinds(0)).toEqual([...Array(10).fill('question'), ...Array(10).fill('action')]);
+    for (const i of [1, 4, 6, 9]) expect(new Set(kinds(i))).toEqual(new Set(['action']));
+    for (const i of [2, 3, 5, 7, 8]) expect(new Set(kinds(i))).toEqual(new Set(['question']));
+  });
+
+  it('contient 200 textes complets, sans reste de mise en forme du PDF', () => {
+    const cards = themes.flatMap((t) => t.cards);
+    expect(cards).toHaveLength(200);
+    for (const c of cards) {
+      expect(c.text.trim().length).toBeGreaterThan(30);
+      expect(c.text).not.toMatch(/^\d+\./);
+      expect(c.text).not.toMatch(/[\u200b\u00ad]/);
+      expect(c.text).not.toMatch(/\s{2,}/);
+      expect(c.text).not.toMatch(/\(Réponse/);
+      expect(c.text).not.toMatch(/THÈME|\(20 (cartes|questions)/);
+    }
+    expect(new Set(cards.map((c) => c.text)).size).toBe(200);
+  });
+
+  it('préfixe les dilemmes (« Tu préfères… ») et le tribunal (« Qui de nous… »)', () => {
+    for (const c of themes[3].cards) expect(c.text).toMatch(/^Tu préfères /);
+    expect(themes[3].cards.every((c) => c.text.includes(' OU '))).toBe(true);
+    expect(
+      themes[7].cards.slice(0, 9).every((c) => c.text.startsWith('Qui de nous est capable de ')),
+    ).toBe(true);
+    expect(themes[7].cards[9].text).toBe(
+      "Qui de nous a le plus d'ego au quotidien et refuse d'admettre ses torts ?",
+    );
+  });
+
+  it('corrige les coquilles évidentes du PDF', () => {
+    const all = themes.flatMap((t) => t.cards.map((c) => c.text)).join(' | ');
+    expect(all).not.toContain("Je n'ai jamais me suis");
+    expect(all).not.toContain('Je n me suis');
+    expect(all).not.toContain('tords');
+    expect(all).toContain('Je ne me suis jamais trompé de prénom');
+  });
+
+  it('isole les réponses des casse-têtes (thème 6) : cachées sur la carte, pas dans le texte', () => {
+    for (const c of themes[5].cards) {
+      expect(c.answer, `carte ${c.number}`).toBeTruthy();
+    }
+    expect(themes[5].cards[0].text).toBe("Logique : Combien de mois dans l'année ont 28 jours ?");
+    expect(themes[5].cards[0].answer).toBe('Tous les 12 mois');
+    expect(themes[5].cards[19].answer).toBe("L'allumette");
+    // Aucune autre carte n'a de réponse cachée.
+    expect(
+      themes
+        .filter((_, i) => i !== 5)
+        .flatMap((t) => t.cards)
+        .some((c) => c.answer),
+    ).toBe(false);
+  });
+
+  it('les chronomètres sont des durées plausibles (5 s à 2 min), réservées aux actions', () => {
+    const timed = themes.flatMap((t) => t.cards).filter((c) => c.timer);
+    expect(timed.length).toBeGreaterThan(8);
     for (const c of timed) {
       expect(c.type).toBe('action');
-      expect(c.timer).toBeGreaterThanOrEqual(10);
+      expect(c.timer).toBeGreaterThanOrEqual(5);
       expect(c.timer).toBeLessThanOrEqual(120);
     }
+    // « Tu dois tenir deux minutes… » → 120 s ; « en moins de 5 secondes » → 5 s.
+    expect(themes[0].cards[18].timer).toBe(120);
+    expect(themes[9].cards[8].timer).toBe(5);
+    // Pas de chrono quand la durée dépasse 2 minutes (« Pendant 5 minutes… »).
+    expect(themes[1].cards[15].timer).toBeNull();
   });
 
   it('a des noms, emojis et couleurs distincts', () => {
-    const t = builtInContent.themes;
-    expect(new Set(t.map((x) => x.emoji)).size).toBe(10);
-    expect(new Set(t.map((x) => x.color)).size).toBe(10);
-    expect(new Set(t.map((x) => x.name)).size).toBe(10);
+    expect(new Set(themes.map((x) => x.emoji)).size).toBe(10);
+    expect(new Set(themes.map((x) => x.color)).size).toBe(10);
+    expect(new Set(themes.map((x) => x.name)).size).toBe(10);
   });
 });
 

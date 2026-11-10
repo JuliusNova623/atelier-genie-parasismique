@@ -8,7 +8,7 @@ un barème de points, des boissons, des jokers, un mode équipes et un podium fi
 - Joueurs, parties et réglages sont stockés **sur le téléphone** (IndexedDB).
 - Application web (Vite + React + TypeScript) empaquetée en APK avec **Capacitor**, ou en **un seul fichier HTML** pour le navigateur.
 - Design « nuit violette, or, magenta, cyan » : fond animé, verre dépoli, polices embarquées (Bungee, Outfit).
-- Les **200 cartes** (10 thèmes × 20, vérités et actions) sont intégrées.
+- Les **200 cartes du PDF « jeux script »** (10 thèmes × 20 : vérités, actions, dilemmes, énigmes, chaos…) sont intégrées.
 
 > État : toute l'application est développée et testée (tests unitaires et e2e). Les parties **natives**
 > (sons, vibrations, écran allumé, bouton retour, partage de fichier) n'ont pas pu être testées sur un
@@ -215,7 +215,7 @@ elle doit rester **identique** d'une version à l'autre.
 ## Mettre vos vraies cartes
 
 Le contenu tient dans **un seul fichier** : [`src/content/content.json`](src/content/content.json)
-(10 thèmes × 20 cartes : les 200 cartes de la version de référence).
+(10 thèmes × 20 cartes : les 200 cartes du PDF « jeux script »).
 
 ```jsonc
 {
@@ -238,7 +238,8 @@ Le contenu tient dans **un seul fichier** : [`src/content/content.json`](src/con
 ```
 
 - `type` : `"question"` ou `"action"` ; `timer` : durée en **secondes** (chronomètre proposé) ou `null` ;
-  `points` : réservé (ignoré en v1, `null`).
+  `points` : réservé (ignoré en v1, `null`) ; `answer` (facultatif) : réponse cachée d'une énigme, affichée par le bouton
+  « Voir la réponse » ; `short` (thème, facultatif) : libellé court sur la roue.
 - Exactement **10 thèmes** (autre nombre : avertissement, non bloquant) et **20 cartes par thème** (obligatoire).
 - Aucun filtrage du contenu : texte libre.
 
