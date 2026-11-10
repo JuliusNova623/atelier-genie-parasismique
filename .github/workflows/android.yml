@@ -1,55 +1,103 @@
 name: Android APK
 
+# Déclenchement manuel (onglet Actions → Run workflow) ou sur un tag de version (git tag v1.0.0 && git push --tags).
 on:
   workflow_dispatch:
   push:
     tags: ['v*']
 
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    # contents: write n'est utilisé que pour joindre l'APK à une « Release » GitHub sur un tag.
+    permissions:
+      contents: write
     env:
+      # versionCode = numéro d'exécution du workflow : il augmente à chaque build (mise à jour possible).
       VERSION_CODE: ${{ github.run_number }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+
+      # Capacitor 8 / Android Gradle Plugin récent : JDK 21.
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
+          cache: gradle
+
       - run: npm ci
       - run: npm run lint
       - run: npm test
+
+      # versionName = champ "version" de package.json.
       - name: Version name
         run: echo "VERSION_NAME=$(node -p "require('./package.json').version")" >> "$GITHUB_ENV"
+
       - run: npm run build
       - run: npx cap sync android
+
       - name: APK debug
         working-directory: android
         run: chmod +x gradlew && ./gradlew assembleDebug
+
+      - name: Nommer l'APK debug
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk "roulette-soiree-${VERSION_NAME}-debug.apk"
+
       - uses: actions/upload-artifact@v4
         with:
           name: roulette-soiree-debug
-          path: android/app/build/outputs/apk/debug/*.apk
-      - name: APK release signé (si secrets présents)
+          path: roulette-soiree-*-debug.apk
+
+      # APK release SIGNÉ : uniquement si les secrets de signature sont présents.
+      - name: APK release signé
+        id: release
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
-            export KEYSTORE_PATH="$RUNNER_TEMP/release.keystore"
-            cd android && ./gradlew assembleRelease
-          else
-            echo "Pas de secrets de signature : release ignoré."
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "Pas de secrets de signature : release ignoré (seul l'APK debug est produit)."
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+          export KEYSTORE_PATH="$RUNNER_TEMP/release.keystore"
+          (cd android && ./gradlew assembleRelease)
+          cp android/app/build/outputs/apk/release/app-release.apk "roulette-soiree-${VERSION_NAME}.apk"
+          rm -f "$RUNNER_TEMP/release.keystore"
+          echo "signed=true" >> "$GITHUB_OUTPUT"
+
+      # Contrôle de la signature + empreinte du certificat (doit être identique d'une version à l'autre,
+      # sinon Android refusera la mise à jour par-dessus l'ancienne installation).
+      - name: Vérifier la signature
+        if: steps.release.outputs.signed == 'true'
+        run: |
+          APKSIGNER="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)/apksigner"
+          "$APKSIGNER" verify --verbose --print-certs "roulette-soiree-${VERSION_NAME}.apk"
+
       - uses: actions/upload-artifact@v4
+        if: steps.release.outputs.signed == 'true'
         with:
           name: roulette-soiree-release
-          path: android/app/build/outputs/apk/release/*.apk
-          if-no-files-found: ignore
+          path: roulette-soiree-${{ env.VERSION_NAME }}.apk
+
+      # Sur un tag vX.Y.Z : joint l'APK (signé si possible) à une Release GitHub.
+      - name: Release GitHub
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SIGNED: ${{ steps.release.outputs.signed }}
+        run: |
+          if [ "$SIGNED" = "true" ]; then FILE="roulette-soiree-${VERSION_NAME}.apk"; else FILE="roulette-soiree-${VERSION_NAME}-debug.apk"; fi
+          gh release create "$GITHUB_REF_NAME" "$FILE" --title "Roulette Soirée $GITHUB_REF_NAME" --generate-notes
