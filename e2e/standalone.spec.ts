@@ -1,3 +1,4 @@
+import { finishFlow } from './flow';
 import { expect, test } from '@playwright/test';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -66,6 +67,7 @@ test('sur grand écran, le mode TV s’active seul et la partie se joue au clavi
 
   // Espace : « Je le fais » → +3 pour Alice, c'est au tour de Bob.
   await page.keyboard.press('Space');
+  await finishFlow(page);
   await expect(page.getByRole('button', { name: 'Lancer la roulette', exact: true })).toBeVisible();
   const first = live.getByRole('listitem').first();
   await expect(first).toContainText('Alice');

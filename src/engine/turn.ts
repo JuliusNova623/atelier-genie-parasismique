@@ -1,4 +1,8 @@
 import { drawWithReplacement } from './deck';
+import { malusEffects, type EffectRecord } from './effects';
+import { answerFlow, flowDone, startFlow, type FlowInput } from './flow';
+import type { Step } from './steps';
+import { DRINK_COUNT, MAX_DRINKS, drinkCountOf } from './drinks';
 import {
   currentPlayerId,
   exhaustedThemes,
@@ -88,14 +92,7 @@ export function playedCards(game: Game, themeId: string): number[] {
 
 // ───────────────────────── Carte, jokers, boisson (étape 6) ─────────────────────────
 
-export const MAX_DRINKS = 20;
-export const DRINK_COUNT = MAX_DRINKS;
-
-/** Nombre de boissons de la partie (borné à 1..20 ; 20 si la partie n'en précise pas). */
-export function drinkCountOf(game: Game): number {
-  const n = game.rules.drinkCount ?? MAX_DRINKS;
-  return Math.min(MAX_DRINKS, Math.max(1, Math.trunc(n)));
-}
+export { DRINK_COUNT, MAX_DRINKS, drinkCountOf };
 
 function requireCard(game: Game) {
   const p = game.pending;
@@ -201,12 +198,26 @@ export function drawDrinkNumber(game: Game, source?: Uint32Source): Game {
   };
 }
 
+/**
+ * Effets d'une boisson « Je bois » quand un bouclier ou une alliance s'applique au buveur
+ * (le protecteur boit à sa place, ou le malus est partagé 50/50). Vide si le joueur boit seul.
+ */
+export function drinkEffects(game: Game): EffectRecord[] {
+  const p = game.pending;
+  if (!p || p.drinkNumber === undefined) return [];
+  const player = cardPlayerId(game);
+  const fx = malusEffects(game, [], [player], p.drinkNumber, 1);
+  const plain = fx.length === 1 && fx[0].k === 'malus' && fx[0].to === player && fx[0].mult === 1;
+  return plain ? [] : fx;
+}
+
 /** « J'ai bu » : boire est obligatoire quand on ne fait pas la carte. Points boisson, puis joueur suivant. */
 export function resolveDrink(game: Game, now: number): Game {
   const p = game.pending;
   if (!p || p.stage !== 'drink' || !p.revealed || p.drinkNumber === undefined) {
     throw new Error('Aucune boisson à résoudre.');
   }
+  const effects = drinkEffects(game);
   return recordTurn(
     game,
     {
@@ -217,9 +228,67 @@ export function resolveDrink(game: Game, now: number): Game {
       jokerUsed: p.joker === 'transfer' ? 'transfer' : undefined,
       playerId: p.transferTo,
       deciderId: p.deciderId,
+      effects: effects.length ? effects : undefined,
     },
     now,
   );
+}
+
+// ───────────────────────── Effets de cartes (« Je le fais » d'une carte à effet) ─────────────────────────
+
+/** Lance l'effet de la carte (choisir un joueur, malus, règle…). Sans étape à jouer, le tour se termine aussitôt. */
+export function startCardFlow(
+  game: Game,
+  steps: Step[],
+  title: string,
+  now: number,
+  rng?: Uint32Source,
+): Game {
+  const p = requireCard(game);
+  if (p.duel) throw new Error('Pas d’effet de carte pendant un duel.');
+  const flow = startFlow(game, steps, cardPlayerId(game), 'card', title, rng);
+  const next: Game = { ...game, pending: { ...p, stage: 'flow', flow, revealed: true } };
+  return flowDone(flow) ? finishCardFlow(next, now) : next;
+}
+
+/** Répond à l'étape en cours de l'effet ; la dernière réponse enregistre le tour (+ points de carte). */
+export function answerCardFlow(
+  game: Game,
+  input: FlowInput,
+  now: number,
+  rng?: Uint32Source,
+): Game {
+  const p = game.pending;
+  if (!p || p.stage !== 'flow' || !p.flow) throw new Error('Aucun effet de carte en cours.');
+  const flow = answerFlow(game, p.flow, input, rng);
+  const next: Game = { ...game, pending: { ...p, flow } };
+  return flowDone(flow) ? finishCardFlow(next, now) : next;
+}
+
+/** Enregistre le tour d'une carte à effet : carte réalisée, effets joints au journal. */
+export function finishCardFlow(game: Game, now: number): Game {
+  const p = game.pending;
+  if (!p || p.stage !== 'flow' || !p.flow || p.cardNumber === undefined) {
+    throw new Error('Aucun effet de carte à terminer.');
+  }
+  return recordTurn(
+    game,
+    {
+      themeId: p.themeId,
+      cardNumber: p.cardNumber,
+      outcome: 'done',
+      jokerUsed: p.joker,
+      playerId: p.transferTo,
+      deciderId: p.deciderId,
+      effects: p.flow.effects,
+    },
+    now,
+  );
+}
+
+/** Effets décidés entre deux tours (faute, résolution d'une règle) : joints au prochain tour enregistré. */
+export function addCarry(game: Game, effects: EffectRecord[]): Game {
+  return effects.length ? { ...game, carry: [...(game.carry ?? []), ...effects] } : game;
 }
 
 // ───────────────────────── Duel (équipes) ─────────────────────────

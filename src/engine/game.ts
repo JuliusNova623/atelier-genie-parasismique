@@ -1,3 +1,4 @@
+import type { EffectRecord } from './effects';
 import { newId } from './id';
 import { pickOne, type Uint32Source } from './rng';
 import { pointsFor } from './scoring';
@@ -114,6 +115,14 @@ export interface TurnInput {
   jokerUsed?: JokerType;
   cardPoints?: number | null;
   deciderId?: string;
+  /** Effets de la carte (malus infligés, règles créées…). */
+  effects?: EffectRecord[];
+}
+
+/** Effets décidés entre deux tours (fautes…) + effets de la carte : tous joints au tour enregistré. */
+function withEffects(game: Game, own: EffectRecord[] = []): { effects?: EffectRecord[] } {
+  const all = [...(game.carry ?? []), ...own];
+  return all.length ? { effects: all } : {};
 }
 
 /** Ajoute un tour au journal. Pur : renvoie une nouvelle partie. */
@@ -161,9 +170,10 @@ export function recordTurn(game: Game, input: TurnInput, now: number, source?: U
       cardPoints: input.cardPoints,
     }),
     nextPlayerId: nextPlayerId(game, owner, source),
+    ...withEffects(game, input.effects),
     timestamp: now,
   };
-  return { ...game, log: [...game.log, event], pending: null };
+  return { ...game, log: [...game.log, event], pending: null, carry: undefined };
 }
 
 /** Duel : le vainqueur marque les points de carte, aucune boisson. */
@@ -196,9 +206,10 @@ export function recordDuel(
     outcome: 'duel',
     pointsDelta: pointsFor(game.rules, 'duel', { cardPoints: input.cardPoints }),
     nextPlayerId: nextPlayerId(game, owner, source),
+    ...withEffects(game),
     timestamp: now,
   };
-  return { ...game, log: [...game.log, event], pending: null };
+  return { ...game, log: [...game.log, event], pending: null, carry: undefined };
 }
 
 export function canUndo(game: Game): boolean {

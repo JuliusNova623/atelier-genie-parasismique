@@ -1,7 +1,7 @@
 import { PickerPanel } from '../../components/PickerPanel';
 import styles from '../../components/ui.module.css';
 import { getPlayer } from '../../engine/game';
-import { cardPlayerId, drinkCountOf } from '../../engine/turn';
+import { cardPlayerId, drinkCountOf, drinkEffects } from '../../engine/turn';
 import type { Game } from '../../engine/types';
 import { fr } from '../../i18n/fr';
 import { useGameStore } from '../../store/game';
@@ -57,6 +57,15 @@ export function DrinkScreen({ game }: { game: Game }) {
             <h2 style={{ fontSize: '1.2rem', textAlign: 'center' }}>
               {t.drinkIs(target, drinkLabel(drinks, target))}
             </h2>
+            {drinkEffects(game).map((fx, i) =>
+              fx.k === 'malus' ? (
+                <p key={i} className={styles.hint} data-effect="malus">
+                  {fx.via ? '🛡️ ' : ''}
+                  {getPlayer(game, fx.to).name} boit {fx.mult === 0.5 ? '½ ' : ''}
+                  {fx.via ? `(bouclier de ${getPlayer(game, fx.via).name})` : ''}
+                </p>
+              ) : null,
+            )}
             {player.noAlcohol && <p style={{ margin: 0, fontWeight: 700 }}>{t.noAlcoholVersion}</p>}
             {drink?.noAlcohol && <p className={styles.hint}>{t.drinkIsNoAlcohol}</p>}
           </section>

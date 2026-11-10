@@ -5,6 +5,9 @@ import { useSettings } from '../store/settings';
 import { setKeepAwake } from '../util/native';
 import { CardScreen } from './play/CardScreen';
 import { DrinkScreen } from './play/DrinkScreen';
+import { FlowScreen } from './play/FlowScreen';
+import { RulesPanel } from './play/RulesPanel';
+import { deriveEffects } from '../engine/effects';
 import { PlayShell } from './play/PlayShell';
 import { ThemeScreen } from './play/ThemeScreen';
 import { WheelScreen } from './play/WheelScreen';
@@ -28,13 +31,28 @@ export function Play() {
 
   usePlayHotkeys(game);
 
+  // Une règle arrivée à échéance avec des étapes de résolution s'ouvre toute seule entre deux tours.
+  const interlude = useGameStore((s) => s.interlude);
+  const dueId =
+    game && !game.pending && !interlude
+      ? deriveEffects(game).rules.find((r) => r.due)?.id
+      : undefined;
+  useEffect(() => {
+    if (dueId) useGameStore.getState().startResolution(dueId);
+  }, [dueId]);
+
   if (!game) return <Navigate to="/" replace />;
 
   const screen = screenOf(game);
   const turn = game.log.length;
   const view =
     screen === 'wheel' ? (
-      <WheelScreen key={`wheel-${turn}`} game={game} />
+      <>
+        <WheelScreen key={`wheel-${turn}`} game={game} />
+        <RulesPanel game={game} />
+      </>
+    ) : screen === 'flow' ? (
+      <FlowScreen key={`flow-${turn}`} game={game} />
     ) : screen === 'drink' ? (
       <DrinkScreen key={`drink-${turn}`} game={game} />
     ) : screen === 'card' ? (

@@ -1,3 +1,4 @@
+import { checkFlowRefs } from '../engine/steps';
 import { CARDS_PER_THEME, EXPECTED_THEMES, contentSchema, type Content } from './schema';
 
 export interface ValidationResult {
@@ -49,6 +50,9 @@ export function validateContent(raw: unknown): ValidationResult {
     }
     const seen = new Set<number>();
     for (const c of t.cards) {
+      if (c.flow) {
+        for (const e of checkFlowRefs(c.flow)) errors.push(`${label}, carte ${c.number} : ${e}`);
+      }
       if (c.number > CARDS_PER_THEME) {
         errors.push(`${label}, carte ${c.number} : numéro hors de 1 à ${CARDS_PER_THEME}.`);
       }

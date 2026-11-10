@@ -1,3 +1,5 @@
+import type { EffectRecord } from './effects';
+import type { FlowState } from './flow';
 export type JokerType = 'pass' | 'double' | 'transfer';
 
 /**
@@ -67,6 +69,8 @@ export interface TurnEvent {
   deciderId?: string;
   /** Joueur désigné pour le tour suivant (rotation ou tirage au hasard). */
   nextPlayerId: string;
+  /** Effets de la carte et des règles de ce tour (malus infligés, règles créées…). */
+  effects?: EffectRecord[];
   timestamp: number;
 }
 
@@ -79,7 +83,7 @@ export type PickerMode = 'auto' | 'dice' | 'shake' | 'cards' | 'slot';
  */
 export interface PendingTurn {
   /** theme : roue puis choix du numéro · card : carte tirée · drink : étape boisson après un refus. */
-  stage: 'theme' | 'card' | 'drink';
+  stage: 'theme' | 'card' | 'drink' | 'flow';
   themeId: string;
   cardNumber?: number;
   /** Étape boisson : boisson tirée (avec remise) ; absente tant que le joueur n'a pas tiré. */
@@ -90,6 +94,8 @@ export interface PendingTurn {
   transferTo?: string;
   /** « L'adversaire décide » : joueur d'une autre équipe, désigné au hasard au tirage de la carte. */
   deciderId?: string;
+  /** Effet de la carte en cours (choix de joueurs, malus…), sauvegardé à chaque étape. */
+  flow?: FlowState;
   /** Duel en cours : les deux joueurs (équipes différentes) qui reçoivent la même carte. */
   duel?: { a: string; b: string };
   revealed: boolean;
@@ -111,6 +117,8 @@ export interface Game {
   themeIds: string[];
   log: TurnEvent[];
   pending: PendingTurn | null;
+  /** Effets décidés entre deux tours (fautes, résolutions) : joints au prochain tour enregistré. */
+  carry?: EffectRecord[];
   /** Conditions de fin déjà proposées puis refusées (« Continuer ») : on ne les repropose pas. */
   endDismissed?: string[];
   /** Dernier mode de tirage utilisé par joueur (présélectionné au tour suivant). */

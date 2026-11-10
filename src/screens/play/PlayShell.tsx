@@ -15,6 +15,7 @@ const HINTS: Record<PlayScreen, [string, string][]> = {
     ['B', fr.play.keys.cardRefuse],
     ['P', fr.play.keys.cardPass],
   ],
+  flow: [['Espace', 'Valider']],
   drink: [['Espace', `${fr.play.keys.drinkSpin} / ${fr.play.keys.drinkDrank}`]],
 };
 

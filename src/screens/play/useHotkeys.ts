@@ -1,15 +1,17 @@
 import { useEffect } from 'react';
+import { stepView } from '../../engine/flow';
 import type { Game } from '../../engine/types';
 import { useGameStore } from '../../store/game';
 import { toggleFullscreen } from '../../util/fullscreen';
 
-export type PlayScreen = 'wheel' | 'theme' | 'card' | 'drink';
+export type PlayScreen = 'wheel' | 'theme' | 'card' | 'drink' | 'flow';
 
 /** Quel écran de jeu est affiché, d'après l'état de la partie (même logique que le routeur de jeu). */
 export function screenOf(game: Game): PlayScreen {
   const p = game.pending;
   if (!p || (p.stage === 'theme' && !p.revealed)) return 'wheel';
   if (p.stage === 'drink') return 'drink';
+  if (p.stage === 'flow') return 'flow';
   if (p.stage === 'card' && p.revealed) return 'card';
   return 'theme';
 }
@@ -32,6 +34,11 @@ export function hotkeysFor(game: Game): Actions {
         b: () => void s.refuseCard(),
         p: () => void s.playPass(),
       };
+    case 'flow': {
+      const v = p?.flow ? stepView(game, p.flow) : null;
+      const confirm = v && ['draw', 'malus', 'water', 'info'].includes(v.kind);
+      return confirm ? { space: () => void s.answerFlow({}) } : {};
+    }
     case 'drink':
       if (p?.drinkNumber === undefined) return { space: () => void s.spinDrink() };
       return {

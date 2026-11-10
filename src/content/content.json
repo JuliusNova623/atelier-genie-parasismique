@@ -98,7 +98,15 @@
           "type": "action",
           "text": "Laisse le groupe te donner un surnom embarrassant qui devra être utilisé pendant les trois prochains tours.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} porte un surnom embarrassant choisi par le groupe",
+              "subject": "me",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 14,
@@ -119,7 +127,15 @@
           "type": "action",
           "text": "Choisis deux personnes et explique pourquoi tu ne leur confierais jamais un secret.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "p",
+              "prompt": "Choisis deux personnes",
+              "count": 2
+            }
+          ]
         },
         {
           "number": 17,
@@ -133,7 +149,15 @@
           "type": "action",
           "text": "Pendant un tour complet, tu dois répondre à toutes les questions comme si tu étais une personne extrêmement arrogante.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} répond à tout comme une personne extrêmement arrogante",
+              "subject": "me",
+              "turns": "round"
+            }
+          ]
         },
         {
           "number": 19,
@@ -147,7 +171,14 @@
           "type": "action",
           "text": "Désigne un joueur et raconte une histoire fictive dans laquelle vous êtes complices d'une énorme bêtise. Il doit improviser la suite sans rire.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Désigne ton complice"
+            }
+          ]
         }
       ]
     },
@@ -164,140 +195,562 @@
           "type": "action",
           "text": "Bataille de regards : Choisis un adversaire. Le premier qui cligne des yeux, détourne le regard ou rit prend le malus indiqué par la roue.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "opp",
+              "prompt": "Choisis ton adversaire"
+            },
+            {
+              "do": "pick",
+              "as": "loser",
+              "prompt": "Qui a clignoté, détourné le regard ou ri en premier ?",
+              "among": ["me", "opp"]
+            },
+            {
+              "do": "malus",
+              "to": "loser"
+            }
+          ]
         },
         {
           "number": 2,
           "type": "action",
           "text": "Le chef d'orchestre : Tape un rythme simple avec tes mains. Le joueur à ta gauche doit le reproduire et ajouter un son. Le premier qui se trompe ou hésite a perdu.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "info",
+              "text": "Ton adversaire : {left} (ton voisin de gauche)."
+            },
+            {
+              "do": "pick",
+              "as": "loser",
+              "prompt": "Qui s'est trompé ou a hésité en premier ?",
+              "among": ["me", "left"]
+            },
+            {
+              "do": "malus",
+              "to": "loser"
+            }
+          ]
         },
         {
           "number": 3,
           "type": "action",
           "text": "Le jeu du \"Qui pourrait...\" : Compte jusqu'à 3. Tout le monde pointe la personne la plus susceptible de survivre à une invasion zombie en sacrifiant les autres. La personne visée perd.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "v",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "v"
+            }
+          ]
         },
         {
           "number": 4,
           "type": "action",
           "text": "Mission Secrète (Le Maître des Pouces) : Jusqu'à ton prochain tour, si tu poses ton pouce sur le rebord de la table, tous les autres doivent faire pareil. Le dernier prend un malus.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "Maître des pouces : si {me} pose son pouce sur la table, tout le monde doit l'imiter",
+              "subject": "all",
+              "until": "owner-turn",
+              "onExpire": [
+                {
+                  "do": "pick",
+                  "as": "last",
+                  "prompt": "Qui a posé son pouce en dernier ?",
+                  "from": "all"
+                },
+                {
+                  "do": "malus",
+                  "to": "last"
+                }
+              ]
+            }
+          ]
         },
         {
           "number": 5,
           "type": "action",
           "text": "Le duel des compliments : Choisis un adversaire. Tour à tour, faites-vous des compliments de plus en plus intenses et gênants. Le premier qui rit est pénalisé.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "opp",
+              "prompt": "Choisis ton adversaire"
+            },
+            {
+              "do": "pick",
+              "as": "loser",
+              "prompt": "Qui a ri en premier ?",
+              "among": ["me", "opp"]
+            },
+            {
+              "do": "malus",
+              "to": "loser"
+            }
+          ]
         },
         {
           "number": 6,
           "type": "action",
           "text": "Le mot interdit collectif : Choisis un mot très courant. Quiconque le prononce avant que l'aiguille de la roue ne tourne à nouveau prend le numéro de la roue.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "Mot interdit collectif : {me} a choisi un mot très courant",
+              "subject": "all",
+              "until": "next-turn",
+              "onExpire": [
+                {
+                  "do": "pick",
+                  "as": "w",
+                  "prompt": "Qui a prononcé le mot interdit ?",
+                  "from": "all",
+                  "count": "any"
+                },
+                {
+                  "do": "malus",
+                  "to": "w"
+                }
+              ]
+            }
+          ]
         },
         {
           "number": 7,
           "type": "action",
           "text": "La chorégraphie maudite : Invente un pas de danse ridicule. Tous les joueurs doivent le reproduire. Tu juges qui y met le moins d'énergie pour lui donner un gage.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "j",
+              "prompt": "Qui a mis le moins d'énergie ?"
+            },
+            {
+              "do": "malus",
+              "to": "j",
+              "prompt": "Gage : boisson"
+            }
+          ]
         },
         {
           "number": 8,
           "type": "action",
           "text": "Le tribunal de l'absurde : Désigne deux joueurs qui doivent débattre 1 minute sur un sujet ridicule. Tu désignes le vainqueur, le perdant trinque.",
           "points": null,
-          "timer": 60
+          "timer": 60,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "d",
+              "prompt": "Qui sont les deux débatteurs ?",
+              "count": 2
+            },
+            {
+              "do": "pick",
+              "as": "loser",
+              "prompt": "Qui a perdu le débat ?",
+              "among": ["d"]
+            },
+            {
+              "do": "malus",
+              "to": "loser"
+            }
+          ]
         },
         {
           "number": 9,
           "type": "action",
           "text": "Compétition de mimes en duo : Fais équipe avec la personne en face. Tu as 30 secondes pour lui faire deviner un film honteux. En cas d'échec, vous prenez la pénalité.",
           "points": null,
-          "timer": 30
+          "timer": 30,
+          "flow": [
+            {
+              "do": "info",
+              "text": "Ton partenaire : {opposite} (la personne en face)."
+            },
+            {
+              "do": "ask",
+              "as": "r",
+              "prompt": "{opposite} a-t-il deviné le film ?",
+              "options": [
+                {
+                  "id": "win",
+                  "label": "Oui, trouvé !"
+                },
+                {
+                  "id": "fail",
+                  "label": "Non, échec"
+                }
+              ]
+            },
+            {
+              "do": "malus",
+              "to": ["me", "opposite"],
+              "when": {
+                "var": "r",
+                "is": ["fail"]
+              }
+            }
+          ]
         },
         {
           "number": 10,
           "type": "action",
           "text": "L'épreuve de la statue : Crie \"STATUE!\". Le dernier joueur à s'immobiliser totalement perd.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "l",
+              "prompt": "Qui s'est immobilisé en dernier ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "l"
+            }
+          ]
         },
         {
           "number": 11,
           "type": "action",
           "text": "Le Bouclier Humain : Désigne un joueur. Il devient ton bouclier humain et prendra ton prochain gage ou malus à ta place. Il pourra se venger plus tard !",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "p",
+              "prompt": "Qui sera ton bouclier humain ?"
+            },
+            {
+              "do": "shield",
+              "protector": "p"
+            }
+          ]
         },
         {
           "number": 12,
           "type": "action",
           "text": "Alliance forcée (Les Siamois) : Choisis un partenaire. Jusqu'à ton prochain tour, vous devez vous toucher en continu. Si le contact rompt, vous êtes pénalisés au maximum.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "p",
+              "prompt": "Choisis ton partenaire"
+            },
+            {
+              "do": "rule",
+              "text": "Siamois : {me} et {p} doivent rester en contact jusqu'au prochain tour de {me}",
+              "subject": ["me", "p"],
+              "until": "owner-turn",
+              "onExpire": [
+                {
+                  "do": "ask",
+                  "as": "broke",
+                  "prompt": "Le contact a-t-il été rompu ?",
+                  "options": [
+                    {
+                      "id": "yes",
+                      "label": "Oui"
+                    },
+                    {
+                      "id": "no",
+                      "label": "Non"
+                    }
+                  ]
+                },
+                {
+                  "do": "malus",
+                  "to": ["me", "p"],
+                  "mult": "max",
+                  "when": {
+                    "var": "broke",
+                    "is": ["yes"]
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
           "number": 13,
           "type": "action",
           "text": "Pacte de silence mortel : Choisis un joueur. Vous n'avez plus le droit de vous adresser la parole ni de vous regarder jusqu'à la fin du jeu. Premier faux pas = sanction.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "p",
+              "prompt": "Avec qui conclus-tu le pacte de silence ?"
+            },
+            {
+              "do": "rule",
+              "text": "Pacte de silence : {me} et {p} ne se parlent plus et ne se regardent plus",
+              "subject": ["me", "p"],
+              "until": "end",
+              "fault": {
+                "ends": true
+              }
+            }
+          ]
         },
         {
           "number": 14,
           "type": "action",
           "text": "Le traducteur dramatique : Choisis un partenaire. Pour les 3 prochains tours, à chaque fois qu'il parle, tu dois \"traduire\" ses propos sur un ton hyper dramatique ou sarcastique.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "p",
+              "prompt": "Qui est ton partenaire ?"
+            },
+            {
+              "do": "rule",
+              "text": "{me} traduit tout ce que dit {p} sur un ton dramatique ou sarcastique",
+              "subject": ["me", "p"],
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 15,
           "type": "action",
           "text": "Le pacte du diable : Propose à un joueur de prendre la moitié de ton numéro de roue. S'il refuse, tu prends tout mais tu lui imposes une humiliation publique (un gage).",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "p",
+              "prompt": "À qui proposes-tu le pacte du diable ?"
+            },
+            {
+              "do": "ask",
+              "as": "a",
+              "prompt": "{p} accepte-t-il de prendre la moitié ?",
+              "options": [
+                {
+                  "id": "yes",
+                  "label": "Il accepte"
+                },
+                {
+                  "id": "no",
+                  "label": "Il refuse"
+                }
+              ]
+            },
+            {
+              "do": "malus",
+              "to": ["me", "p"],
+              "mult": 0.5,
+              "prompt": "Malus partagé (moitié chacun)",
+              "when": {
+                "var": "a",
+                "is": ["yes"]
+              }
+            },
+            {
+              "do": "malus",
+              "to": "me",
+              "prompt": "Tu prends tout",
+              "when": {
+                "var": "a",
+                "is": ["no"]
+              }
+            },
+            {
+              "do": "info",
+              "text": "{p} subit un gage public imposé par {me}.",
+              "when": {
+                "var": "a",
+                "is": ["no"]
+              }
+            }
+          ]
         },
         {
           "number": 16,
           "type": "action",
           "text": "L'échange de personnalité : Pendant 5 minutes, toi et le joueur à ta droite intervertissez vos personnalités et façons de parler. Le groupe note vos performances.",
           "points": null,
-          "timer": null
+          "timer": 300,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} et {right} ont échangé leurs personnalités et leurs façons de parler",
+              "subject": ["me", "right"],
+              "turns": "round"
+            }
+          ]
         },
         {
           "number": 17,
           "type": "action",
           "text": "Le détecteur de mensonges : Raconte une fausse anecdote gênante impliquant un autre joueur avec le plus grand sérieux. Si le groupe doute, c'est l'autre joueur qui est pénalisé.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "p",
+              "prompt": "Quel joueur est impliqué dans ton anecdote ?"
+            },
+            {
+              "do": "ask",
+              "as": "d",
+              "prompt": "Le groupe doute-t-il ?",
+              "options": [
+                {
+                  "id": "yes",
+                  "label": "Oui, il doute"
+                },
+                {
+                  "id": "no",
+                  "label": "Non, il y croit"
+                }
+              ]
+            },
+            {
+              "do": "malus",
+              "to": "p",
+              "when": {
+                "var": "d",
+                "is": ["yes"]
+              }
+            }
+          ]
         },
         {
           "number": 18,
           "type": "action",
           "text": "La roulette russe des contacts : Ton voisin de gauche scrolle tes contacts à l'aveugle. Le groupe rédige un message étrange à lui envoyer. Si tu refuses, pénalité maximale.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "ask",
+              "as": "a",
+              "prompt": "{left} scrolle tes contacts : tu acceptes ?",
+              "options": [
+                {
+                  "id": "ok",
+                  "label": "J'accepte"
+                },
+                {
+                  "id": "refuse",
+                  "label": "Je refuse"
+                }
+              ]
+            },
+            {
+              "do": "malus",
+              "to": "me",
+              "mult": "max",
+              "prompt": "Pénalité maximale",
+              "when": {
+                "var": "a",
+                "is": ["refuse"]
+              }
+            }
+          ]
         },
         {
           "number": 19,
           "type": "action",
           "text": "Trahison éclair : Tu as 10 secondes pour révéler une habitude honteuse du joueur que tu connais le mieux ici. S'il valide en riant, il prend le malus. S'il se vexe, c'est pour toi.",
           "points": null,
-          "timer": 10
+          "timer": 10,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "p",
+              "prompt": "Quel joueur connais-tu le mieux ?"
+            },
+            {
+              "do": "ask",
+              "as": "r",
+              "prompt": "Comment réagit {p} ?",
+              "options": [
+                {
+                  "id": "laugh",
+                  "label": "Il valide en riant"
+                },
+                {
+                  "id": "vexed",
+                  "label": "Il se vexe"
+                }
+              ]
+            },
+            {
+              "do": "malus",
+              "to": "p",
+              "when": {
+                "var": "r",
+                "is": ["laugh"]
+              }
+            },
+            {
+              "do": "malus",
+              "to": "me",
+              "when": {
+                "var": "r",
+                "is": ["vexed"]
+              }
+            }
+          ]
         },
         {
           "number": 20,
           "type": "action",
           "text": "Le concours de la pire imitation : Toi et un autre joueur imitez une personne du groupe. Le groupe vote pour la pire imitation, et le perdant assume les conséquences.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "p",
+              "prompt": "Quel joueur imite avec toi ?"
+            },
+            {
+              "do": "pick",
+              "as": "loser",
+              "prompt": "Qui a fait la pire imitation ?",
+              "among": ["me", "p"]
+            },
+            {
+              "do": "malus",
+              "to": "loser"
+            }
+          ]
         }
       ]
     },
@@ -684,70 +1137,150 @@
           "type": "action",
           "text": "Tourette de l'Amour : Termine toutes tes phrases par \"...et c'est pour ça que je suis incroyable au lit\".",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} : Tourette de l'Amour : Termine toutes tes phrases par \"...et c'est pour ça que je suis incroyable au lit\".",
+              "subject": "me",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 12,
           "type": "action",
           "text": "Le Poète Maudit : S'exprimer uniquement en rimes. La première phrase sans rime entraîne une pénalité.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} : Le Poète Maudit : S'exprimer uniquement en rimes. La première phrase sans rime entraîne une pénalité.",
+              "subject": "me",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 13,
           "type": "action",
           "text": "L'Ascenseur Émotionnel : Le groupe choisit une émotion extrême. Tu dois tout jouer sur ce ton.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} : L'Ascenseur Émotionnel : Le groupe choisit une émotion extrême. Tu dois tout jouer sur ce ton.",
+              "subject": "me",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 14,
           "type": "action",
           "text": "Le Voyageur Bloqué : Parle avec un accent imposé (québécois, bourgeois, etc.) sans jamais en sortir.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} : Le Voyageur Bloqué : Parle avec un accent imposé (québécois, bourgeois, etc.) sans jamais en sortir.",
+              "subject": "me",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 15,
           "type": "action",
           "text": "Le Voyage dans le Temps : Vouvoie tout le monde en utilisant du vocabulaire du Moyen-Âge ou de Molière.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} : Le Voyage dans le Temps : Vouvoie tout le monde en utilisant du vocabulaire du Moyen-Âge ou de Molière.",
+              "subject": "me",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 16,
           "type": "action",
           "text": "Le Regard de Psychopathe : Ne cligne plus des yeux quand tu parles et fixe intensément ton interlocuteur.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} : Le Regard de Psychopathe : Ne cligne plus des yeux quand tu parles et fixe intensément ton interlocuteur.",
+              "subject": "me",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 17,
           "type": "action",
           "text": "Le Murmure Gênant : Parle uniquement en chuchotant façon ASMR à l'oreille de tes voisins.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} : Le Murmure Gênant : Parle uniquement en chuchotant façon ASMR à l'oreille de tes voisins.",
+              "subject": "me",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 18,
           "type": "action",
           "text": "La Ferme : Remplace tous les prénoms des joueurs par des noms d'animaux de la ferme.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} : La Ferme : Remplace tous les prénoms des joueurs par des noms d'animaux de la ferme.",
+              "subject": "me",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 19,
           "type": "action",
           "text": "Le Fan Club : Applaudis et lance des \"Bravo!\" exagérés à chaque fois que quelqu'un finit de parler.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} : Le Fan Club : Applaudis et lance des \"Bravo!\" exagérés à chaque fois que quelqu'un finit de parler.",
+              "subject": "me",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 20,
           "type": "action",
           "text": "La Voix Maudite : Raconte ton premier baiser avec la voix de Mickey, Donald ou Homer Simpson.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} : La Voix Maudite : Raconte ton premier baiser avec la voix de Mickey, Donald ou Homer Simpson.",
+              "subject": "me",
+              "turns": 3
+            }
+          ]
         }
       ]
     },
@@ -934,140 +1467,494 @@
           "type": "action",
           "text": "Le Transfert Magique : Annule ton malus et donne-le immédiatement à un autre joueur.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "À qui donnes-tu ce malus ?"
+            },
+            {
+              "do": "malus",
+              "to": "x",
+              "draw": "m"
+            }
+          ]
         },
         {
           "number": 2,
           "type": "action",
           "text": "Le Roi/La Reine : Multiplie le chiffre de la roue par deux et distribue le total entre les joueurs.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "distribute",
+              "portions": 2,
+              "draw": "m",
+              "prompt": "Répartis 2 portions entre les joueurs"
+            }
+          ]
         },
         {
           "number": 3,
           "type": "action",
           "text": "Immunité Totale : Rien pour ce tour, et tu annules une contrainte active sur toi ou un autre.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "info",
+              "text": "Immunité totale : rien pour ce tour."
+            },
+            {
+              "do": "cancel-rule",
+              "prompt": "Annule une contrainte active (sur toi ou sur un autre)"
+            }
+          ]
         },
         {
           "number": 4,
           "type": "action",
           "text": "Le Maître de l'Eau : Remplace ton malus en forçant un joueur au choix à boire un grand verre d'eau.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui boit un grand verre d'eau à ta place ?"
+            },
+            {
+              "do": "water",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 5,
           "type": "action",
           "text": "Solidarité Inversée : Tous les autres joueurs prennent le malus de la roue à ta place.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "malus",
+              "to": "others",
+              "draw": "m"
+            }
+          ]
         },
         {
           "number": 6,
           "type": "action",
           "text": "Le Bouc Émissaire : Tu prends immédiatement le double du malus de la roue.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "malus",
+              "to": "me",
+              "mult": 2,
+              "draw": "m"
+            }
+          ]
         },
         {
           "number": 7,
           "type": "action",
           "text": "Retour de Karma : Tu subis la pénalité maximale prévue par le jeu sans discussion.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "malus",
+              "to": "me",
+              "mult": "max",
+              "draw": "m"
+            }
+          ]
         },
         {
           "number": 8,
           "type": "action",
           "text": "La Taxe Téléphone : Prends ton malus. Tous ceux qui ont leur téléphone sur la table le prennent aussi.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "malus",
+              "to": "me",
+              "draw": "m"
+            },
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui a son téléphone sur la table ?",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x",
+              "draw": "m"
+            }
+          ]
         },
         {
           "number": 9,
           "type": "action",
           "text": "L'Aimant à Poisse : Tu prends ton malus + un gage immédiat choisi par tes deux voisins.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "malus",
+              "to": "me",
+              "draw": "m"
+            },
+            {
+              "do": "info",
+              "text": "Gage immédiat choisi par tes deux voisins : {left} et {right}."
+            }
+          ]
         },
         {
           "number": 10,
           "type": "action",
           "text": "Victime Collégiale : Tu prends ton malus et désignes le joueur qui a le moins bu/joué pour faire de même.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "malus",
+              "to": "me",
+              "draw": "m"
+            },
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui a le moins bu ou le moins joué ?"
+            },
+            {
+              "do": "malus",
+              "to": "x",
+              "draw": "m"
+            }
+          ]
         },
         {
           "number": 11,
           "type": "action",
           "text": "Révolution : Tout le monde passe son verre ou son gage en cours à son voisin de gauche.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rotate-rules"
+            },
+            {
+              "do": "info",
+              "text": "Tout le monde passe son verre ou son gage en cours à son voisin de gauche."
+            }
+          ]
         },
         {
           "number": 12,
           "type": "action",
           "text": "Communisme : Le malus de ce tour s'applique simultanément à TOUS les joueurs.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "malus",
+              "to": "all",
+              "draw": "m"
+            }
+          ]
         },
         {
           "number": 13,
           "type": "action",
           "text": "La Roulette Russe : Choisis un chiffre entre 1 et 10. Chiffre pair = voisin prend le malus, impair = tu prends le double.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "number",
+              "as": "n",
+              "prompt": "Choisis un chiffre entre 1 et 10",
+              "min": 1,
+              "max": 10
+            },
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "malus",
+              "to": "left",
+              "draw": "m",
+              "prompt": "Chiffre pair : ton voisin prend le malus",
+              "when": {
+                "var": "n",
+                "is": [2, 4, 6, 8, 10]
+              }
+            },
+            {
+              "do": "malus",
+              "to": "me",
+              "mult": 2,
+              "draw": "m",
+              "prompt": "Chiffre impair : tu prends le double",
+              "when": {
+                "var": "n",
+                "is": [1, 3, 5, 7, 9]
+              }
+            }
+          ]
         },
         {
           "number": 14,
           "type": "action",
           "text": "Duel à mort : Pierre-Feuille-Ciseaux immédiat avec un joueur. Le perdant prend la pénalité.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Contre qui joues-tu à Pierre-Feuille-Ciseaux ?"
+            },
+            {
+              "do": "pick",
+              "as": "l",
+              "prompt": "Qui a perdu ?",
+              "among": ["me", "x"]
+            },
+            {
+              "do": "malus",
+              "to": "l"
+            }
+          ]
         },
         {
           "number": 15,
           "type": "action",
           "text": "Solidarité Forcée : Choisis un partenaire pour partager intégralement le malus de la roue.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Avec qui partages-tu le malus ?"
+            },
+            {
+              "do": "malus",
+              "to": ["me", "x"],
+              "draw": "m"
+            }
+          ]
         },
         {
           "number": 16,
           "type": "action",
           "text": "Le Bouclier Humain : Désigne un joueur qui absorbe l'intégralité de ton malus tout de suite.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est ton bouclier humain ?"
+            },
+            {
+              "do": "malus",
+              "to": "x",
+              "draw": "m"
+            }
+          ]
         },
         {
           "number": 17,
           "type": "action",
           "text": "Le Silence est d'Or : Le dernier à s'arrêter de parler après cette lecture prend le malus à ta place.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui s'est arrêté de parler en dernier ?"
+            },
+            {
+              "do": "malus",
+              "to": "x",
+              "draw": "m"
+            }
+          ]
         },
         {
           "number": 18,
           "type": "action",
           "text": "Inversion du Temps : Le malus est transféré directement au joueur qui a joué juste avant toi.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "malus",
+              "to": "prev",
+              "draw": "m",
+              "prompt": "Le malus revient à {prev}, qui a joué juste avant toi"
+            }
+          ]
         },
         {
           "number": 19,
           "type": "action",
           "text": "L'Arbitre : Fais affronter deux joueurs du regard. Le perdant prend ton malus.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "pick",
+              "as": "p",
+              "prompt": "Qui s'affronte du regard ?",
+              "count": 2
+            },
+            {
+              "do": "pick",
+              "as": "l",
+              "prompt": "Qui a perdu ?",
+              "among": ["p"]
+            },
+            {
+              "do": "malus",
+              "to": "l",
+              "draw": "m"
+            }
+          ]
         },
         {
           "number": 20,
           "type": "action",
           "text": "Épreuve d'adresse : Lance un bouchon dans un verre au centre. Réussi = tu distribues, Raté = tu prends le double.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "ask",
+              "as": "r",
+              "prompt": "Le bouchon est-il dans le verre ?",
+              "options": [
+                {
+                  "id": "yes",
+                  "label": "Réussi"
+                },
+                {
+                  "id": "no",
+                  "label": "Raté"
+                }
+              ]
+            },
+            {
+              "do": "draw",
+              "as": "m",
+              "prompt": "Voici le malus de la roue"
+            },
+            {
+              "do": "distribute",
+              "portions": 1,
+              "draw": "m",
+              "prompt": "Réussi : tu distribues le malus",
+              "when": {
+                "var": "r",
+                "is": ["yes"]
+              }
+            },
+            {
+              "do": "malus",
+              "to": "me",
+              "mult": 2,
+              "draw": "m",
+              "prompt": "Raté : tu prends le double",
+              "when": {
+                "var": "r",
+                "is": ["no"]
+              }
+            }
+          ]
         }
       ]
     },
@@ -1084,140 +1971,386 @@
           "type": "question",
           "text": "Qui de nous est capable de finir en garde à vue par stupidité après une soirée trop arrosée ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 2,
           "type": "question",
           "text": "Qui de nous est capable de feindre une grave maladie juste pour annuler un plan et rester au lit ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 3,
           "type": "question",
           "text": "Qui de nous est capable de épouser quelqu'un uniquement pour son compte en banque ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 4,
           "type": "question",
           "text": "Qui de nous est capable de recoucher avec son ex après avoir juré que c'était fini à jamais ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 5,
           "type": "question",
           "text": "Qui de nous est capable de oublier l'anniversaire de son partenaire ou de son meilleur ami sans excuse ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 6,
           "type": "question",
           "text": "Qui de nous est capable de trahir le groupe en premier pour sauver sa peau dans une télé-réalité ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 7,
           "type": "question",
           "text": "Qui de nous est capable de envoyer un message compromettant à son boss ou prof à 3h du matin ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 8,
           "type": "question",
           "text": "Qui de nous est capable de créer un faux compte sur les réseaux sociaux pour espionner quelqu'un ici ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 9,
           "type": "question",
           "text": "Qui de nous est capable de manger de la nourriture tombée par terre depuis plus de 10 secondes ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 10,
           "type": "question",
           "text": "Qui de nous a le plus d'ego au quotidien et refuse d'admettre ses torts ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 11,
           "type": "question",
           "text": "Qui a le look ou la tenue la plus questionable ce soir ? (Le désigné prend le malus + 1 compliment)",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            },
+            {
+              "do": "info",
+              "text": "{x} reçoit aussi 1 compliment du groupe."
+            }
+          ]
         },
         {
           "number": 12,
           "type": "question",
           "text": "Qui est le plus mauvais perdant dès qu'on lance un jeu ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 13,
           "type": "question",
           "text": "Qui paraît très sage alors que c'est le pire démon ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 14,
           "type": "question",
           "text": "Qui tient le moins bien l'alcool (ou s'endort en premier) ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 15,
           "type": "question",
           "text": "Qui met le plus de temps à répondre aux SMS et ignore ses amis ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 16,
           "type": "question",
           "text": "Qui est la plus grande \"drama queen\" pour des broutilles insignifiantes ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 17,
           "type": "question",
           "text": "Qui a la voix la plus forte et couvre la parole des autres ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 18,
           "type": "question",
           "text": "Qui est le plus susceptible d'avoir déjà menti sur son CV ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 19,
           "type": "question",
           "text": "Qui débattrait 2 heures avec des démarcheurs à domicile par politesse ?",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est désigné par le groupe ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 20,
           "type": "question",
           "text": "Qui est le/la plus séduisant(e) sans s'en rendre compte ? (Le vainqueur distribue le malus)",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "w",
+              "prompt": "Qui est le plus séduisant(e) sans s'en rendre compte ?",
+              "from": "all"
+            },
+            {
+              "do": "distribute",
+              "portions": 1,
+              "by": "w",
+              "prompt": "{w} distribue le malus"
+            }
+          ]
         }
       ]
     },
@@ -1234,140 +2367,400 @@
           "type": "question",
           "text": "Je n'ai jamais fait semblant d'avoir un appel urgent pour m'éclipser d'un rendez-vous assommant.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 2,
           "type": "question",
           "text": "Je n'ai jamais supprimé ou ignoré un message d'un ami en prétendant ne l'avoir jamais reçu.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 3,
           "type": "question",
           "text": "Je n'ai jamais uriné dans une piscine publique ou la mer à l'âge adulte.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 4,
           "type": "question",
           "text": "Je ne me suis jamais trompé de prénom en m'adressant à mon partenaire pendant un moment intime.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 5,
           "type": "question",
           "text": "Je n'ai jamais menti sur mon âge, prénom ou job à un inconnu en soirée juste pour m'inventer une vie.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 6,
           "type": "question",
           "text": "Je n'ai jamais espionné mon ex (ou sa nouvelle conquête) sur les réseaux avec un faux compte.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 7,
           "type": "question",
           "text": "Je n'ai jamais vomi dans un endroit inapproprié (taxi, sac, lit, transports).",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 8,
           "type": "question",
           "text": "Je n'ai jamais fait tomber mon téléphone portable dans la cuvette des toilettes.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 9,
           "type": "question",
           "text": "Je n'ai jamais dit une énorme méchanceté dans le dos de quelqu'un présent ce soir.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 10,
           "type": "question",
           "text": "Je n'ai jamais prétendu avoir lu un livre ou vu un film culte sans rien en connaître.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 11,
           "type": "question",
           "text": "Je n'ai jamais eu de coup d'un soir avec une personne dont j'avais oublié le prénom le lendemain.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 12,
           "type": "question",
           "text": "Je n'ai jamais envoyé un SMS très osé (sexting) à la mauvaise personne par accident.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 13,
           "type": "question",
           "text": "Je n'ai jamais eu de fantasme sur le/la partenaire ou l'ex d'un(e) ami(e) présent(e).",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 14,
           "type": "question",
           "text": "Je n'ai jamais embrassé deux personnes différentes au cours d'une seule et même soirée.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 15,
           "type": "question",
           "text": "Je n'ai jamais fouillé en cachette dans le téléphone de quelqu'un sans autorisation.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 16,
           "type": "question",
           "text": "Je n'ai jamais fait semblant d'être ivre mort pour ne pas assumer ce que j'avais dit ou fait.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 17,
           "type": "question",
           "text": "Je n'ai jamais créé de faux profil sur une application de rencontre.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 18,
           "type": "question",
           "text": "Je ne me suis jamais séparé(e) de quelqu'un uniquement par SMS sans lui faire face.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 19,
           "type": "question",
           "text": "Je n'ai jamais flirté ouvertement avec un serveur uniquement pour avoir un verre gratuit.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         },
         {
           "number": 20,
           "type": "question",
           "text": "Je n'ai jamais eu de blackout total sans aucun souvenir de ma fin de soirée.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui l'a déjà fait ? (ils boivent)",
+              "from": "all",
+              "count": "any"
+            },
+            {
+              "do": "malus",
+              "to": "x"
+            }
+          ]
         }
       ]
     },
@@ -1384,35 +2777,82 @@
           "type": "action",
           "text": "La Loi du Gaucher : Tout faire de la main gauche. L'utilisation de la main droite entraîne un malus.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "Loi du gaucher : tout se fait de la main gauche (main droite = malus)",
+              "subject": "all",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 2,
           "type": "action",
           "text": "L'Interdiction de Pointer : Interdit de pointer du doigt ou dire un prénom. Utiliser \"L'individu en face\".",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "Interdit de pointer du doigt ou de dire un prénom : « l'individu en face »",
+              "subject": "all",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 3,
           "type": "action",
           "text": "Silence Téléphonique : Téléphones face cachée au centre. Le premier qui touche au sien prend le malus max.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "Silence téléphonique : téléphones face cachée au centre, le premier qui touche le sien prend le malus max",
+              "subject": "all",
+              "turns": 3,
+              "fault": {
+                "mult": "max",
+                "ends": true
+              }
+            }
+          ]
         },
         {
           "number": 4,
           "type": "action",
           "text": "La Taxe des Yeux : Interdiction de croiser le regard de son voisin d'en face sous peine de trinquer ensemble.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "Taxe des yeux : interdit de croiser le regard de son voisin d'en face (sinon on trinque ensemble)",
+              "subject": "all",
+              "turns": 3,
+              "fault": {
+                "count": "any"
+              }
+            }
+          ]
         },
         {
           "number": 5,
           "type": "action",
           "text": "Le Protocole Royal : Vouvoyer le joueur qui tourne la roue et l'appeler \"Votre Majesté\".",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "Protocole royal : vouvoyer le joueur qui tourne la roue (« Votre Majesté »)",
+              "subject": "all",
+              "turns": 3
+            }
+          ]
         },
         {
           "number": 6,
@@ -1440,28 +2880,88 @@
           "type": "action",
           "text": "Le Switch Général : Changer de chaise dans le sens horaire en moins de 5 secondes. Le dernier assis perd.",
           "points": null,
-          "timer": 5
+          "timer": 5,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "l",
+              "prompt": "Qui est assis en dernier ?",
+              "from": "all"
+            },
+            {
+              "do": "malus",
+              "to": "l"
+            }
+          ]
         },
         {
           "number": 10,
           "type": "action",
           "text": "Le Chuchotement Général : Toute la table doit chuchoter pendant 1 tour complet.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "Chuchotement général : toute la table chuchote",
+              "subject": "all",
+              "turns": "round"
+            }
+          ]
         },
         {
           "number": 11,
           "type": "action",
           "text": "Le Serveur d'Élite : Servir les verres et assiettes du groupe pendant les 2 prochains tours.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "rule",
+              "text": "{me} est le serveur d'élite : il sert les verres et assiettes du groupe",
+              "subject": "me",
+              "turns": 2
+            }
+          ]
         },
         {
           "number": 12,
           "type": "action",
           "text": "Le Check de la Honte : Créer un check complexe avec son voisin. Une erreur = sanction double.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "p",
+              "prompt": "Avec quel voisin crées-tu le check ?"
+            },
+            {
+              "do": "ask",
+              "as": "r",
+              "prompt": "Le check est-il réussi ?",
+              "options": [
+                {
+                  "id": "ok",
+                  "label": "Réussi"
+                },
+                {
+                  "id": "err",
+                  "label": "Une erreur"
+                }
+              ]
+            },
+            {
+              "do": "malus",
+              "to": ["me", "p"],
+              "mult": 2,
+              "prompt": "Sanction double",
+              "when": {
+                "var": "r",
+                "is": ["err"]
+              }
+            }
+          ]
         },
         {
           "number": 13,
@@ -1475,7 +2975,52 @@
           "type": "action",
           "text": "Le Détecteur de Faux Rires : Raconter une blague. Si personne ne rit = malus pour toi, si ça rit = malus pour eux.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "ask",
+              "as": "r",
+              "prompt": "Quelqu'un a-t-il ri ?",
+              "options": [
+                {
+                  "id": "yes",
+                  "label": "Oui"
+                },
+                {
+                  "id": "no",
+                  "label": "Non"
+                }
+              ]
+            },
+            {
+              "do": "malus",
+              "to": "me",
+              "prompt": "Personne n'a ri : tu prends le malus",
+              "when": {
+                "var": "r",
+                "is": ["no"]
+              }
+            },
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui a ri ?",
+              "count": "any",
+              "when": {
+                "var": "r",
+                "is": ["yes"]
+              }
+            },
+            {
+              "do": "malus",
+              "to": "x",
+              "prompt": "Ceux qui ont ri prennent le malus",
+              "when": {
+                "var": "r",
+                "is": ["yes"]
+              }
+            }
+          ]
         },
         {
           "number": 15,
@@ -1489,28 +3034,90 @@
           "type": "action",
           "text": "Le Quitte ou Double : Relance la roue. >5 = tu distribues le double, <=5 = tu prends le triple.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "draw",
+              "as": "d",
+              "prompt": "Relance la roue"
+            },
+            {
+              "do": "distribute",
+              "portions": 2,
+              "draw": "d",
+              "prompt": "Plus de 5 : tu distribues le double",
+              "when": {
+                "var": "d",
+                "gt": 5
+              }
+            },
+            {
+              "do": "malus",
+              "to": "me",
+              "mult": 3,
+              "draw": "d",
+              "prompt": "5 ou moins : tu prends le triple",
+              "when": {
+                "var": "d",
+                "lte": 5
+              }
+            }
+          ]
         },
         {
           "number": 17,
           "type": "action",
           "text": "Le Troc Forcé : Échange ton verre avec celui du joueur qui a le verre le plus rempli.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui a le verre le plus rempli ?"
+            },
+            {
+              "do": "info",
+              "text": "Échange ton verre avec celui de {x}."
+            }
+          ]
         },
         {
           "number": 18,
           "type": "action",
           "text": "L'Alliance Ultime : Désigne ton âme sœur. Toutes vos sanctions sont partagées 50/50 jusqu'à la fin.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "pick",
+              "as": "x",
+              "prompt": "Qui est ton âme sœur ?"
+            },
+            {
+              "do": "rule",
+              "text": "Alliance ultime : les sanctions de {me} et {x} sont partagées 50/50",
+              "subject": ["me", "x"],
+              "until": "end",
+              "link": ["me", "x"]
+            }
+          ]
         },
         {
           "number": 19,
           "type": "action",
           "text": "Le Pardon Général : Tu peux effacer tous les gages ou pénalités en cours autour de la table.",
           "points": null,
-          "timer": null
+          "timer": null,
+          "flow": [
+            {
+              "do": "clear-rules"
+            },
+            {
+              "do": "info",
+              "text": "Tous les gages et pénalités en cours sont effacés."
+            }
+          ]
         },
         {
           "number": 20,

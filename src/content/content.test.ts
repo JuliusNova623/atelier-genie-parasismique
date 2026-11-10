@@ -94,19 +94,19 @@ describe('content.json (200 cartes du PDF « jeux script »)', () => {
     ).toBe(false);
   });
 
-  it('les chronomètres sont des durées plausibles (5 s à 2 min), réservées aux actions', () => {
+  it('les chronomètres sont des durées plausibles (5 s à 5 min), réservées aux actions', () => {
     const timed = themes.flatMap((t) => t.cards).filter((c) => c.timer);
     expect(timed.length).toBeGreaterThan(8);
     for (const c of timed) {
       expect(c.type).toBe('action');
       expect(c.timer).toBeGreaterThanOrEqual(5);
-      expect(c.timer).toBeLessThanOrEqual(120);
+      expect(c.timer).toBeLessThanOrEqual(300);
     }
     // « Tu dois tenir deux minutes… » → 120 s ; « en moins de 5 secondes » → 5 s.
     expect(themes[0].cards[18].timer).toBe(120);
     expect(themes[9].cards[8].timer).toBe(5);
-    // Pas de chrono quand la durée dépasse 2 minutes (« Pendant 5 minutes… »).
-    expect(themes[1].cards[15].timer).toBeNull();
+    // « Pendant 5 minutes… » → 300 s ; aucune durée au-delà.
+    expect(themes[1].cards[15].timer).toBe(300);
   });
 
   it('a des noms, emojis et couleurs distincts', () => {

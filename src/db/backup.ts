@@ -98,7 +98,8 @@ export async function exportBackup(db: AppDb = defaultDb, now = Date.now()): Pro
 export async function importBackup(backup: Backup, db: AppDb = defaultDb): Promise<void> {
   await db.transaction(
     'rw',
-    [db.settings, db.drinks, db.contentOverride, db.currentGame, db.gameHistory],
+    // db.tables : évite une récursion de types (Step.onExpire) dans la signature de Dexie.
+    db.tables,
     async () => {
       await Promise.all([
         db.settings.clear(),

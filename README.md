@@ -266,12 +266,21 @@ Le contenu tient dans **un seul fichier** : [`src/content/content.json`](src/con
 **Un tour** : le joueur actif lance la roulette (thème), choisit son mode de tirage et tire un numéro de 1 à 20
 (la carte correspondante, jamais déjà jouée), puis :
 
-- **« Je le fais / Je réponds »** → **+3** points ;
-- **« Je refuse »** → étape boisson : tirage d'un numéro de 1 à N (la boisson correspondante, avec remise ; N = nombre de boissons de la soirée, de 1 à 20, réglable dans _Accueil → Boissons_),
-  puis **« J'ai bu »** (**+1**) ou **« Je ne bois pas »** (**−2**).
+- **« Je le fais / Je réponds »** → **+3** points (et, si la carte a un effet, les étapes de l'effet, voir plus bas) ;
+- **« Je bois »** → étape boisson : tirage d'un numéro de 1 à N (la boisson correspondante, avec remise ; N = nombre de boissons de la soirée, de 1 à 20, réglable dans _Accueil → Boissons_),
+  puis **« J'ai bu »** (**+1**). **Boire est obligatoire** : il n'existe ni « Je refuse » ni « Je ne bois pas » — soit on fait la carte, soit on boit.
 
 Dans tous les cas la carte est consommée. Le barème, les jokers et les conditions de fin se règlent
 **avant** la partie, puis sont verrouillés. Contrainte : points « boisson bue » < points de carte.
+
+**Effets des cartes** : 108 cartes sur 200 déclenchent une mini-séquence après « Je le fais » (détail carte par carte :
+[`docs/mecaniques-des-cartes.md`](docs/mecaniques-des-cartes.md)) :
+choisir un joueur dans la liste (« qui prend le malus à ma place »), répondre à une question (réussi / raté, il a ri / pas ri…),
+choisir un nombre, **malus** = boisson tirée au sort (×½, ×2, ×3…) appliquée au joueur choisi, **répartition** de portions entre joueurs,
+verre d'eau, **règles en cours** (contraintes sur N tours, pactes, alliance 50/50, bouclier humain) avec bouton **⚠️ Faute**,
+**résolution** automatique à l'échéance (« le dernier prend un malus »…). Les règles actives sont listées sous la roue.
+Tout est dans le journal de partie : reprise après fermeture et _Annuler_ restaurent aussi les règles. Les effets se décrivent
+dans `content.json` (champ `flow`) ; l'application valide leur structure au démarrage.
 
 **Jokers** (1 de chaque par défaut, 0 à 3, désactivables) : **Passe** (saute la carte, sans points ni boisson),
 **Double** (points de carte ×2 si réalisée), **Transfert** (un autre joueur joue la carte et ses conséquences).
@@ -350,8 +359,8 @@ variables CSS dans `src/theme/themes.css`.
 
 1. Créer une partie à **4 joueurs** (noms uniques, un joueur « sans alcool »), _Lancer la partie_.
 2. **Tour 1 — fait** : roulette → numéro → _Je réponds_ → +3 ; le joueur suivant s'affiche.
-3. **Tour 2 — refus + boisson bue** : _Je refuse_ → tirage de la boisson → _J'ai bu_ → +1.
-4. **Tour 3 — refus + boisson refusée** (sur le joueur « sans alcool », vérifier le message _Version sans alcool_) → _Je ne bois pas_ → −2.
+3. **Tour 2 — je bois** : _Je bois_ → tirage de la boisson → _J'ai bu_ → +1 (aucune option pour ne pas boire).
+4. **Tour 3 — carte à effet** (ex. « Qui est désigné ? ») : _Je le fais_ → choisir un joueur dans la liste → le malus s'affiche pour lui → _J'ai bu_. Sur le joueur « sans alcool », vérifier le message _Version sans alcool_.
 5. **Annuler** (🏆 Scores → _Annuler le dernier tour_) : scores, cartes, jokers et joueur actif sont restaurés.
 6. **Quitter** : appuyer sur _Retour_ → confirmation « Mettre la partie en pause et quitter ? » ; quitter, fermer l'application.
 7. **Reprendre** : rouvrir l'application → _Reprendre la partie en cours_ → même étape qu'avant.
@@ -371,7 +380,7 @@ Points ambigus du cahier des charges, tranchés ainsi :
 - **Un seul joker par carte** ; _Double_ sans effet (et non consommé) si le joueur refuse.
 - **Joker partagé** : la réserve d'équipe vaut _nombre de départ × effectif_ ; tout équipier peut y puiser.
 - **L'adversaire décide** : l'adversaire (équipe différente, tiré au hasard au tirage de la carte) choisit
-  _Doit le faire_ (points de carte) ou _Doit boire_ (étape boisson, où le joueur peut encore refuser de boire).
+  _Doit le faire_ (points de carte) ou _Doit boire_ (étape boisson, obligatoire).
 - **Duel** : « une fois par tour de table » = une fois par bloc de _nombre de joueurs_ tours ; il consomme le
   tour du joueur actif ; le vainqueur marque les points de carte, aucun refus ni joker en duel.
 - **Rang** : classement « compétition » (1, 1, 3…) ; les ex æquo partagent la victoire.

@@ -7,7 +7,19 @@ import { useContent } from './content';
 import { drinkLabel, useSettings } from './settings';
 import { undoLast } from '../engine/game';
 import { endGame, replayGame } from '../engine/results';
+import { deriveEffects } from '../engine/effects';
 import {
+  faultFlow,
+  flowDone,
+  resolutionFlow,
+  answerFlow,
+  type FlowInput,
+  type FlowState,
+} from '../engine/flow';
+import {
+  addCarry,
+  answerCardFlow,
+  startCardFlow,
   armJoker,
   cancelDuel,
   completeCard,
@@ -27,6 +39,15 @@ import type { Game, PickerMode } from '../engine/types';
 
 interface GameState {
   game: Game | null;
+  /** Faute / résolution d'une règle en cours : non sauvegardé, son résultat part dans `game.carry`. */
+  interlude: FlowState | null;
+  startFault: (ruleId: string) => void;
+  startResolution: (ruleId: string) => void;
+  answerInterlude: (input: FlowInput) => Promise<void>;
+  cancelInterlude: () => void;
+  /** Termine une règle à la main (fin anticipée). */
+  endRule: (ruleId: string) => Promise<void>;
+  answerFlow: (input: FlowInput) => Promise<void>;
   loaded: boolean;
   load: () => Promise<void>;
   /** Remplace la partie en cours et la sauvegarde (appelé après chaque événement). */
@@ -107,7 +128,39 @@ export const useGameStore = create<GameState>((set, get) => {
 
   return {
     game: null,
+    interlude: null,
     loaded: false,
+    startFault(ruleId) {
+      const g = get().game;
+      const rule = g && deriveEffects(g).rules.find((r) => r.id === ruleId);
+      if (g && rule) set({ interlude: faultFlow(g, rule) });
+    },
+    startResolution(ruleId) {
+      const g = get().game;
+      const rule = g && deriveEffects(g).rules.find((r) => r.id === ruleId);
+      if (g && rule) set({ interlude: resolutionFlow(g, rule) });
+    },
+    async answerInterlude(input) {
+      const g = get().game;
+      const st = get().interlude;
+      if (!g || !st) return;
+      let next: FlowState;
+      try {
+        next = answerFlow(g, st, input);
+      } catch (e) {
+        console.warn('Action ignorée :', e instanceof Error ? e.message : e);
+        return;
+      }
+      if (!flowDone(next)) {
+        set({ interlude: next });
+        return;
+      }
+      set({ interlude: null });
+      await get().setGame(addCarry(g, next.effects));
+    },
+    cancelInterlude: () => set({ interlude: null }),
+    endRule: (ruleId) => act((g) => addCarry(g, [{ k: 'end-rule', id: ruleId, why: 'cancel' }])),
+    answerFlow: (input) => act((g) => answerCardFlow(g, input, Date.now()), 'pass'),
     async load() {
       const game = (await repo.loadCurrentGame()) ?? null;
       set({
@@ -141,7 +194,17 @@ export const useGameStore = create<GameState>((set, get) => {
           p && (p.stage === 'card' || (p.stage === 'drink' && p.drinkNumber !== undefined));
         return busy ? g : rememberPickerMode(g, mode);
       }),
-    completeCard: () => act((g) => completeCard(g, Date.now()), 'success'),
+    completeCard: () =>
+      act((g) => {
+        const p = g.pending;
+        const card = useContent
+          .getState()
+          .content.themes.find((t) => t.id === p?.themeId)
+          ?.cards.find((c) => c.number === p?.cardNumber);
+        return card?.flow && p && !p.duel
+          ? startCardFlow(g, card.flow, card.text, Date.now())
+          : completeCard(g, Date.now());
+      }, 'success'),
     refuseCard: () => act((g) => refuseCard(g), 'refuse'),
     playPass: () => act((g) => playPass(g, Date.now()), 'pass'),
     armJoker: (joker, transferTo) => act((g) => armJoker(g, joker, transferTo), 'pass'),

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { finishFlow } from './flow';
 
 async function createGame(page: Page, names: string[]) {
   await page.goto('/');
@@ -25,6 +26,7 @@ test('parcours complet : créer, jouer un tour, terminer, historique', async ({ 
 
   await drawCard(page);
   await page.getByRole('button', { name: /Je (réponds|le fais) \(\+3\)/ }).click();
+  await finishFlow(page);
   await expect(page.getByRole('button', { name: 'Lancer la roulette', exact: true })).toBeVisible();
   await expect(page.getByText('Bob').first()).toBeVisible();
 
@@ -82,6 +84,7 @@ test('aucune requête réseau externe, aucune erreur console', async ({ page }) 
   await createGame(page, ['Alice', 'Bob']);
   await drawCard(page);
   await page.getByRole('button', { name: /Je (réponds|le fais)/ }).click();
+  await finishFlow(page);
   await page.goto('/#/settings');
   await page.goto('/#/history');
   await page.goto('/#/import');
