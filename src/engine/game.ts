@@ -133,6 +133,9 @@ export function recordTurn(game: Game, input: TurnInput, now: number, source?: U
   if (input.jokerUsed !== 'transfer' && playerId !== owner) {
     throw new Error('Seul un joker Transfert permet de faire jouer un autre joueur.');
   }
+  if (input.jokerUsed === 'transfer' && playerId === owner) {
+    throw new Error('Le transfert doit désigner un autre joueur.');
+  }
   const event: TurnEvent = {
     id: newId(),
     turnOwnerId: owner,

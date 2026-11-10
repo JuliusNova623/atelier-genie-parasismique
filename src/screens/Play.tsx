@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useGameStore } from '../store/game';
 import { CardScreen } from './play/CardScreen';
+import { DrinkScreen } from './play/DrinkScreen';
 import { ThemeScreen } from './play/ThemeScreen';
 import { WheelScreen } from './play/WheelScreen';
 
@@ -17,6 +18,7 @@ export function Play() {
   if (!p || (p.stage === 'theme' && !p.revealed)) {
     return <WheelScreen key={`wheel-${turn}`} game={game} />;
   }
+  if (p.stage === 'drink') return <DrinkScreen key={`drink-${turn}`} game={game} />;
   if (p.stage === 'card' && p.revealed) return <CardScreen key={`card-${turn}`} game={game} />;
   return <ThemeScreen key={`theme-${turn}`} game={game} />;
 }

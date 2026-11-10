@@ -1,7 +1,19 @@
 import { create } from 'zustand';
 import { repo } from '../db/repo';
-import { recordTurn } from '../engine/game';
-import { drawCardNumber, drawTheme, rememberPickerMode, revealPending } from '../engine/turn';
+import { undoLast } from '../engine/game';
+import {
+  armJoker,
+  completeCard,
+  disarmJoker,
+  drawCardNumber,
+  drawDrinkNumber,
+  drawTheme,
+  playPass,
+  refuseCard,
+  rememberPickerMode,
+  resolveDrink,
+  revealPending,
+} from '../engine/turn';
 import type { Game, PickerMode } from '../engine/types';
 
 interface GameState {
@@ -15,18 +27,35 @@ interface GameState {
   spinTheme: () => Promise<void>;
   /** Tire le numéro de carte (résultat fixé et sauvegardé AVANT l'animation du sélecteur). */
   spinCard: () => Promise<void>;
+  /** Tire la boisson (avec remise), idem. */
+  spinDrink: () => Promise<void>;
   /** Fin d'animation : le résultat devient visible. */
   reveal: () => Promise<void>;
   selectPickerMode: (mode: PickerMode) => Promise<void>;
-  /** Provisoire (étape 5) : valide la carte comme réalisée. Remplacé par la page de carte (étape 6). */
-  completeCardTemp: () => Promise<void>;
+  completeCard: () => Promise<void>;
+  refuseCard: () => Promise<void>;
+  playPass: () => Promise<void>;
+  armJoker: (joker: 'double' | 'transfer', transferTo?: string) => Promise<void>;
+  disarmJoker: () => Promise<void>;
+  resolveDrink: (drank: boolean) => Promise<void>;
+  undo: () => Promise<void>;
 }
 
 export const useGameStore = create<GameState>((set, get) => {
+  /**
+   * Applique une transition du moteur. Les transitions invalides (double tap, état périmé)
+   * lèvent une erreur dans le moteur : on les ignore pour qu'un second clic reste sans effet.
+   */
   const apply = async (fn: (g: Game) => Game) => {
     const g = get().game;
     if (!g) return;
-    const next = fn(g);
+    let next: Game;
+    try {
+      next = fn(g);
+    } catch (e) {
+      console.warn('Action ignorée :', e instanceof Error ? e.message : e);
+      return;
+    }
     if (next !== g) await get().setGame(next);
   };
 
@@ -51,18 +80,21 @@ export const useGameStore = create<GameState>((set, get) => {
     spinTheme: () => apply((g) => (g.pending ? g : drawTheme(g))),
     spinCard: () =>
       apply((g) => (g.pending?.stage === 'theme' && g.pending.revealed ? drawCardNumber(g) : g)),
+    spinDrink: () => apply((g) => drawDrinkNumber(g)),
     reveal: () => apply(revealPending),
     selectPickerMode: (mode) =>
-      apply((g) => (g.pending?.stage === 'card' ? g : rememberPickerMode(g, mode))),
-    completeCardTemp: () =>
       apply((g) => {
         const p = g.pending;
-        if (!p || p.stage !== 'card' || !p.revealed || p.cardNumber === undefined) return g;
-        return recordTurn(
-          g,
-          { themeId: p.themeId, cardNumber: p.cardNumber, outcome: 'done' },
-          Date.now(),
-        );
+        const busy =
+          p && (p.stage === 'card' || (p.stage === 'drink' && p.drinkNumber !== undefined));
+        return busy ? g : rememberPickerMode(g, mode);
       }),
+    completeCard: () => apply((g) => completeCard(g, Date.now())),
+    refuseCard: () => apply((g) => refuseCard(g)),
+    playPass: () => apply((g) => playPass(g, Date.now())),
+    armJoker: (joker, transferTo) => apply((g) => armJoker(g, joker, transferTo)),
+    disarmJoker: () => apply((g) => disarmJoker(g)),
+    resolveDrink: (drank) => apply((g) => resolveDrink(g, drank, Date.now())),
+    undo: () => apply((g) => undoLast(g)),
   };
 });

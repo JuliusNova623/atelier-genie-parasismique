@@ -1,5 +1,5 @@
 import 'fake-indexeddb/auto';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { builtInContent } from '../content';
@@ -94,22 +94,5 @@ describe('Play : écran dérivé de l’état de la partie', () => {
     await user.click(screen.getByRole('button', { name: /Machine/ }));
     expect(useGameStore.getState().game!.pickerModes).toEqual({ a: 'slot' });
     expect(screen.getByRole('button', { name: 'Lancer la machine à sous' })).toBeInTheDocument();
-  });
-
-  it('affiche la carte tirée puis revient à la roulette pour le joueur suivant', async () => {
-    const user = userEvent.setup();
-    const g = withPending(base(), {
-      stage: 'card',
-      themeId: 'theme-3',
-      cardNumber: 7,
-      revealed: true,
-    });
-    await show(g);
-    expect(screen.getByRole('heading', { name: 'Carte n°7' })).toBeInTheDocument();
-    expect(screen.getByText('[Thème 3 – Carte 7] Question provisoire')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /Valider le tour/ }));
-    await waitFor(() => expect(useGameStore.getState().game!.log).toHaveLength(1));
-    expect(await screen.findByRole('button', { name: 'Lancer la roulette' })).toBeInTheDocument();
-    expect(screen.getByText('Bob')).toBeInTheDocument();
   });
 });

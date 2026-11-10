@@ -74,9 +74,16 @@ export type PickerMode = 'dice' | 'shake' | 'cards' | 'slot';
  * l'animation, la reprise rejoue la même issue, sans nouveau tirage).
  */
 export interface PendingTurn {
-  stage: 'theme' | 'card';
+  /** theme : roue puis choix du numéro · card : carte tirée · drink : étape boisson après un refus. */
+  stage: 'theme' | 'card' | 'drink';
   themeId: string;
   cardNumber?: number;
+  /** Étape boisson : boisson tirée (avec remise) ; absente tant que le joueur n'a pas tiré. */
+  drinkNumber?: number;
+  /** Joker armé pour cette carte (Passe est immédiat et n'est jamais « armé »). */
+  joker?: 'double' | 'transfer';
+  /** Transfert : joueur désigné qui joue la carte à la place du joueur actif. */
+  transferTo?: string;
   revealed: boolean;
 }
 

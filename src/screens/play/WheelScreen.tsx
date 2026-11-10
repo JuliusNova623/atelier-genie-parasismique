@@ -1,8 +1,8 @@
 import { useReducedMotion } from 'framer-motion';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import styles from '../../components/ui.module.css';
 import { ThemeWheel } from '../../components/ThemeWheel';
-import { exhaustedThemes } from '../../engine/game';
+import { exhaustedThemes, hydrationDue } from '../../engine/game';
 import { availableThemes } from '../../engine/turn';
 import type { Game } from '../../engine/types';
 import { fr } from '../../i18n/fr';
@@ -15,6 +15,7 @@ export function WheelScreen({ game }: { game: Game }) {
   const spinTheme = useGameStore((s) => s.spinTheme);
   const reveal = useGameStore((s) => s.reveal);
   const reduced = useReducedMotion() ?? false;
+  const [hydrationSeen, setHydrationSeen] = useState(false);
   const onDone = useCallback(() => void reveal(), [reveal]);
 
   const themes = game.themeIds
@@ -27,6 +28,15 @@ export function WheelScreen({ game }: { game: Game }) {
   return (
     <main className={styles.screen}>
       <PlayerBanner game={game} />
+      {hydrationDue(game) && !hydrationSeen && !game.pending && (
+        <p className={styles.notice} role="status">
+          <span aria-hidden="true">💧</span>
+          <span className={styles.grow}>{fr.play.hydration}</span>
+          <button type="button" className={styles.btn} onClick={() => setHydrationSeen(true)}>
+            {fr.play.ok}
+          </button>
+        </p>
+      )}
       {noneLeft ? (
         <section className={styles.section} role="status">
           <h2>{fr.play.allDone}</h2>
