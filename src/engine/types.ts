@@ -61,6 +61,8 @@ export interface TurnEvent {
   jokerUsed?: JokerType;
   /** Duel : adversaire. */
   duelOpponentId?: string;
+  /** Règle « L'adversaire décide » : joueur adverse qui a tranché (faire ou boire). */
+  deciderId?: string;
   /** Joueur désigné pour le tour suivant (rotation ou tirage au hasard). */
   nextPlayerId: string;
   timestamp: number;
@@ -84,6 +86,10 @@ export interface PendingTurn {
   joker?: 'double' | 'transfer';
   /** Transfert : joueur désigné qui joue la carte à la place du joueur actif. */
   transferTo?: string;
+  /** « L'adversaire décide » : joueur d'une autre équipe, désigné au hasard au tirage de la carte. */
+  deciderId?: string;
+  /** Duel en cours : les deux joueurs (équipes différentes) qui reçoivent la même carte. */
+  duel?: { a: string; b: string };
   revealed: boolean;
 }
 

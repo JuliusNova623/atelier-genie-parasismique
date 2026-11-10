@@ -72,13 +72,30 @@ export function ScoreSheet({ game, onClose }: { game: Game; onClose: () => void 
 
         <ol className={styles.ranking}>
           {tab === 'teams'
-            ? teams.map((tm, i) => (
-                <li key={tm.id} style={{ ['--player-color' as string]: tm.color }}>
-                  <span>{i + 1}.</span>
-                  <strong className={styles.grow}>{tm.name}</strong>
-                  <span>{tScores[tm.id]}</span>
-                </li>
-              ))
+            ? teams.map((tm, i) => {
+                const first = game.players.find((x) => x.teamId === tm.id);
+                const pool =
+                  game.rules.teamRules.sharedJokers && first
+                    ? remainingJokers(game, first.id)
+                    : null;
+                const poolText = pool
+                  ? JOKERS.map((k) => `${fr.play.jokers[k]} ${pool[k]}`).join(' · ')
+                  : '';
+                return (
+                  <li key={tm.id} style={{ ['--player-color' as string]: tm.color }}>
+                    <span>{i + 1}.</span>
+                    <span className={styles.grow}>
+                      <strong>{tm.name}</strong>
+                      {pool && (
+                        <small className={styles.hint} style={{ display: 'block' }}>
+                          {fr.play.team.sharedPool} : {poolText}
+                        </small>
+                      )}
+                    </span>
+                    <span>{tScores[tm.id]}</span>
+                  </li>
+                );
+              })
             : players.map((p, i) => {
                 const j = remainingJokers(game, p.id);
                 return (

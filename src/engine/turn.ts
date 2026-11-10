@@ -2,6 +2,8 @@ import { drawWithReplacement } from './deck';
 import {
   currentPlayerId,
   exhaustedThemes,
+  getPlayer,
+  recordDuel,
   recordTurn,
   remainingCards,
   remainingJokers,
@@ -44,9 +46,21 @@ export function drawCardNumber(game: Game, source?: Uint32Source): Game {
       stage: 'card',
       themeId: p.themeId,
       cardNumber: pickOne(remaining, source),
+      deciderId: pickDecider(game, source),
       revealed: false,
     },
   };
+}
+
+/**
+ * Règle « L'adversaire décide » : un joueur d'une autre équipe, désigné au hasard (uniforme),
+ * tranche à la place du joueur actif. Choisi au tirage de la carte, donc sauvegardé avec lui.
+ */
+export function pickDecider(game: Game, source?: Uint32Source): string | undefined {
+  if (game.mode !== 'teams' || !game.rules.teamRules.opponentDecides) return undefined;
+  const ownerTeam = getPlayer(game, currentPlayerId(game)).teamId;
+  const opponents = game.players.filter((x) => x.teamId && x.teamId !== ownerTeam);
+  return opponents.length ? pickOne(opponents, source).id : undefined;
 }
 
 /** Fin d'animation : le résultat devient visible et l'écran suivant s'affiche. */
@@ -92,6 +106,7 @@ export function cardPlayerId(game: Game): string {
 /** Arme le joker Double ou Transfert pour la carte en cours (un seul joker par carte). */
 export function armJoker(game: Game, joker: 'double' | 'transfer', transferTo?: string): Game {
   const p = requireCard(game);
+  if (p.duel) throw new Error('Aucun joker pendant un duel.');
   const owner = currentPlayerId(game);
   if (p.joker) throw new Error('Un joker est déjà armé.');
   if (remainingJokers(game, owner)[joker] < 1) throw new Error('Joker indisponible.');
@@ -116,6 +131,7 @@ export function disarmJoker(game: Game): Game {
 /** Joker Passe : saute la carte, sans boisson ni points (la carte et le joker sont consommés). */
 export function playPass(game: Game, now: number): Game {
   const p = requireCard(game);
+  if (p.duel) throw new Error('Aucun refus ni joker pendant un duel.');
   if (p.joker) throw new Error('Désarmez le joker avant d’utiliser Passe.');
   return recordTurn(
     game,
@@ -127,6 +143,7 @@ export function playPass(game: Game, now: number): Game {
 /** « Je le fais / Je réponds » : points de carte (×2 avec Double) puis joueur suivant. */
 export function completeCard(game: Game, now: number): Game {
   const p = requireCard(game);
+  if (p.duel) throw new Error('Désignez le vainqueur du duel.');
   return recordTurn(
     game,
     {
@@ -135,6 +152,7 @@ export function completeCard(game: Game, now: number): Game {
       outcome: 'done',
       jokerUsed: p.joker,
       playerId: p.transferTo,
+      deciderId: p.deciderId,
     },
     now,
   );
@@ -143,6 +161,7 @@ export function completeCard(game: Game, now: number): Game {
 /** « Je refuse » : passe à l'étape boisson (la carte est déjà consommée pour cette partie). */
 export function refuseCard(game: Game): Game {
   const p = requireCard(game);
+  if (p.duel) throw new Error('Aucun refus possible en duel.');
   // Double n'a aucun effet sur un refus et n'est pas consommé.
   const joker = p.joker === 'transfer' ? 'transfer' : undefined;
   return {
@@ -153,6 +172,7 @@ export function refuseCard(game: Game): Game {
       cardNumber: p.cardNumber,
       joker,
       transferTo: p.transferTo,
+      deciderId: p.deciderId,
       revealed: false,
     },
   };
@@ -185,7 +205,53 @@ export function resolveDrink(game: Game, drank: boolean, now: number): Game {
       drinkNumber: p.drinkNumber,
       jokerUsed: p.joker === 'transfer' ? 'transfer' : undefined,
       playerId: p.transferTo,
+      deciderId: p.deciderId,
     },
+    now,
+  );
+}
+
+// ───────────────────────── Duel (équipes) ─────────────────────────
+
+/**
+ * Le duel est disponible une fois par tour de table (un tour de table = autant de tours que de
+ * joueurs), en mode équipes avec la règle activée.
+ */
+export function duelAvailable(game: Game): boolean {
+  if (game.mode !== 'teams' || !game.rules.teamRules.duel || game.teams.length < 2) return false;
+  const n = game.players.length;
+  const start = Math.floor(game.log.length / n) * n;
+  return !game.log.slice(start).some((e) => e.outcome === 'duel');
+}
+
+/** Deux joueurs d'équipes différentes reçoivent la même carte (choix du joueur actif). */
+export function startDuel(game: Game, a: string, b: string): Game {
+  const p = requireCard(game);
+  if (!duelAvailable(game)) throw new Error('Duel indisponible ce tour de table.');
+  if (p.joker) throw new Error('Désarmez le joker avant de lancer un duel.');
+  const ta = getPlayer(game, a).teamId;
+  const tb = getPlayer(game, b).teamId;
+  if (!ta || !tb || ta === tb) throw new Error('Un duel oppose deux équipes différentes.');
+  return { ...game, pending: { ...p, duel: { a, b } } };
+}
+
+export function cancelDuel(game: Game): Game {
+  const p = requireCard(game);
+  if (!p.duel) return game;
+  const { duel: _duel, ...rest } = p;
+  void _duel;
+  return { ...game, pending: rest };
+}
+
+/** Le groupe désigne le vainqueur : +points de carte pour lui (donc son équipe), aucune boisson. */
+export function finishDuel(game: Game, winnerId: string, now: number): Game {
+  const p = requireCard(game);
+  if (!p.duel) throw new Error('Aucun duel en cours.');
+  const { a, b } = p.duel;
+  if (winnerId !== a && winnerId !== b) throw new Error('Le vainqueur doit être un duelliste.');
+  return recordDuel(
+    game,
+    { themeId: p.themeId, cardNumber: p.cardNumber, winnerId, loserId: winnerId === a ? b : a },
     now,
   );
 }

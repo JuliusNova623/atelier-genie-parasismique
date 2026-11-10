@@ -3,16 +3,19 @@ import { repo } from '../db/repo';
 import { undoLast } from '../engine/game';
 import {
   armJoker,
+  cancelDuel,
   completeCard,
   disarmJoker,
   drawCardNumber,
   drawDrinkNumber,
   drawTheme,
+  finishDuel,
   playPass,
   refuseCard,
   rememberPickerMode,
   resolveDrink,
   revealPending,
+  startDuel,
 } from '../engine/turn';
 import type { Game, PickerMode } from '../engine/types';
 
@@ -38,6 +41,10 @@ interface GameState {
   armJoker: (joker: 'double' | 'transfer', transferTo?: string) => Promise<void>;
   disarmJoker: () => Promise<void>;
   resolveDrink: (drank: boolean) => Promise<void>;
+  /** Duel : deux joueurs d'équipes différentes reçoivent la même carte. */
+  startDuel: (a: string, b: string) => Promise<void>;
+  cancelDuel: () => Promise<void>;
+  finishDuel: (winnerId: string) => Promise<void>;
   undo: () => Promise<void>;
 }
 
@@ -95,6 +102,9 @@ export const useGameStore = create<GameState>((set, get) => {
     armJoker: (joker, transferTo) => apply((g) => armJoker(g, joker, transferTo)),
     disarmJoker: () => apply((g) => disarmJoker(g)),
     resolveDrink: (drank) => apply((g) => resolveDrink(g, drank, Date.now())),
+    startDuel: (a, b) => apply((g) => startDuel(g, a, b)),
+    cancelDuel: () => apply((g) => cancelDuel(g)),
+    finishDuel: (winnerId) => apply((g) => finishDuel(g, winnerId, Date.now())),
     undo: () => apply((g) => undoLast(g)),
   };
 });

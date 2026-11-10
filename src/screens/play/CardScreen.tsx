@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { CardTimer } from '../../components/CardTimer';
 import styles from '../../components/ui.module.css';
 import { currentPlayerId, getPlayer, remainingJokers } from '../../engine/game';
-import { cardPlayerId } from '../../engine/turn';
+import { cardPlayerId, duelAvailable } from '../../engine/turn';
 import type { Game, JokerType } from '../../engine/types';
 import { fr } from '../../i18n/fr';
 import { useContent } from '../../store/content';
@@ -16,33 +16,44 @@ const HINTS = {
   transfer: fr.play.jokers.transferHint,
 };
 
-/** Page de carte : faire / refuser, jokers (Passe, Double, Transfert) et chronomètre éventuel. */
+/**
+ * Page de carte : faire / refuser, jokers (Passe, Double, Transfert), chronomètre éventuel,
+ * et règles d'équipe optionnelles (l'adversaire décide, duel).
+ */
 export function CardScreen({ game }: { game: Game }) {
   const content = useContent((s) => s.content);
-  const { completeCard, refuseCard, playPass, armJoker, disarmJoker } = useGameStore.getState();
+  const store = useGameStore.getState();
   const [choosing, setChoosing] = useState(false);
+  const [duelPanel, setDuelPanel] = useState<null | { first: string | null }>(null);
 
   const p = game.pending!;
   const theme = content.themes.find((t) => t.id === p.themeId);
   const card = theme?.cards.find((c) => c.number === p.cardNumber);
   const owner = getPlayer(game, currentPlayerId(game));
   const player = getPlayer(game, cardPlayerId(game));
+  const decider = p.deciderId ? getPlayer(game, p.deciderId) : null;
   const left = remainingJokers(game, owner.id);
   const anyJoker = JOKERS.some((j) => game.rules.jokers[j].enabled);
   const base = card?.points ?? game.rules.pointsCard;
   const gain = p.joker === 'double' ? base * 2 : base;
   const isAction = card?.type === 'action';
+  const doLabel = decider ? fr.play.team.mustDo : isAction ? fr.play.doIt : fr.play.answerIt;
+  const refuseLabel = decider ? fr.play.team.mustDrink : fr.play.refuse;
+  const canDuel = duelAvailable(game) && !p.joker && !p.duel;
 
   const toggleJoker = (j: 'double' | 'transfer') => {
     if (p.joker === j) {
       setChoosing(false);
-      void disarmJoker();
+      void store.disarmJoker();
     } else if (j === 'transfer') {
       setChoosing((c) => !c);
     } else {
-      void armJoker('double');
+      void store.armJoker('double');
     }
   };
+
+  const duelists = p.duel ? [getPlayer(game, p.duel.a), getPlayer(game, p.duel.b)] : [];
+  const teamName = (id?: string) => game.teams.find((t) => t.id === id)?.name ?? '';
 
   return (
     <main className={styles.screen}>
@@ -63,23 +74,111 @@ export function CardScreen({ game }: { game: Game }) {
         </p>
       )}
 
-      <div className={styles.bigActions}>
-        <button
-          type="button"
-          className={`${styles.btn} ${styles.btnPrimary}`}
-          onClick={() => void completeCard()}
-        >
-          {isAction ? fr.play.doIt : fr.play.answerIt} ({fr.play.points(gain)})
-          {p.transferTo ? ` · ${player.name}` : ''}
-        </button>
-        <button type="button" className={styles.btn} onClick={() => void refuseCard()}>
-          {fr.play.refuse}
-        </button>
-      </div>
+      {decider && !p.duel && (
+        <p className={styles.notice} role="status">
+          🎭 {fr.play.team.decides(decider.name, player.name)}
+        </p>
+      )}
 
-      {anyJoker && (
+      {p.duel ? (
+        <section className={styles.section} aria-label={fr.play.team.duelTitle}>
+          <h2>
+            ⚔️ {fr.play.team.duelTitle} : {fr.play.team.duelVs(duelists[0].name, duelists[1].name)}
+          </h2>
+          <p className={styles.hint}>{fr.play.team.duelHint}</p>
+          <div className={styles.bigActions}>
+            {duelists.map((d) => (
+              <button
+                key={d.id}
+                type="button"
+                className={`${styles.btn} ${styles.btnPrimary}`}
+                onClick={() => void store.finishDuel(d.id)}
+              >
+                {d.avatar} {fr.play.team.duelWins(d.name)} ({fr.play.points(base)} ·{' '}
+                {teamName(d.teamId)})
+              </button>
+            ))}
+            <button type="button" className={styles.btn} onClick={() => void store.cancelDuel()}>
+              {fr.play.team.duelCancel}
+            </button>
+          </div>
+        </section>
+      ) : (
+        <div className={styles.bigActions}>
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.btnPrimary}`}
+            onClick={() => void store.completeCard()}
+          >
+            {doLabel} ({fr.play.points(gain)}){p.transferTo ? ` · ${player.name}` : ''}
+          </button>
+          <button type="button" className={styles.btn} onClick={() => void store.refuseCard()}>
+            {refuseLabel}
+          </button>
+        </div>
+      )}
+
+      {canDuel && (
+        <section className={styles.section} aria-label={fr.play.team.duelTitle}>
+          {!duelPanel ? (
+            <button
+              type="button"
+              className={styles.btn}
+              onClick={() => setDuelPanel({ first: null })}
+            >
+              ⚔️ {fr.play.team.duelStart}
+            </button>
+          ) : (
+            <div role="group" aria-label={fr.play.team.duelTitle}>
+              <p className={styles.hint}>
+                {duelPanel.first ? fr.play.team.duelSecond : fr.play.team.duelFirst}
+              </p>
+              <div className={styles.segment}>
+                {game.players
+                  .filter((x) => {
+                    if (!duelPanel.first) return true;
+                    return x.teamId !== getPlayer(game, duelPanel.first).teamId;
+                  })
+                  .map((x) => (
+                    <button
+                      key={x.id}
+                      type="button"
+                      className={styles.btn}
+                      onClick={() => {
+                        if (!duelPanel.first) {
+                          setDuelPanel({ first: x.id });
+                        } else {
+                          void store.startDuel(duelPanel.first, x.id);
+                          setDuelPanel(null);
+                        }
+                      }}
+                    >
+                      {x.avatar} {x.name}
+                      <small> · {teamName(x.teamId)}</small>
+                    </button>
+                  ))}
+              </div>
+              <button
+                type="button"
+                className={styles.btn}
+                style={{ marginTop: 8 }}
+                onClick={() => setDuelPanel(null)}
+              >
+                {fr.common.cancel}
+              </button>
+            </div>
+          )}
+        </section>
+      )}
+
+      {anyJoker && !p.duel && (
         <section className={styles.section} aria-label={fr.play.jokers.title}>
-          <h2>{fr.play.jokers.title}</h2>
+          <h2>
+            {fr.play.jokers.title}
+            {game.rules.teamRules.sharedJokers && game.mode === 'teams'
+              ? ` · ${fr.play.team.sharedPool}`
+              : ''}
+          </h2>
           <div className={styles.jokerBar}>
             {JOKERS.map((j) => {
               const armed = p.joker === j;
@@ -92,7 +191,7 @@ export function CardScreen({ game }: { game: Game }) {
                   aria-pressed={j === 'pass' ? undefined : armed}
                   disabled={(exhausted && !armed) || blocked || !game.rules.jokers[j].enabled}
                   title={HINTS[j]}
-                  onClick={() => (j === 'pass' ? void playPass() : toggleJoker(j))}
+                  onClick={() => (j === 'pass' ? void store.playPass() : toggleJoker(j))}
                 >
                   <span>{fr.play.jokers[j]}</span>
                   <small>{armed ? fr.play.jokers.armed : fr.play.jokers.left(left[j])}</small>
@@ -113,7 +212,7 @@ export function CardScreen({ game }: { game: Game }) {
                       className={styles.btn}
                       onClick={() => {
                         setChoosing(false);
-                        void armJoker('transfer', x.id);
+                        void store.armJoker('transfer', x.id);
                       }}
                     >
                       {x.avatar} {x.name}

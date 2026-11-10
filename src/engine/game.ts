@@ -64,13 +64,22 @@ export function getPlayer(game: Game, id: string): Player {
   return p;
 }
 
-/** Jokers restants d'un joueur (déduits du log). */
+/**
+ * Jokers restants d'un joueur (déduits du log). Avec la règle « Joker partagé » (mode équipes),
+ * les jokers de départ de tous les membres sont mis en commun : la réserve de l'équipe vaut
+ * « nombre de départ × effectif » et n'importe quel équipier peut y puiser.
+ */
 export function remainingJokers(game: Game, playerId: string): Record<JokerType, number> {
+  const me = game.players.find((p) => p.id === playerId);
+  const shared = game.mode === 'teams' && game.rules.teamRules.sharedJokers && !!me?.teamId;
+  const members = shared ? game.players.filter((p) => p.teamId === me?.teamId) : [];
+  const ids = new Set(shared ? members.map((p) => p.id) : [playerId]);
   const out = {} as Record<JokerType, number>;
   for (const t of JOKER_TYPES) {
     const rule = game.rules.jokers[t];
-    const used = game.log.filter((e) => e.turnOwnerId === playerId && e.jokerUsed === t).length;
-    out[t] = rule.enabled ? Math.max(0, rule.count - used) : 0;
+    const pool = rule.count * (shared ? members.length : 1);
+    const used = game.log.filter((e) => ids.has(e.turnOwnerId) && e.jokerUsed === t).length;
+    out[t] = rule.enabled ? Math.max(0, pool - used) : 0;
   }
   return out;
 }
@@ -104,6 +113,7 @@ export interface TurnInput {
   drinkNumber?: number;
   jokerUsed?: JokerType;
   cardPoints?: number | null;
+  deciderId?: string;
 }
 
 /** Ajoute un tour au journal. Pur : renvoie une nouvelle partie. */
@@ -145,6 +155,7 @@ export function recordTurn(game: Game, input: TurnInput, now: number, source?: U
     outcome: input.outcome,
     drinkNumber: input.drinkNumber,
     jokerUsed: input.jokerUsed,
+    deciderId: input.deciderId,
     pointsDelta: pointsFor(game.rules, input.outcome, {
       doubled: input.jokerUsed === 'double',
       cardPoints: input.cardPoints,

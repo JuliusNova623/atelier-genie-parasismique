@@ -134,6 +134,21 @@ export const fr = {
       transferredTo: (from: string, to: string) => `${from} a transféré la carte à ${to}`,
       playsCard: (name: string) => `${name} joue cette carte`,
     },
+    team: {
+      decides: (decider: string, player: string) =>
+        `${decider} (équipe adverse) décide pour ${player}`,
+      mustDo: 'Doit le faire',
+      mustDrink: 'Doit boire',
+      duelStart: 'Lancer un duel',
+      duelTitle: 'Duel',
+      duelFirst: 'Premier duelliste',
+      duelSecond: 'Adversaire (autre équipe)',
+      duelVs: (a: string, b: string) => `${a} contre ${b}`,
+      duelWins: (name: string) => `${name} gagne`,
+      duelCancel: 'Annuler le duel',
+      duelHint: 'Même carte pour les deux. Pas de refus : le groupe désigne le vainqueur.',
+      sharedPool: 'Jokers d’équipe',
+    },
     drink: {
       title: 'Étape boisson',
       pick: 'Tire ta boisson (1 à 20)',
