@@ -116,7 +116,7 @@ describe('terminer la partie', () => {
         },
         1,
       ),
-      { themeId: 'theme-1', cardNumber: 2, outcome: 'refused-no-drink', drinkNumber: 3 },
+      { themeId: 'theme-1', cardNumber: 2, outcome: 'refused-drink', drinkNumber: 3 },
       2,
     );
     await show(g);

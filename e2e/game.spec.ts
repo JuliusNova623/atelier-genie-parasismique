@@ -28,9 +28,9 @@ test('parcours complet : créer, jouer un tour, terminer, historique', async ({ 
   await expect(page.getByRole('button', { name: 'Lancer la roulette', exact: true })).toBeVisible();
   await expect(page.getByText('Bob').first()).toBeVisible();
 
-  // Tour de Bob : refus puis boisson.
+  // Tour de Bob : il boit au lieu de faire la carte.
   await drawCard(page);
-  await page.getByRole('button', { name: 'Je refuse' }).click();
+  await page.getByRole('button', { name: /^Je bois/ }).click();
   await expect(page.getByRole('heading', { name: 'Étape boisson' })).toBeVisible();
   // La boisson se tire aussi toute seule ; on valide quand le résultat s'affiche.
   await page.getByRole('button', { name: /J’ai bu/ }).click();

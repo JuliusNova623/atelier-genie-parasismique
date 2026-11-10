@@ -45,7 +45,8 @@ describe('barème', () => {
   it('applique les points par défaut', () => {
     expect(pointsFor(DEFAULT_RULES, 'done')).toBe(3);
     expect(pointsFor(DEFAULT_RULES, 'refused-drink')).toBe(1);
-    expect(pointsFor(DEFAULT_RULES, 'refused-no-drink')).toBe(-2);
+    // Ancien résultat (boire est désormais obligatoire) : plus aucun point.
+    expect(pointsFor(DEFAULT_RULES, 'refused-no-drink')).toBe(0);
     expect(pointsFor(DEFAULT_RULES, 'joker-pass')).toBe(0);
     expect(pointsFor(DEFAULT_RULES, 'done', { doubled: true })).toBe(6);
     expect(pointsFor(DEFAULT_RULES, 'done', { cardPoints: 5 })).toBe(5);
@@ -88,10 +89,10 @@ describe('tours, scores et rotation', () => {
     );
     g = recordTurn(
       g,
-      { themeId: 't2', cardNumber: 1, outcome: 'refused-no-drink', drinkNumber: 3 },
+      { themeId: 't2', cardNumber: 1, outcome: 'refused-drink', drinkNumber: 3 },
       3,
     );
-    expect(playerScores(g)).toEqual({ a: 3, b: 1, c: -2, d: 0 });
+    expect(playerScores(g)).toEqual({ a: 3, b: 1, c: 1, d: 0 });
     expect(currentPlayerId(g)).toBe('d');
     g = recordTurn(g, { themeId: 't2', cardNumber: 2, outcome: 'done' }, 4);
     expect(currentPlayerId(g)).toBe('a');
@@ -115,14 +116,14 @@ describe('tours, scores et rotation', () => {
     ).toThrow();
   });
 
-  it('permet des scores négatifs', () => {
+  it('ne retire jamais de points : les anciennes parties « sans boire » comptent 0', () => {
     let g = solo();
     g = recordTurn(
       g,
       { themeId: 't1', cardNumber: 1, outcome: 'refused-no-drink', drinkNumber: 1 },
       1,
     );
-    expect(playerScores(g).a).toBe(-2);
+    expect(playerScores(g).a).toBe(0);
   });
 });
 
@@ -251,11 +252,11 @@ describe('équipes', () => {
     g = recordTurn(g, { themeId: 't1', cardNumber: 1, outcome: 'done' }, 1);
     g = recordTurn(
       g,
-      { themeId: 't1', cardNumber: 2, outcome: 'refused-no-drink', drinkNumber: 1 },
+      { themeId: 't1', cardNumber: 2, outcome: 'refused-drink', drinkNumber: 1 },
       2,
     );
     g = recordTurn(g, { themeId: 't1', cardNumber: 3, outcome: 'done' }, 3);
-    expect(teamScores(g)).toEqual({ A: 6, B: -2 });
+    expect(teamScores(g)).toEqual({ A: 6, B: 1 });
     expect(playerScores(g).a1).toBe(3);
   });
 
@@ -342,10 +343,10 @@ describe('stats', () => {
         { themeId: 't1', cardNumber: n, outcome, drinkNumber: outcome === 'done' ? undefined : 1 },
         n,
       ));
-    // a: done, b: drink, c: nodrink, d: done, a: done, b: drink, c: done, d: done
+    // a: done, b: drink, c: drink, d: done, a: done, b: drink, c: done, d: done
     play(1, 'done');
     play(2, 'refused-drink');
-    play(3, 'refused-no-drink');
+    play(3, 'refused-drink');
     play(4, 'done');
     play(5, 'done');
     play(6, 'refused-drink');
@@ -355,9 +356,9 @@ describe('stats', () => {
     const by = Object.fromEntries(s.players.map((p) => [p.playerId, p]));
     expect(by.a).toMatchObject({ done: 2, refused: 0, bestStreak: 2, score: 6 });
     expect(by.b).toMatchObject({ done: 0, refused: 2, drunk: 2, score: 2 });
-    expect(by.c).toMatchObject({ done: 1, noDrink: 1, score: 1 });
+    expect(by.c).toMatchObject({ done: 1, drunk: 1, noDrink: 0, score: 4 });
     expect(by.d).toMatchObject({ done: 2, bestStreak: 2 });
-    expect(s.totals).toEqual({ done: 5, refused: 3, drunk: 2, noDrink: 1 });
+    expect(s.totals).toEqual({ done: 5, refused: 3, drunk: 3, noDrink: 0 });
     expect(s.biggestDrinker).toBe('b');
     expect(s.biggestQuitter).toBe('b');
     expect(s.bestStreak?.length).toBe(2);

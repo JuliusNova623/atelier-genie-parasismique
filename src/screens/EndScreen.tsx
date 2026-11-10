@@ -156,8 +156,8 @@ export function EndScreen() {
               <span className={styles.grow}>
                 <strong>{nameOf(r.id)}</strong>
                 <small className={styles.hint} style={{ display: 'block' }}>
-                  {fr.end.columns.done} {byId[r.id].done} · {fr.end.columns.refused}{' '}
-                  {byId[r.id].refused} · {fr.end.columns.drunk} {byId[r.id].drunk}
+                  {fr.end.columns.done} {byId[r.id].done} · {fr.end.columns.drunk}{' '}
+                  {byId[r.id].drunk}
                 </small>
               </span>
               <strong>{r.score}</strong>
@@ -174,20 +174,17 @@ export function EndScreen() {
             <strong>{stats.totals.done}</strong>
           </li>
           <li>
-            <span>{fr.end.totals.refused}</span>
-            <strong>{stats.totals.refused}</strong>
-          </li>
-          <li>
             <span>{fr.end.totals.drunk}</span>
             <strong>{stats.totals.drunk}</strong>
           </li>
-          <li>
-            <span>{fr.end.totals.noDrink}</span>
-            <strong>{stats.totals.noDrink}</strong>
-          </li>
+          {stats.totals.noDrink > 0 && (
+            <li>
+              <span>{fr.end.totals.noDrink}</span>
+              <strong>{stats.totals.noDrink}</strong>
+            </li>
+          )}
           {award(fr.end.awards.bravest, stats.bravest)}
           {award(fr.end.awards.drinker, stats.biggestDrinker)}
-          {award(fr.end.awards.quitter, stats.biggestQuitter)}
           {award(
             fr.end.awards.streak,
             stats.bestStreak?.playerId ?? null,

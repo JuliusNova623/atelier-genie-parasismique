@@ -30,7 +30,7 @@ export function pointsFor(
     case 'refused-drink':
       return rules.pointsDrinkDrunk;
     case 'refused-no-drink':
-      return rules.pointsDrinkRefused;
+      return 0; // ancien résultat : on ne peut plus refuser de boire
     case 'joker-pass':
       return 0;
   }

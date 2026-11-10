@@ -121,14 +121,14 @@ describe('page de carte', () => {
     expect(screen.queryByRole('button', { name: /Voir la réponse/ })).not.toBeInTheDocument();
   });
 
-  it('« Je refuse » mène à l’étape boisson', async () => {
+  it('« Je bois » mène à l’étape boisson (boire est obligatoire si on ne fait pas la carte)', async () => {
     const user = userEvent.setup();
     await show({ ...base(), pending: card() });
-    await user.click(screen.getByRole('button', { name: 'Je refuse' }));
+    await user.click(screen.getByRole('button', { name: /^Je bois/ }));
     expect(g().pending).toMatchObject({ stage: 'drink' });
     expect(g().pending?.drinkNumber).toBeUndefined();
     expect(await screen.findByRole('heading', { name: 'Étape boisson' })).toBeInTheDocument();
-    expect(screen.getByText(`Carte n°${QUESTION.number} refusée`)).toBeInTheDocument();
+    expect(screen.getByText(`Carte n°${QUESTION.number} : tu bois`)).toBeInTheDocument();
   });
 
   it('Double : s’active, double les points affichés et enregistrés', async () => {
@@ -231,12 +231,14 @@ describe('étape boisson', () => {
     expect(playerScores(g()).a).toBe(1);
   });
 
-  it('affiche « Boisson n°X » si le nom est vide, et « Je ne bois pas » retire des points', async () => {
+  it('affiche « Boisson n°X » si le nom est vide, et propose uniquement « J’ai bu » (pas de refus)', async () => {
     const user = userEvent.setup();
     await show({ ...base(), pending: drink({ drinkNumber: 5 }) });
     expect(screen.getByText('Boisson n°5 : Boisson n°5')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /Je ne bois pas \(-2\)/ }));
-    expect(playerScores(g()).a).toBe(-2);
+    expect(screen.queryByRole('button', { name: /Je ne bois pas/ })).not.toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /J’ai bu/ })).toHaveLength(1);
+    await user.click(screen.getByRole('button', { name: /J’ai bu/ }));
+    expect(playerScores(g()).a).toBe(1);
   });
 
   it('joueur « sans alcool » : version sans alcool, nom conservé, mêmes points', async () => {

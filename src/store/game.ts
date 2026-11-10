@@ -46,7 +46,7 @@ interface GameState {
   playPass: () => Promise<void>;
   armJoker: (joker: 'double' | 'transfer', transferTo?: string) => Promise<void>;
   disarmJoker: () => Promise<void>;
-  resolveDrink: (drank: boolean) => Promise<void>;
+  resolveDrink: () => Promise<void>;
   /** Duel : deux joueurs d'équipes différentes reçoivent la même carte. */
   startDuel: (a: string, b: string) => Promise<void>;
   cancelDuel: () => Promise<void>;
@@ -146,8 +146,7 @@ export const useGameStore = create<GameState>((set, get) => {
     playPass: () => act((g) => playPass(g, Date.now()), 'pass'),
     armJoker: (joker, transferTo) => act((g) => armJoker(g, joker, transferTo), 'pass'),
     disarmJoker: () => act((g) => disarmJoker(g)),
-    resolveDrink: (drank) =>
-      act((g) => resolveDrink(g, drank, Date.now()), drank ? 'drink' : 'refuse'),
+    resolveDrink: () => act((g) => resolveDrink(g, Date.now()), 'drink'),
     startDuel: (a, b) => act((g) => startDuel(g, a, b), 'duel'),
     cancelDuel: () => act((g) => cancelDuel(g)),
     finishDuel: (winnerId) => act((g) => finishDuel(g, winnerId, Date.now()), 'success'),

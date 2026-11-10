@@ -5,6 +5,7 @@ export type JokerType = 'pass' | 'double' | 'transfer';
  * Un transfert de joker n'a pas son propre résultat : le joueur désigné joue la carte et son
  * résultat est enregistré normalement (done / refused-*), avec `jokerUsed: 'transfer'`.
  */
+/** « refused-no-drink » n'existe plus (boire est obligatoire) : conservé pour lire d'anciennes parties. */
 export type Outcome = 'done' | 'refused-drink' | 'refused-no-drink' | 'joker-pass' | 'duel';
 
 export interface Player {
@@ -31,7 +32,6 @@ export interface JokerRule {
 export interface Rules {
   pointsCard: number;
   pointsDrinkDrunk: number;
-  pointsDrinkRefused: number;
   jokers: Record<JokerType, JokerRule>;
   end: {
     /** Chaque joueur a joué N fois. */
@@ -120,7 +120,6 @@ export interface Game {
 export const DEFAULT_RULES: Rules = {
   pointsCard: 3,
   pointsDrinkDrunk: 1,
-  pointsDrinkRefused: -2,
   jokers: {
     pass: { enabled: true, count: 1 },
     double: { enabled: true, count: 1 },

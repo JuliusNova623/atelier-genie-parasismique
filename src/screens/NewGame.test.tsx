@@ -49,7 +49,7 @@ describe('NewGame', () => {
     setup();
     await addPlayer(user, 'Alice');
     await addPlayer(user, 'Bob');
-    const drunk = screen.getByLabelText('Boisson bue après un refus');
+    const drunk = screen.getByLabelText('Je bois (au lieu de faire la carte)');
     await user.clear(drunk);
     await user.type(drunk, '5');
     expect(screen.getAllByRole('alert')[0]).toHaveTextContent('strictement inférieurs');

@@ -12,13 +12,10 @@ const HINTS: Record<PlayScreen, [string, string][]> = {
   theme: [['Espace', fr.play.keys.theme]],
   card: [
     ['Espace', fr.play.keys.cardDo],
-    ['R', fr.play.keys.cardRefuse],
+    ['B', fr.play.keys.cardRefuse],
     ['P', fr.play.keys.cardPass],
   ],
-  drink: [
-    ['Espace', `${fr.play.keys.drinkSpin} / ${fr.play.keys.drinkDrank}`],
-    ['N', fr.play.keys.drinkNo],
-  ],
+  drink: [['Espace', `${fr.play.keys.drinkSpin} / ${fr.play.keys.drinkDrank}`]],
 };
 
 /**

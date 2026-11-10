@@ -64,12 +64,9 @@ export function DrinkScreen({ game }: { game: Game }) {
             <button
               type="button"
               className={`${styles.btn} ${styles.btnPrimary}`}
-              onClick={() => void resolveDrink(true)}
+              onClick={() => void resolveDrink()}
             >
               {t.drank} ({fr.play.points(game.rules.pointsDrinkDrunk)})
-            </button>
-            <button type="button" className={styles.btn} onClick={() => void resolveDrink(false)}>
-              {t.refused} ({fr.play.points(game.rules.pointsDrinkRefused)})
             </button>
           </div>
         </>

@@ -44,7 +44,7 @@ function finished(id = 'g1'): Game {
     ));
   t(1, 'done', 1); // Alice
   t(2, 'refused-drink', 2); // Bob
-  t(3, 'refused-no-drink', 3); // Chloé
+  t(3, 'refused-drink', 3); // Chloé
   t(4, 'done', 4); // Alice
   return endGame(g, 1000);
 }
@@ -77,16 +77,16 @@ describe('écran de fin', () => {
     expect(items).toHaveLength(3);
     expect(podium).toHaveTextContent('Alice');
     expect(podium).toHaveTextContent('6 pts');
-    expect(podium).toHaveTextContent('-2 pts');
+    expect(podium).toHaveTextContent('1 pt');
   });
 
   it('affiche les statistiques et les récompenses', async () => {
     await showEnd(finished());
     const stats = await screen.findByRole('region', { name: 'Statistiques' });
     expect(within(stats).getByText('Cartes faites').nextSibling).toHaveTextContent('2');
-    expect(within(stats).getByText('Refus').nextSibling).toHaveTextContent('2');
-    expect(within(stats).getByText('Boissons bues').nextSibling).toHaveTextContent('1');
-    expect(within(stats).getByText('Boissons refusées').nextSibling).toHaveTextContent('1');
+    expect(within(stats).getByText(/Cartes bues/).nextSibling).toHaveTextContent('2');
+    // Boire est obligatoire : plus de ligne « boissons refusées » (sauf anciennes parties).
+    expect(within(stats).queryByText(/Boissons refusées/)).not.toBeInTheDocument();
     expect(within(stats).getByText('Le plus courageux').nextSibling).toHaveTextContent('Alice');
     expect(within(stats).getByText('Le plus buveur').nextSibling).toHaveTextContent('Bob');
     expect(within(stats).getByText('Meilleure série')).toBeInTheDocument();

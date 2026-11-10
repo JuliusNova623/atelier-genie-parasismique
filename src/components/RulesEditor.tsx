@@ -38,12 +38,6 @@ export function RulesEditor({ rules, onChange, readOnly, showTeamRules }: Props)
             disabled={readOnly}
             onChange={(v) => set({ pointsDrinkDrunk: v ?? 0 })}
           />
-          <NumberField
-            label={t.pointsDrinkRefused}
-            value={rules.pointsDrinkRefused}
-            disabled={readOnly}
-            onChange={(v) => set({ pointsDrinkRefused: v ?? 0 })}
-          />
         </div>
         {errors.length > 0 && (
           <ul className={styles.errors} role="alert">

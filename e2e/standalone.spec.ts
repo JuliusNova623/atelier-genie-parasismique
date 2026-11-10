@@ -73,7 +73,9 @@ test('sur grand écran, le mode TV s’active seul et la partie se joue au clavi
   await expect(page.getByLabel('Au tour de Bob')).toBeVisible();
 });
 
-test('R refuse la carte, N refuse de boire : points négatifs', async ({ page }) => {
+test('B = « Je bois » : boire est obligatoire, +1 point, aucun refus possible', async ({
+  page,
+}) => {
   await page.goto(URL_FILE);
   await page.getByRole('button', { name: 'Nouvelle partie' }).click();
   for (const name of ['Alice', 'Bob']) {
@@ -88,17 +90,17 @@ test('R refuse la carte, N refuse de boire : points négatifs', async ({ page })
   await expect(page.getByRole('heading', { name: /^Carte n°\d+$/ })).toBeVisible({
     timeout: 20_000,
   });
-  await page.keyboard.press('r');
+  await page.keyboard.press('b');
   await expect(page.getByRole('heading', { name: 'Étape boisson' })).toBeVisible();
-  await expect(page.getByRole('button', { name: /Je ne bois pas/ })).toBeVisible({
-    timeout: 20_000,
-  });
-  await page.keyboard.press('n');
+  await expect(page.getByRole('button', { name: /J’ai bu/ })).toBeVisible({ timeout: 20_000 });
+  // Aucune façon de ne pas boire.
+  await expect(page.getByRole('button', { name: /Je ne bois pas|refus/i })).toHaveCount(0);
+  await page.keyboard.press('b');
   const first = page
     .getByRole('region', { name: 'Scores en direct' })
     .getByRole('listitem')
     .filter({ hasText: 'Alice' });
-  await expect(first).toContainText('-2');
+  await expect(first).toContainText('1');
 });
 
 test('la partie survit à un rechargement du fichier (stockage local du navigateur)', async ({

@@ -73,24 +73,26 @@ describe('refus et boisson', () => {
     const { themeId, cardNumber, drinkNumber } = g.pending!;
     expect(drinkNumber).toBeGreaterThanOrEqual(1);
     expect(drinkNumber).toBeLessThanOrEqual(20);
-    g = resolveDrink(g, true, 1);
+    g = resolveDrink(g, 1);
     expect(playerScores(g).a).toBe(1);
     expect(g.log[0]).toMatchObject({ outcome: 'refused-drink', drinkNumber, cardNumber });
     expect(remainingCards(g, themeId)).not.toContain(cardNumber);
     expect(currentPlayerId(g)).toBe('b');
   });
 
-  it('« Je ne bois pas » : points négatifs', () => {
-    const g = resolveDrink(toDrink(newGame()), false, 1);
-    expect(playerScores(g).a).toBe(-2);
-    expect(g.log[0].outcome).toBe('refused-no-drink');
+  it('boire est obligatoire : l’étape boisson n’a qu’une issue, « J’ai bu »', () => {
+    const g = resolveDrink(toDrink(newGame()), 1);
+    expect(playerScores(g).a).toBe(1);
+    expect(g.log[0].outcome).toBe('refused-drink');
+    // Plus de refus possible : la signature n'accepte plus qu'un moment.
+    expect(resolveDrink.length).toBe(2);
   });
 
   it('refuser ne consomme pas encore la carte avant la fin du tour, mais la boisson est exigée', () => {
     const g = refuseCard(toCard(newGame()));
     expect(g.pending?.stage).toBe('drink');
     expect(g.log).toHaveLength(0);
-    expect(() => resolveDrink(g, true, 1)).toThrow();
+    expect(() => resolveDrink(g, 1)).toThrow();
     expect(() => completeCard(g, 1)).toThrow();
   });
 
@@ -137,7 +139,7 @@ describe('jokers', () => {
 
   it('Double : sans effet et non consommé si le joueur refuse', () => {
     let g = armJoker(toCard(newGame()), 'double');
-    g = resolveDrink(revealPending(drawDrinkNumber(refuseCard(g))), true, 1);
+    g = resolveDrink(revealPending(drawDrinkNumber(refuseCard(g))), 1);
     expect(playerScores(g).a).toBe(1);
     expect(remainingJokers(g, 'a').double).toBe(1);
   });
@@ -165,8 +167,8 @@ describe('jokers', () => {
     let g = armJoker(toCard(newGame()), 'transfer', 'b');
     g = refuseCard(g);
     expect(g.pending).toMatchObject({ stage: 'drink', transferTo: 'b', joker: 'transfer' });
-    g = resolveDrink(revealPending(drawDrinkNumber(g)), false, 1);
-    expect(playerScores(g)).toEqual({ a: 0, b: -2, c: 0 });
+    g = resolveDrink(revealPending(drawDrinkNumber(g)), 1);
+    expect(playerScores(g)).toEqual({ a: 0, b: 1, c: 0 });
     expect(remainingJokers(g, 'a').transfer).toBe(0);
   });
 
@@ -205,7 +207,7 @@ describe('jokers', () => {
 describe('annulation', () => {
   it('annule un tour terminé avec refus + boisson et restaure tout', () => {
     const start = newGame();
-    const g = resolveDrink(toDrink(start), false, 1);
+    const g = resolveDrink(toDrink(start), 1);
     const back = undoLast(g);
     expect(back).toEqual({ ...start, pending: null });
     expect(playerScores(back).a).toBe(0);
@@ -224,7 +226,7 @@ describe('rappel d’hydratation', () => {
     let g = newGame({ ...DEFAULT_RULES, hydrationEvery: 2 });
     g = completeCard(toCard(g), 1);
     expect(hydrationDue(g)).toBe(false);
-    g = resolveDrink(toDrink(g), true, 2);
+    g = resolveDrink(toDrink(g), 2);
     expect(hydrationDue(g)).toBe(true);
   });
 });

@@ -128,7 +128,7 @@ export function CardScreen({ game }: { game: Game }) {
             {doLabel} ({fr.play.points(gain)}){p.transferTo ? ` · ${player.name}` : ''}
           </button>
           <button type="button" className={styles.btn} onClick={() => void store.refuseCard()}>
-            {refuseLabel}
+            {refuseLabel} ({fr.play.points(game.rules.pointsDrinkDrunk)})
           </button>
         </div>
       )}

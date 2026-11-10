@@ -29,22 +29,21 @@ export function hotkeysFor(game: Game): Actions {
     case 'card':
       return {
         space: () => void s.completeCard(),
-        r: () => void s.refuseCard(),
+        b: () => void s.refuseCard(),
         p: () => void s.playPass(),
       };
     case 'drink':
       if (p?.drinkNumber === undefined) return { space: () => void s.spinDrink() };
       return {
-        space: () => void s.resolveDrink(true),
-        b: () => void s.resolveDrink(true),
-        n: () => void s.resolveDrink(false),
+        space: () => void s.resolveDrink(),
+        b: () => void s.resolveDrink(),
       };
   }
 }
 
 /**
- * Raccourcis clavier pour jouer sur grand écran : Espace (action principale), R (refus),
- * P (passe), B / N (boisson), F (plein écran). Ignorés pendant la saisie de texte ou si un panneau est ouvert.
+ * Raccourcis clavier pour jouer sur grand écran : Espace (action principale), B (je bois),
+ * P (passe), F (plein écran). Ignorés pendant la saisie de texte ou si un panneau est ouvert.
  */
 export function usePlayHotkeys(game: Game | null): void {
   useEffect(() => {

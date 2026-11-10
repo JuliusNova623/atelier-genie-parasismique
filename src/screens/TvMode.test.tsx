@@ -141,7 +141,7 @@ describe('mode écran : scores en direct et raccourcis', () => {
     await show(game(card));
     const help = screen.getByLabelText('Raccourcis clavier');
     expect(within(help).getByText('Fait')).toBeInTheDocument();
-    expect(within(help).getByText('Refus')).toBeInTheDocument();
+    expect(within(help).getByText('Je bois')).toBeInTheDocument();
     expect(within(help).getByText('Passe')).toBeInTheDocument();
   });
 });
@@ -150,7 +150,7 @@ describe('raccourcis clavier', () => {
   it('associe les touches à l’écran courant', () => {
     expect(screenOf(game())).toBe('wheel');
     expect(Object.keys(hotkeysFor(game()))).toEqual(['space']);
-    expect(Object.keys(hotkeysFor(game(card))).sort()).toEqual(['p', 'r', 'space']);
+    expect(Object.keys(hotkeysFor(game(card))).sort()).toEqual(['b', 'p', 'space']);
     const drinkIdle: PendingTurn = {
       stage: 'drink',
       themeId: 'theme-1',
@@ -161,7 +161,7 @@ describe('raccourcis clavier', () => {
     expect(Object.keys(hotkeysFor(game(drinkIdle)))).toEqual(['space']);
     expect(
       Object.keys(hotkeysFor(game({ ...drinkIdle, drinkNumber: 3, revealed: true }))).sort(),
-    ).toEqual(['b', 'n', 'space']);
+    ).toEqual(['b', 'space']);
   });
 
   it('Espace lance la roue : le thème est tiré', async () => {
@@ -171,7 +171,7 @@ describe('raccourcis clavier', () => {
     await waitFor(() => expect(useGameStore.getState().game!.pending?.stage).toBe('theme'));
   });
 
-  it('Espace valide la carte (+3) et R la refuse', async () => {
+  it('Espace valide la carte (+3) et B = « Je bois »', async () => {
     setWide(true);
     const { unmount } = await show(game(card));
     fireEvent.keyDown(window, { code: 'Space', key: ' ' });
@@ -180,11 +180,11 @@ describe('raccourcis clavier', () => {
     unmount();
 
     await show(game(card));
-    fireEvent.keyDown(window, { key: 'r' });
+    fireEvent.keyDown(window, { key: 'b' });
     await waitFor(() => expect(useGameStore.getState().game!.pending?.stage).toBe('drink'));
   });
 
-  it('à l’étape boisson : Espace tire, puis B/Espace = J’ai bu, N = Je ne bois pas', async () => {
+  it('à l’étape boisson : Espace tire le numéro de la boisson', async () => {
     const drinkIdle: PendingTurn = {
       stage: 'drink',
       themeId: card.themeId,
@@ -196,7 +196,7 @@ describe('raccourcis clavier', () => {
     await waitFor(() => expect(useGameStore.getState().game!.pending?.drinkNumber).toBeDefined());
   });
 
-  it('N sur une boisson révélée = « Je ne bois pas » (−2)', async () => {
+  it('B ou Espace sur une boisson révélée = « J’ai bu » (+1) ; la touche N ne fait plus rien', async () => {
     const revealed: PendingTurn = {
       stage: 'drink',
       themeId: card.themeId,
@@ -206,10 +206,13 @@ describe('raccourcis clavier', () => {
     };
     await show(game(revealed));
     fireEvent.keyDown(window, { key: 'n' });
+    await new Promise((r) => setTimeout(r, 40));
+    expect(useGameStore.getState().game!.log).toHaveLength(0);
+    fireEvent.keyDown(window, { key: 'b' });
     await waitFor(() => expect(useGameStore.getState().game!.log).toHaveLength(1));
     expect(useGameStore.getState().game!.log[0]).toMatchObject({
-      outcome: 'refused-no-drink',
-      pointsDelta: -2,
+      outcome: 'refused-drink',
+      pointsDelta: 1,
     });
   });
 

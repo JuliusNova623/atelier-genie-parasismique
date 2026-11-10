@@ -48,11 +48,7 @@ function played(): Game {
   });
   g = recordTurn(g, { themeId: 't', cardNumber: 1, outcome: 'done' }, 1); // a +3
   g = recordTurn(g, { themeId: 't', cardNumber: 2, outcome: 'done' }, 2); // b +3
-  g = recordTurn(
-    g,
-    { themeId: 't', cardNumber: 3, outcome: 'refused-no-drink', drinkNumber: 4 },
-    3,
-  ); // c -2
+  g = recordTurn(g, { themeId: 't', cardNumber: 3, outcome: 'refused-drink', drinkNumber: 4 }, 3); // c +1
   return g;
 }
 
@@ -61,7 +57,7 @@ describe('buildResults', () => {
     const r = buildResults(played());
     expect(r.winnerIds).toEqual(['a', 'b']);
     expect(r.teams).toBeNull();
-    expect(r.players[2]).toMatchObject({ id: 'c', score: -2, rank: 3 });
+    expect(r.players[2]).toMatchObject({ id: 'c', score: 1, rank: 3 });
   });
 
   it('en mode équipes, le gagnant est une équipe', () => {

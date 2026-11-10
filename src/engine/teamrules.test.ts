@@ -158,7 +158,7 @@ describe('L’adversaire décide', () => {
 
     let g = refuseCard(toCard(teamGame({ opponentDecides: true })));
     expect(g.pending!.deciderId).toBeDefined();
-    g = resolveDrink(revealPending(drawDrinkNumber(g)), true, 2);
+    g = resolveDrink(revealPending(drawDrinkNumber(g)), 2);
     expect(g.log[0].deciderId).toBeDefined();
     expect(g.log[0].outcome).toBe('refused-drink');
   });

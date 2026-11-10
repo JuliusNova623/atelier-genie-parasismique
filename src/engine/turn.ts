@@ -201,8 +201,8 @@ export function drawDrinkNumber(game: Game, source?: Uint32Source): Game {
   };
 }
 
-/** « J'ai bu » (points boisson) ou « Je ne bois pas » (points négatifs), puis joueur suivant. */
-export function resolveDrink(game: Game, drank: boolean, now: number): Game {
+/** « J'ai bu » : boire est obligatoire quand on ne fait pas la carte. Points boisson, puis joueur suivant. */
+export function resolveDrink(game: Game, now: number): Game {
   const p = game.pending;
   if (!p || p.stage !== 'drink' || !p.revealed || p.drinkNumber === undefined) {
     throw new Error('Aucune boisson à résoudre.');
@@ -212,7 +212,7 @@ export function resolveDrink(game: Game, drank: boolean, now: number): Game {
     {
       themeId: p.themeId,
       cardNumber: p.cardNumber!,
-      outcome: drank ? 'refused-drink' : 'refused-no-drink',
+      outcome: 'refused-drink',
       drinkNumber: p.drinkNumber,
       jokerUsed: p.joker === 'transfer' ? 'transfer' : undefined,
       playerId: p.transferTo,

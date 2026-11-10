@@ -77,8 +77,8 @@ describe('l’adversaire décide', () => {
     await show(teamGame({ opponentDecides: true }, card({ deciderId: 'b2' })));
     expect(screen.getByText(/Ben \(équipe adverse\) décide pour Alice/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Doit le faire \(\+3\)/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Doit boire' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Je refuse' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Doit boire/ })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Je bois/ })).not.toBeInTheDocument();
   });
 
   it('« Doit le faire » donne les points ; le décideur est tracé dans le journal', async () => {
@@ -92,7 +92,7 @@ describe('l’adversaire décide', () => {
   it('« Doit boire » mène à l’étape boisson', async () => {
     const user = userEvent.setup();
     await show(teamGame({ opponentDecides: true }, card({ deciderId: 'b1' })));
-    await user.click(screen.getByRole('button', { name: 'Doit boire' }));
+    await user.click(screen.getByRole('button', { name: /^Doit boire/ }));
     expect(await screen.findByRole('heading', { name: 'Étape boisson' })).toBeInTheDocument();
     expect(g().pending?.deciderId).toBe('b1');
   });
@@ -103,9 +103,9 @@ describe('l’adversaire décide', () => {
     expect(screen.getByRole('button', { name: /Transfert/ })).toBeEnabled();
   });
 
-  it('sans la règle, les boutons restent « Je réponds / Je refuse »', async () => {
+  it('sans la règle, les boutons restent « Je réponds / Je bois »', async () => {
     await show(teamGame({}, card()));
-    expect(screen.getByRole('button', { name: 'Je refuse' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Je bois/ })).toBeInTheDocument();
     expect(screen.queryByText(/équipe adverse/)).not.toBeInTheDocument();
   });
 });
@@ -136,7 +136,7 @@ describe('duel', () => {
 
     expect(screen.getByText(/Anna contre Bob/)).toBeInTheDocument();
     // Pas de refus, pas de joker pendant un duel.
-    expect(screen.queryByRole('button', { name: 'Je refuse' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Je bois/ })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Passe/ })).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /Bob gagne/ }));
@@ -151,7 +151,7 @@ describe('duel', () => {
     await show(teamGame({ duel: true }, card({ duel: { a: 'a1', b: 'b1' } })));
     await user.click(screen.getByRole('button', { name: 'Annuler le duel' }));
     expect(g().pending?.duel).toBeUndefined();
-    expect(await screen.findByRole('button', { name: 'Je refuse' })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /^Je bois/ })).toBeInTheDocument();
   });
 
   it('n’est plus proposé une fois utilisé dans le tour de table', async () => {

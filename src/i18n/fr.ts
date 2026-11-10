@@ -59,8 +59,7 @@ export const fr = {
   rules: {
     scoring: 'Barème',
     pointsCard: 'Carte réalisée',
-    pointsDrinkDrunk: 'Boisson bue après un refus',
-    pointsDrinkRefused: 'Boisson refusée',
+    pointsDrinkDrunk: 'Je bois (au lieu de faire la carte)',
     jokers: 'Jokers de départ (par joueur)',
     jokerNames: { pass: 'Passe', double: 'Double', transfer: 'Transfert' },
     end: 'Fin de partie',
@@ -128,8 +127,8 @@ export const fr = {
     totals: {
       done: 'Cartes faites',
       refused: 'Refus',
-      drunk: 'Boissons bues',
-      noDrink: 'Boissons refusées',
+      drunk: 'Cartes bues (« Je bois »)',
+      noDrink: 'Boissons refusées (ancienne règle)',
     },
     awards: {
       bravest: 'Le plus courageux',
@@ -241,7 +240,7 @@ export const fr = {
     playedNumbers: 'Numéros déjà joués',
     doIt: 'Je le fais',
     answerIt: 'Je réponds',
-    refuse: 'Je refuse',
+    refuse: 'Je bois',
     points: (n: number) => (n > 0 ? `+${n}` : `${n}`),
     answer: { show: '👀 Voir la réponse', label: 'Réponse :' },
     timer: {
@@ -283,12 +282,11 @@ export const fr = {
     drink: {
       title: 'Étape boisson',
       pick: (n: number) => `Tire ta boisson (1 à ${n})`,
-      refusedCard: (n: number) => `Carte n°${n} refusée`,
+      refusedCard: (n: number) => `Carte n°${n} : tu bois`,
       yourDrink: 'Ta boisson',
       drinkIs: (n: number, name: string) => `Boisson n°${n} : ${name}`,
       noAlcoholVersion: 'Version sans alcool : un verre d’eau ou un soft',
       drank: 'J’ai bu',
-      refused: 'Je ne bois pas',
       drinkIsNoAlcohol: 'Boisson sans alcool',
     },
     scores: {
@@ -308,11 +306,10 @@ export const fr = {
       wheel: 'Lancer la roue',
       theme: 'Tirer la carte',
       cardDo: 'Fait',
-      cardRefuse: 'Refus',
+      cardRefuse: 'Je bois',
       cardPass: 'Passe',
       drinkSpin: 'Tirer la boisson',
       drinkDrank: 'J’ai bu',
-      drinkNo: 'Je ne bois pas',
       fullscreen: 'Plein écran',
     },
     hydration: 'Pense à boire de l’eau et ne prends pas le volant.',
