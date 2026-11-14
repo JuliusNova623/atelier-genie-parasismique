@@ -1,0 +1,68 @@
+/* =====================================================================
+   ex-td2.js — TD2 Château d'eau : 1 ddl sous séisme (spectre)
+   Sources : SujetsTD p. 2-3 (énoncé, en anglais) ; TD2-GP-EtudeChateauEau-Correction.pdf
+   (corrigé officiel, diapositives 96 à 104 du chapitre 1)
+   ===================================================================== */
+EXERCISES.push({
+ id:'td2',src:'TD2',type:'TD',annee:'2025-2026',diff:2,statut:'off',
+ titre:'Château d\'eau sous séisme',en:'Water Tank Dynamic Analysis – Simplified analysis of tank tower motion under seismic shaking',
+ notions:['inertie','raideur','masse-equiv','sdof','libre-nonamorti','spectre-reponse','force-1ddl','ba-sismique','combinaisons','unites'],
+ enonce:()=>`<p>Le château d'eau est idéalisé par un fût cylindrique creux inextensible (<i>inextensional vacuum cylinder column</i>) en béton armé C25/30 (E<sub>cm</sub> = 31 GPa), de diamètre extérieur 2,00 m et d'épaisseur 30 cm, haut de 15 m, portant un réservoir de 150 t. On le modélise par un système à 1 ddl masse-ressort : masses concentrées en tête, raideur due à la seule flexion du fût. Le séisme horizontal est décrit par le spectre de pseudo-accélération ci-dessous : palier à 5 m/s² jusqu'à T = 0,4 s, puis Sa = 5·(0,4/T)<sup>2/3</sup>.</p>
+ <p class="small muted">Questions : 1) raideur ; 2) masse en mouvement M<sub>sis</sub> (réservoir + part de la masse du fût, à déterminer) ; 3) période propre ; 4) accélération maximale ; 5) effort sismique maximal ; 6) déplacement maximal ; 7) diagrammes de moment et d'effort tranchant ; 8) armatures à l'ELU (abaque d'interaction flexion + effort normal, situation sismique).</p>`,
+ data:[['Fût','D = 2,00 m ; e = 0,30 m','d = 1,40 m'],['Hauteur','L = 15 m','15 m'],['Béton','C25/30, Ecm = 31 GPa','31·10⁹ Pa'],['Réservoir','150 t','150·10³ kg'],['Spectre','palier 5 m/s² jusqu\'à 0,4 s','Sa = 5(0,4/T)^(2/3) au-delà']],
+ fig:'tank',
+ qs:()=>{const c=C2; return [
+  {q:'Q1',t:'Raideur du système',kind:'calcul',st:'offx',notions:['raideur','inertie','unites'],res:String.raw`K\approx ${tn(c.K/1e6,4)}\ \text{MN/m}`,
+   why:`<p>Le château d'eau est un pendule inversé : fût encastré en pied, libre en tête (la tête peut tourner). C'est donc une console de raideur 3EI/L³. La section est un tube : I = π(D⁴ − d⁴)/64 avec d = D − 2e = ${nf(c.d,3)} m.</p>`,
+   f:[String.raw`K=\dfrac{3EI}{L^3}\qquad I=\dfrac{\pi\,(D^4-d^4)}{64}`],
+   a:[String.raw`I=\dfrac{\pi\,(2^4-1{,}4^4)}{64}=${tn(c.I,4)}\ \text{m}^4`,String.raw`K=\dfrac{3\times 31\cdot10^9\times ${tn(c.I,4)}}{15^3}=${tsci(c.K)}\ \text{N/m}`],
+   r:String.raw`K\approx ${tn(c.K/1e6,4)}\ \text{MN/m}`,
+   ecart:`Le corrigé officiel écrit I = π(2⁴ − 1,44)/64 : « 1,44 » est une coquille pour 1,4⁴ = 3,84. Sa valeur I = 0,597 m⁴ et K = 16,44 MN/m sont bien celles qu'on retrouve.`,vig:['v-console','v-tube']},
+  {q:'Q2',t:'Masse sismique en mouvement',kind:'calcul + démonstration',st:'off',notions:['masse-equiv','sdof'],res:String.raw`M_{sis}\approx ${tn(c.Msis,4)}\ \text{t}`,
+   why:`<p>La masse en mouvement est celle du réservoir plus une partie de la masse du fût. Pour remplacer la masse répartie du fût par une masse concentrée en tête, on cherche la masse M<sub>equ</sub> qui donne la même période propre que la console à masse répartie (annexe du corrigé).</p>`,
+   f:[String.raw`2\pi\sqrt{\dfrac{M_{equ}L^3}{3EI}}=\pi L^2\sqrt{\dfrac{11\,m}{34\,EI}}\ \Rightarrow\ M_{equ}=\dfrac{33}{136}\,m\,L\approx 24\,\%\,M_{fût}`,String.raw`M_{sis}=M_{rés}+0{,}24\,M_{fût}\qquad M_{fût}=\rho\,L\,\dfrac{\pi(D^2-d^2)}{4}`],
+   a:[String.raw`M_{fût}=2{,}5\times15\times\dfrac{\pi(2^2-1{,}4^2)}{4}=${tn(c.Mfut,4)}\ \text{t}`,String.raw`M_{sis}=150+\dfrac{33}{136}\times ${tn(c.Mfut,4)}`],
+   r:String.raw`M_{sis}\approx ${tn(c.Msis,4)}\ \text{t}`,after:`<p class="small muted">Le corrigé arrondit 33/136 à 24 % et trouve 164,4 t ; avec 33/136 = ${nf(33/136,4)} exactement on obtient ${nf(c.Msis,4)} t. L'écart (0,1 %) est sans effet.</p>`,vig:['v-meq']},
+  {q:'Q3',t:'Période propre fondamentale',kind:'calcul',st:'off',notions:['libre-nonamorti'],res:String.raw`T\approx ${tn(c.T,3)}\ \text{s}`,
+   f:[String.raw`T=2\pi\sqrt{\dfrac{M_{sis}}{K}}`],a:[String.raw`T=2\pi\sqrt{\dfrac{${tn(c.Msis*1e3,4)}}{${tsci(c.K)}}}`],r:String.raw`T\approx ${tn(c.T,3)}\ \text{s}`,vig:['v-unites']},
+  {q:'Q4',t:'Accélération maximale (lecture du spectre)',kind:'calcul',st:'off',notions:['spectre-reponse','force-1ddl'],res:String.raw`S_a\approx ${tn(c.Sa,3)}\ \text{m/s}^2`,
+   why:`<p>T = ${nf(c.T,3)} s est au-delà de la fin du palier (0,4 s) : on est sur la branche descendante donnée par l'énoncé.</p>`,
+   f:[String.raw`S_a(T)=5\left(\dfrac{0{,}4}{T}\right)^{2/3}\quad(T>0{,}4\ \text{s})`],a:[String.raw`S_a=5\left(\dfrac{0{,}4}{${tn(c.T,3)}}\right)^{2/3}`],r:String.raw`S_a\approx ${tn(c.Sa,3)}\ \text{m/s}^2`,vig:['v-branche']},
+  {q:'Q5',t:'Effort sismique maximal',kind:'calcul',st:'off',notions:['force-1ddl'],res:String.raw`F\approx ${tn(c.F/1e6,3)}\ \text{MN}`,
+   f:[String.raw`F=M_{sis}\cdot S_a`],a:[String.raw`F=${tn(c.Msis*1e3,4)}\times ${tn(c.Sa,3)}=${tsci(c.F)}\ \text{N}`],r:String.raw`F\approx ${tn(c.F/1e6,3)}\ \text{MN}`},
+  {q:'Q6',t:'Déplacement maximal en tête',kind:'calcul',st:'off',notions:['force-1ddl'],res:String.raw`x\approx ${tn(c.x*1e3,3)}\ \text{mm}`,
+   f:[String.raw`x=\dfrac{F}{K}`],a:[String.raw`x=\dfrac{${tn(c.F/1e6,3)}}{${tn(c.K/1e6,4)}}=${tn(c.x,3)}\ \text{m}`],r:String.raw`x\approx ${tn(c.x*1e3,3)}\ \text{mm}`,
+   after:`<p class="small muted">Pas de coefficient q dans ce TD : le spectre donné est un spectre de réponse élastique, le déplacement F/K est donc directement le déplacement réel.</p>`},
+  {q:'Q7',t:'Sollicitations dans le fût (V, M, N)',kind:'calcul',st:'off',notions:['force-1ddl','combinaisons'],res:String.raw`M_{pied}\approx ${tn(c.M/1e6,3)}\ \text{MN·m}`,
+   why:`<p>La force sismique s'applique en tête (masse concentrée). L'effort tranchant est constant sur la hauteur ; le moment est nul en tête et maximal en pied (console). L'effort normal vient du réservoir et du poids propre du fût (béton 25 kN/m³).</p>`,
+   f:[String.raw`V=F\qquad M_{pied}=F\cdot L\qquad N_{pied}=M_{rés}\,g+25\,L\,S`],
+   a:[String.raw`M_{pied}=${tn(c.F/1e6,3)}\times15=${tn(c.M/1e6,3)}\ \text{MN·m}`,String.raw`S=\dfrac{\pi(2^2-1{,}4^2)}{4}=${tn(c.S,3)}\ \text{m}^2`,String.raw`N_{pied}=150\times9{,}81+25\times15\times${tn(c.S,3)}=${tn(c.N,4)}\ \text{kN}`],
+   r:String.raw`V=${tn(c.F/1e6,3)}\ \text{MN}\quad M_{pied}=${tn(c.M/1e6,3)}\ \text{MN·m}\quad N\approx ${tn(c.N,4)}\ \text{kN}`,
+   after:`<p class="small muted">Le corrigé arrondit N à 2 100 kN (≈ 210 t) et M à 9,12 puis 9,1 MN·m.</p>`},
+  {q:'Q8',t:'Ferraillage en pied de fût (ELU sismique)',kind:'calcul + abaque',st:'off',notions:['ba-sismique','combinaisons'],res:String.raw`A\approx ${tn(c.A*1e4,3)}\ \text{cm}^2`,
+   why:`<p>Situation de projet sismique : combinaison 1,0G + 1,0A<sub>E</sub> + ψ₂Q, coefficients partiels γc = 1,3 et γs = 1,0. On calcule le moment réduit μ et l'effort normal réduit ν de la section circulaire, puis on lit le pourcentage mécanique p sur l'abaque d'interaction fourni.</p>`,
+   f:[String.raw`f_{cd}=\dfrac{f_{ck}}{1{,}3}\quad f_{yd}=\dfrac{f_{yk}}{1{,}0}\quad\mu=\dfrac{4M}{\pi D^3 f_{cd}}\quad\nu=\dfrac{4N}{\pi D^2 f_{cd}}\quad A=p\,\dfrac{\pi D^2}{4}\dfrac{f_{cd}}{f_{yd}}`],
+   a:[String.raw`f_{cd}=${tn(c.fcd,4)}\ \text{MPa}\qquad f_{yd}=500\ \text{MPa}`,String.raw`\mu=\dfrac{4\times${tn(c.M/1e6,3)}}{\pi\times2^3\times${tn(c.fcd,4)}}=${tn(c.mu,3)}\qquad\nu=\dfrac{4\times${tn(c.N/1e3,3)}}{\pi\times2^2\times${tn(c.fcd,4)}}=${tn(c.nu,3)}`,String.raw`p=0{,}18\ \text{(lecture d'abaque du corrigé)}\Rightarrow A=0{,}18\times\dfrac{\pi\times2^2}{4}\times\dfrac{${tn(c.fcd,4)}}{500}`],
+   r:String.raw`A\approx ${tn(c.A*1e4,3)}\ \text{cm}^2\ \Rightarrow\ \text{HA 25 tous les }13\ \text{cm}`,
+   after:`<p>Disposition : armatures sur le périmètre extérieur avec enrobage ≈ 5 cm, P = π(2 − 0,1) = ${nf(c.per,3)} m. Avec des HA 25 (${nf(c.Abar,3)} cm²), espacement = ${nf(c.per,3)} × ${nf(c.Abar,3)}/${nf(c.A*1e4,3)} = ${nf(c.esp*100,3)} cm, arrondi à 13 cm.</p><p class="small muted">La valeur p = 0,18 vient de la lecture de l'abaque par le corrigé ; elle n'est pas recalculable ici.</p>`,vig:['v-gamma-sism','v-abaque']}
+ ];},
+ lab:'td2', variant:'td2'
+});
+FORMULAS.push(
+ {id:'f-console',th:'raideur',nom:'Raideur latérale d\'une console (tête libre de tourner)',expr:'K = 3·E·I / L³',tex:String.raw`K=\dfrac{3\,E\,I}{L^3}`,vars:['L : hauteur (m)','E, I : module (Pa) et inertie (m⁴)'],cond:'Encastrée en pied, libre (ou articulée) en tête.',source:'Corrigé officiel TD2 ; corrigé TD3 (fûts sous néoprènes)',notions:['raideur'],ex:['td2:Q1','td3:Q1.1','td3:Q1.2'],vig:['v-console']},
+ {id:'f-I-tube',th:'raideur',nom:'Inertie d\'un tube circulaire',expr:'I = π(D⁴ − d⁴)/64',tex:String.raw`I=\dfrac{\pi\,(D^4-d^4)}{64}`,vars:['D, d : diamètres extérieur et intérieur (m)'],cond:'Section annulaire, flexion autour d\'un diamètre.',source:'Corrigé officiel TD2',notions:['inertie'],ex:['td2:Q1'],vig:['v-tube']},
+ {id:'f-meq',th:'raideur',nom:'Masse équivalente d\'une console à masse répartie',expr:'M_equ = (33/136)·m·L ≈ 24 % M_fût',tex:String.raw`M_{equ}=\dfrac{33}{136}\,m\,L\approx 0{,}24\,M_{fût}\qquad T_1=\pi L^2\sqrt{\dfrac{11\,m}{34\,EI}}`,vars:['m : masse linéique (kg/m)','L : hauteur (m)'],cond:'Masse équivalente en tête donnant la même période propre que la console à masse répartie (annexe du corrigé TD2). Le TD3 l\'arrondit à 25 %.',source:'Corrigé officiel TD2 (annexe, diapo 104)',notions:['masse-equiv'],ex:['td2:Q2','td3:Q1.4'],vig:['v-meq']},
+ {id:'f-F-1ddl',th:'spectre',nom:'Effort sismique et déplacement d\'un 1 ddl',expr:'F = M·Sa(T)      x = F/K',tex:String.raw`F=M\,S_a(T)\qquad x=\dfrac{F}{K}\quad(\times q\ \text{si spectre de calcul})`,vars:['M : masse sismique (kg)','Sa : accélération spectrale (m/s²)','K : raideur (N/m)'],cond:'Système à 1 ddl. Si le spectre est un spectre de calcul réduit par q, le déplacement réel vaut q·F/K.',source:'Corrigés officiels TD2 et TD3',notions:['force-1ddl','deplacements-egaux'],ex:['td2:Q5','td2:Q6','td3:Q1.6'],vig:['v-q-depl']},
+ {id:'f-ba-circ',th:'dim',nom:'Section circulaire BA : efforts réduits (abaque)',expr:'μ = 4M/(πD³fcd)   ν = 4N/(πD²fcd)   A = p·πD²/4·fcd/fyd',tex:String.raw`\mu=\dfrac{4M}{\pi D^3 f_{cd}}\quad\nu=\dfrac{4N}{\pi D^2 f_{cd}}\quad A=p\,\dfrac{\pi D^2}{4}\,\dfrac{f_{cd}}{f_{yd}}`,vars:['p : pourcentage mécanique lu sur l\'abaque'],cond:'Situation sismique : fcd = fck/1,3, fyd = fyk/1,0.',source:'Corrigé officiel TD2',notions:['ba-sismique'],ex:['td2:Q8'],vig:['v-gamma-sism','v-abaque']},
+ {id:'f-comb-acc',th:'ec8',nom:'Combinaison d\'actions en situation sismique',expr:'G + A_E + Σψ2,i·Qi',tex:String.raw`E_d=G+A_{E}+\textstyle\sum\psi_{2,i}\,Q_i`,vars:['ψ2 : coefficient quasi-permanent'],cond:'Situation accidentelle : coefficients partiels sur actions égaux à 1,0.',source:'Corrigés officiels TD2, TD3, TD5 et examen 2024',notions:['combinaisons'],ex:['td2:Q8','td3:Q3.1','e2024:Q4d'],vig:['v-psi2']}
+);
+VIG.push(
+ {id:'v-console',type:'Cas',titre:'Château d\'eau : console 3EI/L³, pas 12EI/L³',texte:'Le réservoir en tête peut tourner : le fût est encastré en pied et libre en tête. On prend donc 3EI/L³. Comparer avec le silo du TD1 où la plaque rigide bloque la rotation (12EI/h³).',notions:['raideur'],ex:['td2:Q1']},
+ {id:'v-tube',type:'Piège',titre:'Tube : D⁴ − d⁴, avec d = D − 2e',texte:`Diamètre intérieur d = 2,00 − 2×0,30 = 1,40 m. Le corrigé écrit « 2⁴ − 1,44 » : lire 1,4⁴ = 3,84. I = ${nf(C2.I,4)} m⁴.`,notions:['inertie'],ex:['td2:Q1']},
+ {id:'v-meq',type:'Hypothèse',titre:'Ne pas oublier la masse du fût, mais seulement ≈ 24 %',texte:`La masse du fût est répartie : seule une fraction 33/136 ≈ 24 % agit comme une masse en tête (même période). Prendre 100 % surestime M et T ; prendre 0 % les sous-estime. TD2 : M = 150 + 0,24 × ${nf(C2.Mfut,3)} = ${nf(C2.Msis,4)} t.`,notions:['masse-equiv'],ex:['td2:Q2','td3:Q1.4']},
+ {id:'v-branche',type:'Piège',titre:'Vérifier sur quelle branche du spectre tombe T',texte:'Toujours comparer T aux bornes du palier avant de lire Sa. TD2 : T ≈ 0,63 s > 0,4 s, donc branche descendante 5(0,4/T)^(2/3) et non le palier 5 m/s².',notions:['spectre-reponse','spectre-ec8'],ex:['td2:Q4','td3:Q1.5','td3:Q2.1c']},
+ {id:'v-gamma-sism',type:'Cas',titre:'Coefficients partiels en situation sismique',texte:'Situation accidentelle : γc = 1,3 pour le béton et γs = 1,0 pour l\'acier (corrigés TD2, TD3, TD5). Les actions sont combinées avec des coefficients 1,0.',notions:['ba-sismique','combinaisons'],ex:['td2:Q8','td3:Q4.1','td5:Q8a']},
+ {id:'v-abaque',type:'Contrôle',titre:'Abaques d\'interaction : hypothèses à respecter',texte:'Les abaques supposent un ferraillage symétrique (aciers comprimés pris en compte), un enrobage relatif donné (c = c′ = 0,1d dans le TD3) et γs = 1,0. Le résultat diffère donc du calcul « section partiellement comprimée » sans aciers comprimés.',notions:['ba-sismique'],ex:['td2:Q8','td3:Q4.4']},
+ {id:'v-psi2',type:'Cas',titre:'ψ2 = 0 : vent, neige (< 1000 m), entretien de toiture',texte:'En situation sismique, seules les parts quasi permanentes des actions variables comptent. ψ2 = 0 pour le vent, la neige à moins de 1000 m d\'altitude et la charge d\'entretien de toiture (catégorie H) : ces charges disparaissent de la combinaison et de la masse sismique.',notions:['masse-sismique','combinaisons'],ex:['td5:Q2a','e2021:Q1.1d','e2022:Q2a','e2024:Q2a']}
+);
+Object.assign(STAR_DEFAULT,{'f-console':1,'f-meq':1,'f-F-1ddl':1,'f-comb-acc':1,'v-console':1,'v-meq':1,'v-branche':1,'v-psi2':1});

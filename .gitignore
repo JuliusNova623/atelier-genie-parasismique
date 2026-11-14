@@ -1,11 +1,4 @@
-node_modules
-dist
-android/build
-android/app/build
-android/.gradle
-android/local.properties
-*.keystore
-*.jks
-playwright-report
-test-results
-dist-web
+.DS_Store
+Thumbs.db
+_site/
+node_modules/
