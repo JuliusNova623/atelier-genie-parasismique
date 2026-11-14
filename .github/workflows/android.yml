@@ -36,6 +36,7 @@ jobs:
 
       - name: Générer le projet Android
         run: |
+          set -x
           npx cap add android
           # Icône de lancement : celle de l'application (au lieu du logo par défaut).
           rm -rf android/app/src/main/res/mipmap-anydpi-v26
