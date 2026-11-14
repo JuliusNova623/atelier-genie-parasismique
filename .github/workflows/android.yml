@@ -39,10 +39,11 @@ jobs:
           npx cap add android
           # Icône de lancement : celle de l'application (au lieu du logo par défaut).
           rm -rf android/app/src/main/res/mipmap-anydpi-v26
+          IM=$(command -v magick || command -v convert)
           for d in mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192; do
             dir=android/app/src/main/res/mipmap-${d%%:*}
             rm -f "$dir"/ic_launcher*.png "$dir"/ic_launcher*.webp
-            convert icons/icon-512.png -resize ${d##*:}x${d##*:} "$dir/ic_launcher.png"
+            "$IM" icons/icon-512.png -resize ${d##*:}x${d##*:} "$dir/ic_launcher.png"
             cp "$dir/ic_launcher.png" "$dir/ic_launcher_round.png"
             cp "$dir/ic_launcher.png" "$dir/ic_launcher_foreground.png"
           done
