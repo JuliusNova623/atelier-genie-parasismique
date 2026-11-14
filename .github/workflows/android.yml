@@ -1,0 +1,64 @@
+name: APK Android
+
+# Emballe le site statique dans une application Android (Capacitor) et produit un APK à télécharger.
+# Résultat : onglet Actions → ce run → Artifacts → « Atelier-Genie-parasismique-APK ».
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - run: npm ci
+
+      - name: Copier le site dans www/ (version du cache = commit)
+        run: |
+          mkdir www
+          cp -r index.html manifest.webmanifest pwa.js sw.js js katex fonts icons www/
+          sed -i "s/__VERSION__/${GITHUB_SHA::10}/" www/sw.js
+
+      - name: Générer le projet Android
+        run: |
+          npx cap add android
+          # Icône de lancement : celle de l'application (au lieu du logo par défaut).
+          rm -rf android/app/src/main/res/mipmap-anydpi-v26
+          for d in mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192; do
+            dir=android/app/src/main/res/mipmap-${d%%:*}
+            rm -f "$dir"/ic_launcher*.png "$dir"/ic_launcher*.webp
+            convert icons/icon-512.png -resize ${d##*:}x${d##*:} "$dir/ic_launcher.png"
+            cp "$dir/ic_launcher.png" "$dir/ic_launcher_round.png"
+            cp "$dir/ic_launcher.png" "$dir/ic_launcher_foreground.png"
+          done
+          npx cap sync android
+
+      - name: Compiler l'APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Nommer l'APK
+        run: |
+          mkdir out
+          cp android/app/build/outputs/apk/debug/app-debug.apk out/Atelier-Genie-parasismique.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Atelier-Genie-parasismique-APK
+          path: out/Atelier-Genie-parasismique.apk
+          if-no-files-found: error

@@ -14,6 +14,12 @@ Ouvrir l'adresse du site une première fois **avec du réseau**, puis :
 
 Après ce premier chargement, l'application s'ouvre et fonctionne sans connexion.
 
+## APK Android
+
+Le workflow `APK Android` emballe le site dans une application Android (Capacitor) : onglet **Actions** → dernier run vert →
+**Artifacts** → `Atelier-Genie-parasismique-APK` (ZIP contenant `Atelier-Genie-parasismique.apk`). APK de test (signature de débogage) :
+autoriser l'installation depuis une source inconnue sur le téléphone.
+
 ## Lancer en local
 
 Le service worker exige `http://localhost` (ou HTTPS) ; un simple serveur statique suffit :

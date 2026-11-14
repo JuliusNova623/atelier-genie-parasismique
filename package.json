@@ -1,0 +1,14 @@
+{
+  "name": "atelier-genie-parasismique",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Atelier Génie parasismique : application de révision (site statique, PWA, APK Android via Capacitor).",
+  "scripts": {
+    "serve": "python -m http.server 8080"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.4.0",
+    "@capacitor/cli": "^7.4.0",
+    "@capacitor/core": "^7.4.0"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "appId": "app.parasismique.atelier",
+  "appName": "Atelier Génie parasismique",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  }
+}
